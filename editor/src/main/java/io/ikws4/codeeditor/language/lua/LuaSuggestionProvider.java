@@ -1,4 +1,4 @@
-package io.ikws4.codeeditor.language.java;
+package io.ikws4.codeeditor.language.lua;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import io.ikws4.codeeditor.api.language.LanguageSuggestionProvider;
 import io.ikws4.codeeditor.api.language.Suggestion;
 import io.ikws4.codeeditor.api.language.Suggestion.Type;
 
-class JavaSuggestionProvider implements LanguageSuggestionProvider {
-    private static JavaSuggestionProvider sInstance;
+class LuaSuggestionProvider implements LanguageSuggestionProvider {
+    private static LuaSuggestionProvider sInstance;
     private final Map<Integer, List<Suggestion>> mLineSuggestions = new HashMap<>();
     private final String[] mKeywords = ("abstract|assert|break|case|catch|class|continue|default|" +
             "do|else|enum|exports|extends|final|finally|for|if|implements|" +
@@ -19,12 +19,12 @@ class JavaSuggestionProvider implements LanguageSuggestionProvider {
             "strictfp|switch|synchronized|throw|throws|to|transient|transitive|" +
             "try|uses|volatile|while|with").split("\\|");
 
-    private JavaSuggestionProvider() {
+    private LuaSuggestionProvider() {
     }
 
-    public static JavaSuggestionProvider getInstance() {
+    public static LuaSuggestionProvider getInstance() {
         if (sInstance == null) {
-            sInstance = new JavaSuggestionProvider();
+            sInstance = new LuaSuggestionProvider();
         }
         return sInstance;
     }

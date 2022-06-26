@@ -10,6 +10,6 @@ find_library(log-lib log)
 add_library(jsitter SHARED src/jsitter.cc tree-sitter/lib/src/lib.c)
 
 # Grammars
-add_library(tsjava SHARED grammars/tree-sitter-java/src/parser.c)
+add_library(tslua SHARED grammars/tree-sitter-lua/src/parser.c grammars/tree-sitter-lua/src/scanner.c)
 
-target_link_libraries(jsitter tsjava ${log-lib})
+target_link_libraries(jsitter tslua ${log-lib})

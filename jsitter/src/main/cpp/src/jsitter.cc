@@ -144,12 +144,12 @@ jobject marshalQueryMatch(JNIEnv *env, TSQuery *query, TSQueryMatch match) {
 /*************************/
 
 extern "C"
-TSLanguage *tree_sitter_java();
+TSLanguage *tree_sitter_lua();
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_io_ikws4_jsitter_TSLanguages_java(JNIEnv *env, jclass clazz) {
-    return reinterpret_cast<jlong>(tree_sitter_java());
+Java_io_ikws4_jsitter_TSLanguages_lua(JNIEnv *env, jclass clazz) {
+    return reinterpret_cast<jlong>(tree_sitter_lua());
 }
 
 

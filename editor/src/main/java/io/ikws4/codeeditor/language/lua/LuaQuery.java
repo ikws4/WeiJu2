@@ -1,8 +1,8 @@
-package io.ikws4.codeeditor.language.java;
+package io.ikws4.codeeditor.language.lua;
 
 import io.ikws4.codeeditor.language.TSLangaugeQuery;
 
-class JavaQuery implements TSLangaugeQuery {
+class LuaQuery implements TSLangaugeQuery {
     @Override
     public String highlight() {
         return ScmsKt.HIGHTLIGHT;

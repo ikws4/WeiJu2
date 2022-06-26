@@ -1,4 +1,4 @@
-package io.ikws4.codeeditor.language.java;
+package io.ikws4.codeeditor.language.lua;
 
 import android.util.Log;
 
@@ -13,23 +13,23 @@ import io.ikws4.codeeditor.api.document.markup.SyntaxMarkup;
 import io.ikws4.codeeditor.language.TSLanguageStyler;
 import io.ikws4.jsitter.TSLanguages;
 
-class JavaStyler extends TSLanguageStyler {
+class LuaStyler extends TSLanguageStyler {
     private static final String TAG = "JavaStyler";
 
     private final Formatter mFormatter;
-    private static JavaStyler sInstance;
+    private static LuaStyler sInstance;
 
-    private JavaStyler() {
-        super(TSLanguages.java(), new JavaQuery());
+    private LuaStyler() {
+        super(TSLanguages.lua(), new LuaQuery());
         JavaFormatterOptions options = JavaFormatterOptions.builder()
                 .style(JavaFormatterOptions.Style.AOSP)
                 .build();
         mFormatter = new Formatter(options);
     }
 
-    public static JavaStyler getInstance() {
+    public static LuaStyler getInstance() {
         if (sInstance == null) {
-            sInstance = new JavaStyler();
+            sInstance = new LuaStyler();
         }
         return sInstance;
     }

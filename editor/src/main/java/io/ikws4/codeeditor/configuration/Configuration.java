@@ -6,7 +6,7 @@ import io.ikws4.codeeditor.configuration.colorscheme.ColorSchemes;
 import io.ikws4.codeeditor.configuration.indent.Indentation;
 
 public class Configuration {
-    private ColorScheme colorScheme = ColorSchemes.NORD;
+    private ColorScheme colorScheme = ColorSchemes.ROSE_PINE;
 
     private float fontSize = 14.0f;
 

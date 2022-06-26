@@ -1,18 +1,18 @@
-package io.ikws4.codeeditor.language.java;
+package io.ikws4.codeeditor.language.lua;
 
 
 import io.ikws4.codeeditor.api.language.LanguageParser;
 import io.ikws4.codeeditor.api.language.ParseException;
 import io.ikws4.codeeditor.api.language.ParseResult;
 
-class JavaParser implements LanguageParser {
-    private static JavaParser sInstance;
+class LuaParser implements LanguageParser {
+    private static LuaParser sInstance;
 
-    private JavaParser() {}
+    private LuaParser() {}
 
-    public static JavaParser getInstance() {
+    public static LuaParser getInstance() {
         if (sInstance == null) {
-            sInstance = new JavaParser();
+            sInstance = new LuaParser();
         }
         return sInstance;
     }

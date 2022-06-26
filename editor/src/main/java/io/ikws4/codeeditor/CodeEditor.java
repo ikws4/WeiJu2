@@ -37,7 +37,7 @@ import io.ikws4.codeeditor.component.Gutter;
 import io.ikws4.codeeditor.component.TextArea;
 import io.ikws4.codeeditor.component.Toolbar;
 import io.ikws4.codeeditor.configuration.Configuration;
-import io.ikws4.codeeditor.language.java.JavaLanguage;
+import io.ikws4.codeeditor.language.lua.LuaLanguage;
 import io.ikws4.codeeditor.widget.HScrollView;
 import io.ikws4.codeeditor.widget.VScrollView;
 
@@ -95,7 +95,7 @@ public class CodeEditor extends FrameLayout implements Editor, ScaleGestureDetec
         LayoutInflater.from(context).inflate(R.layout.editor, this, true);
 
         mConfiguration = new Configuration();
-        mLanguage = new JavaLanguage();
+        mLanguage = new LuaLanguage();
 
         mScaleListeners = new ArrayList<>();
         mSelectionListeners = new ArrayList<>();

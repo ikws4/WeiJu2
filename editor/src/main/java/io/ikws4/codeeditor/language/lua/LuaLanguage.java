@@ -1,11 +1,11 @@
-package io.ikws4.codeeditor.language.java;
+package io.ikws4.codeeditor.language.lua;
 
 import io.ikws4.codeeditor.api.language.Language;
 import io.ikws4.codeeditor.api.language.LanguageParser;
 import io.ikws4.codeeditor.api.language.LanguageSuggestionProvider;
 import io.ikws4.codeeditor.api.language.LanguageStyler;
 
-public class JavaLanguage implements Language {
+public class LuaLanguage implements Language {
     @Override
     public String getName() {
         return "java";
@@ -13,16 +13,16 @@ public class JavaLanguage implements Language {
 
     @Override
     public LanguageParser getParser() {
-        return JavaParser.getInstance();
+        return LuaParser.getInstance();
     }
 
     @Override
     public LanguageSuggestionProvider getSuggestionProvider() {
-        return JavaSuggestionProvider.getInstance();
+        return LuaSuggestionProvider.getInstance();
     }
 
     @Override
     public LanguageStyler getStyler() {
-        return JavaStyler.getInstance();
+        return LuaStyler.getInstance();
     }
 }
