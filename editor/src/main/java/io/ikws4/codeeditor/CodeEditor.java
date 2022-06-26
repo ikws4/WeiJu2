@@ -223,7 +223,7 @@ public class CodeEditor extends FrameLayout implements Editor, ScaleGestureDetec
     @NonNull
     @Override
     public ColorScheme getColorScheme() {
-        return mConfiguration.getColorScheme();
+        return mConfiguration.colorScheme;
     }
 
     @NonNull

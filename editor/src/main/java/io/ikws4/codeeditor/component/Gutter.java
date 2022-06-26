@@ -40,10 +40,10 @@ public class Gutter extends View implements Component, VisibleAreaListener, Scal
   public void onAttachEditor(Editor editor) {
     mEditor = editor;
 
-    ColorScheme colorScheme = editor.getConfiguration().getColorScheme();
+    ColorScheme colorScheme = editor.getConfiguration().colorScheme;
 
     setBackgroundColor(colorScheme.ui.gutterBackground);
-    setTextSize(mEditor.getConfiguration().getFontSize() * mEditor.getScacleModel().getScaleFactor());
+    setTextSize(mEditor.getConfiguration().fontSize * mEditor.getScacleModel().getScaleFactor());
 
     mTextPaint.setColor(colorScheme.ui.gutterForeground);
     mTextPaint.setTypeface(Typeface.MONOSPACE);
@@ -76,7 +76,7 @@ public class Gutter extends View implements Component, VisibleAreaListener, Scal
 
   @Override
   public void onScaleChanged(float factor) {
-    setTextSize(mEditor.getConfiguration().getFontSize() * factor);
+    setTextSize(mEditor.getConfiguration().fontSize * factor);
   }
 
   @Override
@@ -88,8 +88,10 @@ public class Gutter extends View implements Component, VisibleAreaListener, Scal
 
   @Override
   protected void onDraw(Canvas canvas) {
-    measureGutterWidth();
-    drawLineNumber(canvas);
+    if (mEditor.getConfiguration().number) {
+      measureGutterWidth();
+      drawLineNumber(canvas);
+    }
   }
 
   private void drawLineNumber(Canvas canvas) {

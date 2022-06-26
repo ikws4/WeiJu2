@@ -137,8 +137,8 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
 
     @Override
     public void onScaleChanged(float factor) {
-        if (mEditor.getConfiguration().isPinchZoom()) {
-            setTextSize(mEditor.getConfiguration().getFontSize() * factor);
+        if (mEditor.getConfiguration().pinchZoom) {
+            setTextSize(mEditor.getConfiguration().fontSize * factor);
         }
     }
 
@@ -167,7 +167,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
     ///////////////////////////////////////////////////////////////////////////
     protected void configure() {
         // Text & font
-        setTextSize(mEditor.getConfiguration().getFontSize());
+        setTextSize(mEditor.getConfiguration().fontSize);
         setTypeface(Typeface.MONOSPACE);
         setLineSpacing(0, 1.1f);
         setGravity(Gravity.TOP | Gravity.START);
@@ -187,7 +187,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
         setEditableFactory(Document.Factory.getInstance());
 
         // Wrap
-        setHorizontallyScrolling(!mEditor.getConfiguration().isWrap());
+        setHorizontallyScrolling(!mEditor.getConfiguration().wrap);
 
         // Clipboard panel & key handle
         setMovementMethod(MovementMethod.getInstance());
@@ -195,7 +195,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
         setCustomSelectionActionModeCallback(new SelectionActiomModeCallback());
 
         // Completion menu
-        if (mEditor.getConfiguration().isCompletion()) {
+        if (mEditor.getConfiguration().completion) {
             setThreshold(1);
             setAdapter(mSuggestionAdapter);
             setTokenizer(mWordTokenizer);
@@ -382,7 +382,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
         }
 
         private void handleIndent(TextArea textArea, int keyCode, KeyEvent event) {
-            if (!textArea.mEditor.getConfiguration().isAutoIndent()) return;
+            if (!textArea.mEditor.getConfiguration().autoIndent) return;
 
             if (keyCode == KeyEvent.KEYCODE_ENTER && (event.hasNoModifiers())) {
                 textArea.indent(textArea.getCurrentLine());
@@ -442,7 +442,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
     ///////////////////////////////////////////////////////////////////////////
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mEditor.getConfiguration().isCursorLine() && !mEditor.isViwer()) {
+        if (mEditor.getConfiguration().cursorLine && !mEditor.isViwer()) {
             drawCursorLine(canvas);
         }
         super.onDraw(canvas);
@@ -649,7 +649,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
         Editable content = getText();
         int currentLine = getCurrentLine();
         int level = mEditor.getLanguage().getStyler().getIndentLevel(currentLine, getPrevnonblankLine());
-        String tab = mEditor.getConfiguration().getIndentation().get(level);
+        String tab = mEditor.getConfiguration().indentation.get(level);
 
         int start = getLayout().getLineStart(line);
         content.insert(start, tab);

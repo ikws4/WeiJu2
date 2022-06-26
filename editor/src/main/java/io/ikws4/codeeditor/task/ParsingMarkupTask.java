@@ -25,7 +25,7 @@ public class ParsingMarkupTask extends AsyncTask<Void, Void, List<Markup>> {
         Editor editor = mEditor.get();
         String text = editor.getDocument().toString();
         LanguageStyler highlighter = editor.getLanguage().getStyler();
-        ColorScheme.Syntax syntaxScheme = editor.getConfiguration().getColorScheme().syntax;
+        ColorScheme.Syntax syntaxScheme = editor.getConfiguration().colorScheme.syntax;
         return highlighter.process(text, syntaxScheme);
     }
 
