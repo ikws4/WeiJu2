@@ -194,7 +194,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
     setEditableFactory(Document.Factory.getInstance());
 
     // Wrap
-    setHorizontallyScrolling(!mEditor.getConfiguration().wrap);
+    // setHorizontallyScrolling(!mEditor.getConfiguration().wrap);
 
     // Clipboard panel & key handle
     setMovementMethod(MovementMethod.getInstance());
