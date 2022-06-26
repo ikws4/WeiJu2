@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:fillViewport="true"
+    tools:ignore="ContentDescription">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <io.ikws4.codeeditor.widget.KeyButton
+            android:id="@+id/tab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_keyboard_tab" />
+
+        <io.ikws4.codeeditor.widget.KeyButton
+            android:id="@+id/up"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:longClickable="true"
+            android:src="@drawable/ic_keyboard_arrow_up" />
+
+        <io.ikws4.codeeditor.widget.KeyButton
+            android:id="@+id/down"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:longClickable="true"
+            android:src="@drawable/ic_keyboard_arrow_down" />
+
+        <io.ikws4.codeeditor.widget.KeyButton
+            android:id="@+id/left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:longClickable="true"
+            android:src="@drawable/ic_keyboard_arrow_left" />
+
+        <io.ikws4.codeeditor.widget.KeyButton
+            android:id="@+id/right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:longClickable="true"
+            android:src="@drawable/ic_keyboard_arrow_right" />
+
+        <io.ikws4.codeeditor.widget.KeyButton
+            android:id="@+id/keyboard_toggle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_keyboard_hide" />
+
+    </LinearLayout>
+
+</HorizontalScrollView>

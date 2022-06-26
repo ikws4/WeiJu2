@@ -1,0 +1,6 @@
+[submodule "jsitter/src/main/cpp/tree-sitter"]
+	path = jsitter/src/main/cpp/tree-sitter
+	url = https://github.com/tree-sitter/tree-sitter.git
+[submodule "jsitter/src/main/cpp/grammars/tree-sitter-java"]
+	path = jsitter/src/main/cpp/grammars/tree-sitter-java
+	url = https://github.com/tree-sitter/tree-sitter-java.git

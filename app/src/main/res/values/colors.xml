@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="base">#232136</color>
+    <color name="surface">#2a273f</color>
+    <color name="overlay">#393552</color>
+    <color name="muted">#6e6a86</color>
+    <color name="subtle">#908caa</color>
+    <color name="text">#e0def4</color>
+    <color name="love">#eb6f92</color>
+    <color name="gold">#f6c177</color>
+    <color name="rose">#ebbcba</color>
+    <color name="pine">#31748f</color>
+    <color name="foam">#9ccfd8</color>
+    <color name="iris">#c4a7e7</color>
+    <color name="highlight_low">#21202e</color>
+    <color name="highlight_med">#44415a</color>
+    <color name="highlight_high">#56526e</color>
+</resources>
