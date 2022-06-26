@@ -19,12 +19,12 @@
             android:src="@drawable/ic_keyboard_tab" />
 
         <io.ikws4.codeeditor.widget.KeyButton
-            android:id="@+id/up"
+            android:id="@+id/left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:longClickable="true"
-            android:src="@drawable/ic_keyboard_arrow_up" />
+            android:src="@drawable/ic_keyboard_arrow_left" />
 
         <io.ikws4.codeeditor.widget.KeyButton
             android:id="@+id/down"
@@ -35,12 +35,12 @@
             android:src="@drawable/ic_keyboard_arrow_down" />
 
         <io.ikws4.codeeditor.widget.KeyButton
-            android:id="@+id/left"
+            android:id="@+id/up"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:longClickable="true"
-            android:src="@drawable/ic_keyboard_arrow_left" />
+            android:src="@drawable/ic_keyboard_arrow_up" />
 
         <io.ikws4.codeeditor.widget.KeyButton
             android:id="@+id/right"
