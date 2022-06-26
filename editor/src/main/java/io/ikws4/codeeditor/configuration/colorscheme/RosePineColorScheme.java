@@ -52,6 +52,7 @@ class RosePineColorScheme extends ColorScheme {
     syntax.tsFuncMacro = iris;
     syntax.tsInclude = pine;
     syntax.tsKeyword = pine;
+    syntax.tsKeywordReturn = pine;
     syntax.tsKeywordFunction = pine;
     syntax.tsKeywordOperator = pine;
     syntax.tsLabel = foam;

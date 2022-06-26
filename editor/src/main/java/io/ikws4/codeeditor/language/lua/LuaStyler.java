@@ -85,6 +85,8 @@ class LuaStyler extends TSLanguageStyler {
                 return new SyntaxMarkup(scheme.tsInclude, start, end);
             case Keyword:
                 return new SyntaxMarkup(scheme.tsKeyword, start, end);
+            case KeywordReturn:
+                return new SyntaxMarkup(scheme.tsKeywordReturn, start, end);
             case KeywordFunction:
                 return new SyntaxMarkup(scheme.tsKeywordFunction, start, end);
             case KeywordOperator:

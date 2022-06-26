@@ -20,6 +20,7 @@ public enum TSHighlightType {
     FuncMarco,
     Include,
     Keyword,
+    KeywordReturn,
     KeywordFunction,
     KeywordOperator,
     Label,

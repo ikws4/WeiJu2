@@ -37,6 +37,7 @@ public class ColorScheme {
     public int tsFuncMacro;
     public int tsInclude;
     public int tsKeyword;
+    public int tsKeywordReturn;
     public int tsKeywordFunction;
     public int tsKeywordOperator;
     public int tsLabel;

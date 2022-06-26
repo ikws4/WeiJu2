@@ -45,6 +45,7 @@ public abstract class TSLanguageStyler implements LanguageStyler {
         hlmap.put("function.macro", TSHighlightType.FuncMarco);
         hlmap.put("include", TSHighlightType.Include);
         hlmap.put("keyword", TSHighlightType.Keyword);
+        hlmap.put("keyword.return", TSHighlightType.KeywordReturn);
         hlmap.put("keyword.function", TSHighlightType.KeywordFunction);
         hlmap.put("keyword.operator", TSHighlightType.KeywordOperator);
         hlmap.put("label", TSHighlightType.Label);
