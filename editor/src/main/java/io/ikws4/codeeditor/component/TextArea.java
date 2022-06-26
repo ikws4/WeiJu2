@@ -607,6 +607,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
     }
 
     private boolean isToken(char c) {
+      if (c >= 128) return false;
       return NOT_IDENTIFIRE_TOKEN_TABLE[c];
     }
   }
