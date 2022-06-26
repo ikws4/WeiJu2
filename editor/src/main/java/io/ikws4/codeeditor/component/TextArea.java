@@ -32,6 +32,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,15 +170,19 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
   ///////////////////////////////////////////////////////////////////////////
   protected void configure() {
     // Text & font
+    Typeface font = ResourcesCompat.getFont(getContext(), R.font.jetbrains_mono_regular);
     setTextSize(mEditor.getConfiguration().fontSize);
-    setTypeface(Typeface.MONOSPACE);
-    setLineSpacing(0, 1.1f);
+    setTypeface(font);
+    setLineSpacing(0, 1.2f);
+    setFontFeatureSettings("liga 1");
     setGravity(Gravity.TOP | Gravity.START);
-    setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-    setInputType(EditorInfo.TYPE_CLASS_TEXT
-      | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-      | EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE
-      | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+    // setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+    // setInputType(EditorInfo.TYPE_CLASS_TEXT
+    //   | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+    //   | EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE
+    //   | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+    setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE);
     addTextChangedListener(new SyntaxTreeEditWatcher());
     addTextChangedListener(new HighlightUpdateWatcher());
     setIncludeFontPadding(false);
