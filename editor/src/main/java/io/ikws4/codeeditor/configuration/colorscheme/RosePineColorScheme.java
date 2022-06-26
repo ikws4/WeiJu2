@@ -44,7 +44,7 @@ class RosePineColorScheme extends ColorScheme {
     syntax.tsConstMacro = iris;
     syntax.tsConstructor = foam;
     syntax.tsEmphasis = subtle;
-    syntax.tsError = love;
+    syntax.tsError = text;
     syntax.tsException = pine;
     syntax.tsField = foam;
     syntax.tsFloat = gold;

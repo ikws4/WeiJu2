@@ -4,7 +4,9 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.ikws4.codeeditor.api.configuration.ColorScheme;
 import io.ikws4.codeeditor.api.document.markup.Markup;
@@ -13,6 +15,7 @@ import io.ikws4.jsitter.TSNode;
 import io.ikws4.jsitter.TSParser;
 import io.ikws4.jsitter.TSQuery;
 import io.ikws4.jsitter.TSQueryCapture;
+import io.ikws4.jsitter.TSQueryMatch;
 import io.ikws4.jsitter.TSTree;
 
 public abstract class TSLanguageStyler implements LanguageStyler {
@@ -176,14 +179,27 @@ public abstract class TSLanguageStyler implements LanguageStyler {
         return level;
     }
 
+    private final Set<Long> set = new HashSet<>();
+
     @Override
     public List<Markup> process(String source, ColorScheme.Syntax scheme) {
         List<Markup> markups = new ArrayList<>();
         parse(source);
 
-        for (TSQueryCapture capture : mHighlightQuery.captureIter(mTree.getRoot())) {
+        set.clear();
+        for (TSQueryMatch match : mHighlightQuery.matchIter(mTree.getRoot())) {
+            TSQueryCapture capture = match.getCapture(0);
             TSNode node = capture.getNode();
-            Markup markup = onBuildMarkup(hlmap.get(capture.getName()), node.getStartByte(), node.getEndByte(), scheme);
+
+            int l = node.getStartByte();
+            int r = node.getEndByte();
+            long key = (long) l << 31 | r;
+
+            if (set.contains(key)) continue;
+            set.add(key);
+
+            Markup markup = onBuildMarkup(hlmap.get(capture.getName()), l, r, scheme);
+
             if (markup != null) markups.add(markup);
         }
 
