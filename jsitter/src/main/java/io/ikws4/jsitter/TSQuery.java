@@ -77,7 +77,9 @@ public class TSQuery implements AutoCloseable {
 
                     @Override
                     public TSQueryMatch next() {
-                        return match = nextMatch();
+                        TSQueryMatch m = match;
+                        match = nextMatch();
+                        return m;
                     }
                 };
             }
