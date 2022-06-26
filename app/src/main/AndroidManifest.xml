@@ -19,6 +19,11 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".storage.RemoteContentProviderStorageStrategy$SharedPreferenceProvider"
+            android:authorities="io.ikws4.weiju.storage"
+            android:exported="true"/>
     </application>
 
 </manifest>
