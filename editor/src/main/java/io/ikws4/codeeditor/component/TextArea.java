@@ -14,7 +14,6 @@ import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
 import android.text.method.Touch;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -47,7 +46,6 @@ import io.ikws4.codeeditor.api.editor.listener.VisibleAreaListener;
 import io.ikws4.codeeditor.api.language.Suggestion;
 import io.ikws4.codeeditor.language.TSLanguageStyler;
 import io.ikws4.codeeditor.api.document.markup.ReplacedMarkup;
-import io.ikws4.codeeditor.api.document.markup.TabMarkup;
 import io.ikws4.codeeditor.task.FormatTask;
 import io.ikws4.codeeditor.task.ParsingMarkupTask;
 
@@ -212,15 +210,15 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
         ColorScheme colorScheme = mEditor.getColorScheme();
 
         // TextEdit configure
-        setTextColor(colorScheme.getTextColor());
-        setBackgroundColor(colorScheme.getBackgroundColor());
-        setHighlightColor(colorScheme.getSelectionColor());
+        setTextColor(colorScheme.ui.foreground);
+        setBackgroundColor(colorScheme.ui.background);
+        setHighlightColor(colorScheme.ui.selectionBackground);
 
         // Completion menu
-        setDropDownBackgroundDrawable(new ColorDrawable(colorScheme.getCompletionMenuBackgroundColor()));
+        setDropDownBackgroundDrawable(new ColorDrawable(colorScheme.ui.completionMenuBackground));
         mSuggestionAdapter.setColorScheme(colorScheme);
 
-        mCursorLinePaint.setColor(colorScheme.getCursorLineColor());
+        mCursorLinePaint.setColor(colorScheme.ui.cusorLineBackground);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -535,8 +533,8 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
             viewHolder.suggestion.setTextSize(mTextSize);
 
             if (mColorScheme != null) {
-                viewHolder.type.setTextColor(mColorScheme.getTextColor());
-                viewHolder.suggestion.setTextColor(mColorScheme.getTextColor());
+                viewHolder.type.setTextColor(mColorScheme.ui.foreground);
+                viewHolder.suggestion.setTextColor(mColorScheme.ui.foreground);
             }
 
             return convertView;
@@ -655,7 +653,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
 
         int start = getLayout().getLineStart(line);
         content.insert(start, tab);
-        mEditor.getDocument().setMarkup(new TabMarkup(tab, mEditor.getColorScheme().getIndentColor(), start, getSelectionEnd()));
+        // mEditor.getDocument().setMarkup(new TabMarkup(tab, mEditor.getColorScheme().ui.foreground, start, getSelectionEnd()));
     }
 
     /**

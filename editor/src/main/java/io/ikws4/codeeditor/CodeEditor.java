@@ -43,7 +43,7 @@ import io.ikws4.codeeditor.widget.VScrollView;
 
 @SuppressLint("ClickableViewAccessibility")
 public class CodeEditor extends FrameLayout implements Editor, ScaleGestureDetector.OnScaleGestureListener,
-        SelectionModel, ScrollingModel, ScaleModel, LayoutModel {
+    SelectionModel, ScrollingModel, ScaleModel, LayoutModel {
     static {
         System.loadLibrary("jsitter");
     }

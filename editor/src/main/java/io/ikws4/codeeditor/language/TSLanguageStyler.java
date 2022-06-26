@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.ikws4.codeeditor.api.configuration.SyntaxColorScheme;
+import io.ikws4.codeeditor.api.configuration.ColorScheme;
 import io.ikws4.codeeditor.api.document.markup.Markup;
 import io.ikws4.codeeditor.api.language.LanguageStyler;
 import io.ikws4.jsitter.TSNode;
@@ -176,7 +176,7 @@ public abstract class TSLanguageStyler implements LanguageStyler {
     }
 
     @Override
-    public List<Markup> process(String source, SyntaxColorScheme scheme) {
+    public List<Markup> process(String source, ColorScheme.Syntax scheme) {
         List<Markup> markups = new ArrayList<>();
         parse(source);
 
@@ -190,7 +190,7 @@ public abstract class TSLanguageStyler implements LanguageStyler {
     }
 
     @Nullable
-    protected abstract Markup onBuildMarkup(TSHighlightType type, int start, int end, SyntaxColorScheme scheme);
+    protected abstract Markup onBuildMarkup(TSHighlightType type, int start, int end, ColorScheme.Syntax scheme);
 
     private void parse(String source) {
         synchronized (this) {

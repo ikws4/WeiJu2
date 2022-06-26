@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import io.ikws4.codeeditor.api.configuration.ColorScheme;
 import io.ikws4.codeeditor.api.editor.Editor;
-import io.ikws4.codeeditor.api.configuration.SyntaxColorScheme;
 import io.ikws4.codeeditor.api.document.markup.Markup;
 import io.ikws4.codeeditor.api.language.LanguageStyler;
 
@@ -25,7 +25,7 @@ public class ParsingMarkupTask extends AsyncTask<Void, Void, List<Markup>> {
         Editor editor = mEditor.get();
         String text = editor.getDocument().toString();
         LanguageStyler highlighter = editor.getLanguage().getStyler();
-        SyntaxColorScheme syntaxScheme = editor.getConfiguration().getColorScheme().getSyntaxColorScheme();
+        ColorScheme.Syntax syntaxScheme = editor.getConfiguration().getColorScheme().syntax;
         return highlighter.process(text, syntaxScheme);
     }
 

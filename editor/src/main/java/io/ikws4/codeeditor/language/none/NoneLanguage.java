@@ -3,7 +3,7 @@ package io.ikws4.codeeditor.language.none;
 import java.util.Collections;
 import java.util.List;
 
-import io.ikws4.codeeditor.api.configuration.SyntaxColorScheme;
+import io.ikws4.codeeditor.api.configuration.ColorScheme;
 import io.ikws4.codeeditor.api.document.markup.Markup;
 import io.ikws4.codeeditor.api.language.Language;
 import io.ikws4.codeeditor.api.language.LanguageParser;
@@ -74,7 +74,7 @@ public class NoneLanguage implements Language {
             }
 
             @Override
-            public List<Markup> process(String source, SyntaxColorScheme scheme) {
+            public List<Markup> process(String source, ColorScheme.Syntax scheme) {
                 return Collections.emptyList();
             }
         };
