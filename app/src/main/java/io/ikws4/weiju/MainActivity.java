@@ -13,6 +13,8 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import io.ikws4.codeeditor.CodeEditor;
+import io.ikws4.codeeditor.api.document.Document;
+import io.ikws4.weiju.storage.Storage;
 import io.ikws4.weiju.view.AppListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,12 +22,16 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private AppListView mAppList;
 
-    private boolean zenMode;
+    private boolean mZenMode;
+
+    private Storage mStorage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mStorage = Storage.getInstance(this);
 
         Globals globals = JsePlatform.standardGlobals();
 
@@ -40,16 +46,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, result + "", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (menu.getItemId() == R.id.menu_toggle_zem_mode) {
-                if (zenMode) {
+                if (mZenMode) {
                     menu.setIcon(R.drawable.ic_fullscreen);
                     mAppList.setVisibility(View.VISIBLE);
                 } else {
                     menu.setIcon(R.drawable.ic_fullscreen_exit);
                     mAppList.setVisibility(View.GONE);
                 }
-                zenMode = !zenMode;
+                mZenMode = !mZenMode;
+            } else if (menu.getItemId() == R.id.menu_save) {
+                mStorage.write(mAppList.getSelectedPkg().toString(), mEditor.getDocument().toString());
             }
             return false;
+        });
+
+        mAppList.setOnItemClickListener((pkg) -> {
+            mEditor.setDocument(new Document(mStorage.read(pkg.toString())));
         });
     }
 }

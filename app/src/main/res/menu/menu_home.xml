@@ -7,12 +7,16 @@
         android:icon="@drawable/ic_fullscreen"
         android:title="Toggle Zen Mode"
         app:showAsAction="always" />
+
     <item
         android:id="@+id/menu_run"
         android:icon="@drawable/ic_run"
         android:title="Run"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_save"
+        android:title="Save" />
 
     <item
         android:id="@+id/menu_settings"

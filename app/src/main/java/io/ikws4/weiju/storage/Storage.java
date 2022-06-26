@@ -29,4 +29,13 @@ public class Storage {
     }
     return false;
   }
+
+  private static Storage instance;
+
+  public static Storage getInstance(Context context) {
+    if (instance == null) {
+      instance = new Storage(context);
+    }
+    return instance;
+  }
 }
