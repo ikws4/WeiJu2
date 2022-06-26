@@ -2,11 +2,9 @@ package io.ikws4.codeeditor.component;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.Selection;
@@ -27,7 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.textclassifier.TextClassifier;
-import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
@@ -35,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.ikws4.codeeditor.R;
@@ -45,6 +44,7 @@ import io.ikws4.codeeditor.api.editor.component.Component;
 import io.ikws4.codeeditor.api.editor.listener.ScaleListener;
 import io.ikws4.codeeditor.api.editor.listener.VisibleAreaListener;
 import io.ikws4.codeeditor.api.language.Suggestion;
+import io.ikws4.codeeditor.ext.ArrayAdapter;
 import io.ikws4.codeeditor.ext.OutlineColorDrawable;
 import io.ikws4.codeeditor.language.TSLanguageStyler;
 import io.ikws4.codeeditor.api.document.markup.ReplacedMarkup;
