@@ -28,13 +28,13 @@ public class Configuration {
     /**
      * Draw the line number in front of each line.
      */
-    private boolean number = true;
+    private boolean number = false;
 
     // TODO: cursorLine doc with hl-CursorLine
     /**
      * When on, Highlight the screen line of the cursor.
      */
-    private boolean cursorLine = true;
+    private boolean cursorLine = false;
 
     // TODO: highlightDelimiter doc
     private boolean highlightDelimiter = true;
@@ -44,7 +44,7 @@ public class Configuration {
      */
     private boolean autoIndent = true;
 
-    private Indentation indentation = Indentation.WHITE_SPACE_4;
+    private Indentation indentation = Indentation.WHITE_SPACE_2;
 
     public ColorScheme getColorScheme() {
         return colorScheme;
