@@ -28,7 +28,7 @@ public class Configuration {
     /**
      * Draw the line number in front of each line.
      */
-    public boolean number = false;
+    public boolean number = true;
 
     // TODO: cursorLine doc with hl-CursorLine
     /**
