@@ -13,6 +13,7 @@ public class ColorScheme {
     public int cusorLineBackground;
     public int selectionBackground;
     public int completionMenuBackground;
+    public int completionMenuOutlineBackground;
   }
 
   public static class Syntax {

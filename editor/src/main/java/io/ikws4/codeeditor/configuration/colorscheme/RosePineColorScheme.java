@@ -30,6 +30,7 @@ class RosePineColorScheme extends ColorScheme {
     ui.cusorLineBackground = highlightLow;
     ui.selectionBackground = highlightLow;
     ui.completionMenuBackground = base;
+    ui.completionMenuOutlineBackground = surface;
 
     syntax.tsAttribute = iris;
     syntax.tsAnnotation = iris;

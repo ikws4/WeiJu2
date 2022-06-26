@@ -2,8 +2,6 @@
     <!-- Base application theme. -->
     <style name="Theme.WeiJu" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:statusBarColor">@color/base</item>
-        <item name="background">@color/base</item>
-        <item name="android:background">@color/base</item>
         <item name="dividerColor">@color/surface</item>
     </style>
 
