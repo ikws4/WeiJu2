@@ -1,6 +1,7 @@
 package io.ikws4.weiju.view;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,8 +126,12 @@ public class AppListView extends RecyclerView {
         AppInfo lastSelectedItem = data.get(mSelectedPosition);
         if (item.pkg.equals(lastSelectedItem.pkg)) {
           imgIcon.setStrokeWidth(UnitConverter.dp(2));
+          imgIcon.setImageTintList(null);
+          tvName.setTextColor(getContext().getColor(R.color.text));
         } else {
           imgIcon.setStrokeWidth(0);
+          imgIcon.setImageTintList(ColorStateList.valueOf(getContext().getColor(R.color.subtle)));
+          tvName.setTextColor(getContext().getColor(R.color.subtle));
         }
 
         itemView.setOnClickListener((v) -> {

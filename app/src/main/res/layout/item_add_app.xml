@@ -5,14 +5,16 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:paddingHorizontal="16dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_add"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:src="@drawable/ic_add"
+        android:background="@color/surface"
+        android:foreground="@drawable/ic_add"
+        android:foregroundTint="@color/highlight_high"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.WeiJu.Circle" />
 
 </LinearLayout>

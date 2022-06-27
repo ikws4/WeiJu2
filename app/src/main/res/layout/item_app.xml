@@ -16,11 +16,13 @@
         android:src="@drawable/ic_launcher_background"
         app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.WeiJu.Circle"
         app:strokeColor="@color/text"
-        app:strokeWidth="0dp" />
+        app:tintMode="multiply"
+        app:strokeWidth="2dp" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_name"
+        android:textColor="@color/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
