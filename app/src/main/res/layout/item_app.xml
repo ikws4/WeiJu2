@@ -10,19 +10,23 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_icon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.WeiJu.Circle" />
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_launcher_background"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.WeiJu.Circle"
+        app:strokeColor="@color/text"
+        app:strokeWidth="0dp" />
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:singleLine="true"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:singleLine="true"
         android:textSize="12sp" />
 
 </LinearLayout>
