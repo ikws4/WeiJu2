@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/jsitter/src/main/cpp/grammars/tree-sitter-lua" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/jsitter/src/main/cpp/tree-sitter" vcs="Git" />
   </component>
 </project>
