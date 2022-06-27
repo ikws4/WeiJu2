@@ -2,10 +2,10 @@ package io.ikws4.weiju.storage;
 
 import android.content.Context;
 
-public class Storage {
+public class ScriptStorage {
   private final StorageStrategy strategy;
 
-  public Storage(Context context) {
+  public ScriptStorage(Context context) {
     if (isLSP(context)) {
       strategy = new LSPStorageStrategy(context);
     } else {
@@ -23,18 +23,18 @@ public class Storage {
 
   private boolean isLSP(Context context) {
     try {
-      context.getSharedPreferences("store", Context.MODE_WORLD_READABLE);
+      context.getSharedPreferences(StorageStrategy.STORE_NAME, Context.MODE_WORLD_READABLE);
     } catch (SecurityException e) {
       return true;
     }
     return false;
   }
 
-  private static Storage instance;
+  private static ScriptStorage instance;
 
-  public static Storage getInstance(Context context) {
+  public static ScriptStorage getInstance(Context context) {
     if (instance == null) {
-      instance = new Storage(context);
+      instance = new ScriptStorage(context);
     }
     return instance;
   }

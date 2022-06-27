@@ -14,7 +14,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import io.ikws4.codeeditor.CodeEditor;
 import io.ikws4.codeeditor.api.document.Document;
-import io.ikws4.weiju.storage.Storage;
+import io.ikws4.weiju.storage.ScriptStorage;
 import io.ikws4.weiju.view.AppListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,14 +24,14 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mZenMode;
 
-    private Storage mStorage;
+    private ScriptStorage mStorage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mStorage = Storage.getInstance(this);
+        mStorage = ScriptStorage.getInstance(this);
 
         Globals globals = JsePlatform.standardGlobals();
 
