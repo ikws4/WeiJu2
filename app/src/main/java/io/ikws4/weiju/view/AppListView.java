@@ -1,9 +1,6 @@
 package io.ikws4.weiju.view;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.data.AppInfo;
+import io.ikws4.weiju.util.AppInfoListLoader;
 
 public class AppListView extends RecyclerView {
     private OnItemClickListener mOnItemClickListener;
@@ -44,18 +41,18 @@ public class AppListView extends RecyclerView {
     }
 
     private void init() {
-        List<AppInfo> data = new ArrayList<>();
-        PackageManager pm = getContext().getPackageManager();
-        for (ApplicationInfo info : pm.getInstalledApplications(0)) {
-            // Skip System Applications
-            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-            if (BuildConfig.DEBUG && data.size() > 5) break;
-
-            CharSequence name = info.loadLabel(pm);
-            CharSequence pkg = info.packageName;
-            Drawable icon = info.loadIcon(pm);
-            data.add(new AppInfo(name, pkg, icon));
-        }
+        List<AppInfo> data = AppInfoListLoader.getUserApplications(getContext());
+        // PackageManager pm = getContext().getPackageManager();
+        // for (ApplicationInfo info : pm.getInstalledApplications(0)) {
+        //     // Skip System Applications
+        //     if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+        //     if (BuildConfig.DEBUG && data.size() > 5) break;
+        //
+        //     CharSequence name = info.loadLabel(pm);
+        //     CharSequence pkg = info.packageName;
+        //     Drawable icon = info.loadIcon(pm);
+        //     data.add(new AppInfo(name, pkg, icon));
+        // }
         setAdapter(new Adapter(data));
         setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -127,24 +124,12 @@ public class AppListView extends RecyclerView {
                     mSelectedPkg = item.pkg;
                 });
                 tvName.setText(item.name);
-                imgIcon.setImageDrawable(item.icon);
+                imgIcon.setImageBitmap(item.icon);
             }
         }
     }
 
     public interface OnItemClickListener {
         void onClick(CharSequence pkg);
-    }
-
-    static class AppInfo {
-        CharSequence name;
-        CharSequence pkg;
-        Drawable icon;
-
-        public AppInfo(CharSequence name, CharSequence pkg, Drawable icon) {
-            this.name = name;
-            this.pkg = pkg;
-            this.icon = icon;
-        }
     }
 }
