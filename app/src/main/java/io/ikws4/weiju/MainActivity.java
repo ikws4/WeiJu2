@@ -63,5 +63,7 @@ public class MainActivity extends AppCompatActivity {
         mAppList.setOnItemClickListener((pkg) -> {
             mEditor.setDocument(new Document(mStorage.read(pkg.toString())));
         });
+
+        mEditor.setDocument(new Document(mStorage.read(mAppList.getSelectedPkg().toString())));
     }
 }
