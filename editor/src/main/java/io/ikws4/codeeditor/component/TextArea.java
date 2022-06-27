@@ -173,7 +173,7 @@ public class TextArea extends AppCompatMultiAutoCompleteTextView implements Comp
     Typeface font = ResourcesCompat.getFont(getContext(), R.font.jetbrains_mono_regular);
     setTextSize(mEditor.getConfiguration().fontSize);
     setTypeface(font);
-    setLineSpacing(0, 1.2f);
+    setLineSpacing(0, 1.1f);
     setFontFeatureSettings("liga 1");
     setGravity(Gravity.TOP | Gravity.START);
     // setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
