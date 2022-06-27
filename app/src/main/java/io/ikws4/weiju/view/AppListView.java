@@ -139,10 +139,12 @@ public class AppListView extends RecyclerView {
 
         itemView.setOnClickListener((v) -> {
           mOnItemClickListener.onClick(item.pkg);
-          notifyItemChanged(position);
-          notifyItemChanged(mSelectedPosition);
-          mSelectedPosition = position;
-          PreferenceStorage.getInstance(getContext()).put(PreferenceStorage.APP_LIST_SELECTED_POSITION, position);
+          if (position != mSelectedPosition) {
+            notifyItemChanged(position);
+            notifyItemChanged(mSelectedPosition);
+            mSelectedPosition = position;
+            PreferenceStorage.getInstance(getContext()).put(PreferenceStorage.APP_LIST_SELECTED_POSITION, position);
+          }
         });
       }
     }
