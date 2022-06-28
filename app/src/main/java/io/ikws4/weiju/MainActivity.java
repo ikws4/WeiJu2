@@ -14,7 +14,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import io.ikws4.codeeditor.CodeEditor;
 import io.ikws4.codeeditor.api.document.Document;
-import io.ikws4.weiju.storage.ScriptStorage;
+import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.view.AppListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,14 +24,14 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mZenMode;
 
-    private ScriptStorage mStorage;
+    private ScriptStore mStorage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mStorage = ScriptStorage.getInstance(this);
+        mStorage = ScriptStore.getInstance(this);
 
         Globals globals = JsePlatform.standardGlobals();
 
@@ -55,15 +55,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mZenMode = !mZenMode;
             } else if (menu.getItemId() == R.id.menu_save) {
-                mStorage.write(mAppList.getSelectedPkg().toString(), mEditor.getDocument().toString());
+                mStorage.put(mAppList.getSelectedPkg().toString(), mEditor.getDocument().toString());
             }
             return false;
         });
 
         mAppList.setOnItemClickListener((pkg) -> {
-            mEditor.setDocument(new Document(mStorage.read(pkg.toString())));
+            mEditor.setDocument(new Document(mStorage.get(pkg.toString())));
         });
 
-        mEditor.setDocument(new Document(mStorage.read(mAppList.getSelectedPkg().toString())));
+        mEditor.setDocument(new Document(mStorage.get(mAppList.getSelectedPkg().toString())));
     }
 }

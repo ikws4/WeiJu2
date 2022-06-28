@@ -5,14 +5,14 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 
-public class PreferenceStorage {
+public class Preferences {
   private static final String STORE_NAME = "preference";
   private final SharedPreferences storage;
 
   /// Keys
   public static final String APP_LIST_SELECTED_POSITION = "app_list_selected_position";
 
-  private PreferenceStorage(Context context) {
+  private Preferences(Context context) {
     storage = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
   }
 
@@ -69,11 +69,11 @@ public class PreferenceStorage {
     storage.edit().clear().apply();
   }
 
-  private static PreferenceStorage instance;
+  private static Preferences instance;
 
-  public static PreferenceStorage getInstance(Context context) {
+  public static Preferences getInstance(Context context) {
     if (instance == null) {
-      instance = new PreferenceStorage(context);
+      instance = new Preferences(context);
     }
     return instance;
   }

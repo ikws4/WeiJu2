@@ -20,7 +20,7 @@ import java.util.List;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.data.AppInfo;
-import io.ikws4.weiju.storage.PreferenceStorage;
+import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.AppInfoListLoader;
 import io.ikws4.weiju.util.UnitConverter;
 
@@ -45,7 +45,7 @@ public class AppListView extends RecyclerView {
   }
 
   private void init() {
-    mSelectedPosition = PreferenceStorage.getInstance(getContext()).get(PreferenceStorage.APP_LIST_SELECTED_POSITION, 0);
+    mSelectedPosition = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_POSITION, 0);
 
     List<AppInfo> data = AppInfoListLoader.getUserApplications(getContext());
     // PackageManager pm = getContext().getPackageManager();
@@ -143,7 +143,7 @@ public class AppListView extends RecyclerView {
             notifyItemChanged(position);
             notifyItemChanged(mSelectedPosition);
             mSelectedPosition = position;
-            PreferenceStorage.getInstance(getContext()).put(PreferenceStorage.APP_LIST_SELECTED_POSITION, position);
+            Preferences.getInstance(getContext()).put(Preferences.APP_LIST_SELECTED_POSITION, position);
           }
         });
       }
