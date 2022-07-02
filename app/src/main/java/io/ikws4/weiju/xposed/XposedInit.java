@@ -37,7 +37,7 @@ public class XposedInit implements IXposedHookLoadPackage {
                 Logger.d("Android:", Build.VERSION.RELEASE);
                 Logger.d("========================== END ==========================");
 
-                onApplicationCreated(lpparam, (Context) param.args[0]);
+                onApplicationCreated(lpparam, context);
             }
         });
     }
