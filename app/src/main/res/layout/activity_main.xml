@@ -37,7 +37,13 @@
             app:dividerColor="@color/surface"
             android:layout_height="match_parent" />
 
-        <io.ikws4.codeeditor.CodeEditor
+<!--        <io.ikws4.codeeditor.CodeEditor-->
+<!--            android:id="@+id/code_editor"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="match_parent"/>-->
+
+        <io.ikws4.weiju.editor.Editor
             android:id="@+id/code_editor"
             android:layout_width="0dp"
             android:layout_weight="1"

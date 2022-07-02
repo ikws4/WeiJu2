@@ -6,7 +6,7 @@ public class Logger {
     private static final String TAG = "WeiJu";
     private static final StringBuilder sb = new StringBuilder();
 
-    public static void d(Object... msgs) {
+    public static void d(String tag, Object... msgs) {
         pack(msgs);
         Log.d(TAG, sb.toString());
     }

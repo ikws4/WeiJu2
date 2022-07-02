@@ -1,7 +1,6 @@
 package io.ikws4.weiju;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,8 +12,7 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
-import io.ikws4.codeeditor.CodeEditor;
-import io.ikws4.codeeditor.api.document.Document;
+import io.github.rosemoe.sora.widget.CodeEditor;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.view.AppListView;
 
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar.setOnMenuItemClickListener((menu) -> {
             if (menu.getItemId() == R.id.menu_run) {
-                LuaValue chunk = globals.load(mEditor.getDocument().toString());
+                LuaValue chunk = globals.load(mEditor.getText().toString());
                 LuaValue result = chunk.call();
                 Toast.makeText(this, result + "", Toast.LENGTH_SHORT).show();
                 return true;
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mZenMode = !mZenMode;
             } else if (menu.getItemId() == R.id.menu_save) {
-                mStorage.put(mAppList.getSelectedPkg().toString(), mEditor.getDocument().toString());
+                mStorage.put(mAppList.getSelectedPkg().toString(), mEditor.getText().toString());
             } else if (menu.getItemId() == R.id.menu_xposed_status) {
                 Toast.makeText(this, "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
             }
@@ -69,9 +67,10 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
 
         mAppList.setOnItemClickListener((pkg) -> {
-            mEditor.setDocument(new Document(mStorage.get(pkg.toString())));
+            mEditor.setText(mStorage.get(pkg.toString()));
         });
 
-        mEditor.setDocument(new Document(mStorage.get(mAppList.getSelectedPkg().toString())));
+        mEditor.setText(mStorage.get(mAppList.getSelectedPkg().toString()));
     }
+
 }
