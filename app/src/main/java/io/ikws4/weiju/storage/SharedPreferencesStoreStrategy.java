@@ -3,11 +3,11 @@ package io.ikws4.weiju.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-class WorldReadableStoreStrategy implements StoreStrategy {
+class SharedPreferencesStoreStrategy implements StoreStrategy {
   private final SharedPreferences store;
 
-  public WorldReadableStoreStrategy(Context context) {
-    store = context.getSharedPreferences(STORE_NAME, Context.MODE_WORLD_READABLE);
+  public SharedPreferencesStoreStrategy(Context context, int mode) {
+    store = context.getSharedPreferences(STORE_NAME, mode);
   }
 
   @Override

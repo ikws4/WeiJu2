@@ -1,6 +1,7 @@
 package io.ikws4.weiju;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +19,10 @@ import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.view.AppListView;
 
 public class MainActivity extends AppCompatActivity {
+    // For xposed to hook this variable to indicate
+    // that xposed works.
+    private static boolean XPOSED_ENABLED = false;
+
     private CodeEditor mEditor;
     private Toolbar mToolbar;
     private AppListView mAppList;
@@ -56,9 +61,12 @@ public class MainActivity extends AppCompatActivity {
                 mZenMode = !mZenMode;
             } else if (menu.getItemId() == R.id.menu_save) {
                 mStorage.put(mAppList.getSelectedPkg().toString(), mEditor.getDocument().toString());
+            } else if (menu.getItemId() == R.id.menu_xposed_status) {
+                Toast.makeText(this, "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
             }
             return false;
         });
+        mToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
 
         mAppList.setOnItemClickListener((pkg) -> {
             mEditor.setDocument(new Document(mStorage.get(pkg.toString())));

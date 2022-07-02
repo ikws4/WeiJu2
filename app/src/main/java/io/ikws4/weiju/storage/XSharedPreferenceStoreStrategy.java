@@ -1,15 +1,17 @@
 package io.ikws4.weiju.storage;
 
-import android.content.SharedPreferences;
-
 import de.robv.android.xposed.XSharedPreferences;
 import io.ikws4.weiju.BuildConfig;
 
-class XposedStoreStrategy implements StoreStrategy {
-  private final SharedPreferences store;
+class XSharedPreferenceStoreStrategy implements StoreStrategy {
+  private final XSharedPreferences store;
 
-  public XposedStoreStrategy() {
+  public XSharedPreferenceStoreStrategy() {
     store = new XSharedPreferences(BuildConfig.APPLICATION_ID, STORE_NAME);
+  }
+
+  public boolean canRead() {
+    return store.getFile().canRead();
   }
 
   @Override

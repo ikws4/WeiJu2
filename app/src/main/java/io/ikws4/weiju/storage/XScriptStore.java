@@ -1,31 +1,37 @@
 package io.ikws4.weiju.storage;
 
-import android.app.AndroidAppHelper;
 import android.content.Context;
+import android.os.Build;
+
+import io.ikws4.weiju.util.Logger;
 
 public class XScriptStore {
-  private final StoreStrategy stragegy;
+    private final StoreStrategy strategy;
 
-  public XScriptStore(Context context) {
-    XposedStoreStrategy xposedStoreStrategy = new XposedStoreStrategy();
-    if (xposedStoreStrategy.get("flag").equals("1")) {
-      stragegy = xposedStoreStrategy;
-    } else {
-      stragegy = new RemoteStoreStrategy(context);
+    public XScriptStore(Context context) {
+        XSharedPreferenceStoreStrategy strategy = new XSharedPreferenceStoreStrategy();
+        if (strategy.canRead()) {
+            this.strategy = strategy;
+            Logger.d("XScriptStore:", "use XSharedPreferenceStoreStrategy");
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
+            this.strategy = new RemoteSharedPreferencesStoreStrategy(context);
+            Logger.d("XScriptStore:", "use RemoteSharedPreferencesStoreStrategy");
+        } else {
+            this.strategy = new EmptyStoreStrategy();
+            Logger.e("XScriptStore:", "can not load scripts.");
+        }
     }
-  }
 
-  public String get(String k) {
-    return stragegy.get(k);
-  }
-
-  private static XScriptStore instance;
-
-  public static XScriptStore getInstance() {
-    if (instance == null) {
-      Context context = AndroidAppHelper.currentApplication();
-      instance = new XScriptStore(context);
+    public String get(String k) {
+        return strategy.get(k);
     }
-    return instance;
-  }
+
+    private static XScriptStore instance;
+
+    public static XScriptStore getInstance(Context context) {
+        if (instance == null) {
+            instance = new XScriptStore(context);
+        }
+        return instance;
+    }
 }

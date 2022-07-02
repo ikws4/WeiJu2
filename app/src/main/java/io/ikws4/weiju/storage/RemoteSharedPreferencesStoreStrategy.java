@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 import com.crossbowffs.remotepreferences.RemotePreferenceProvider;
 import com.crossbowffs.remotepreferences.RemotePreferences;
 
-public class RemoteStoreStrategy implements StoreStrategy {
-  private static final String AUTHORITY = "io.ikws4.weiju.storage";
+public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
+  static final String AUTHORITY = "io.ikws4.weiju.storage";
   private final SharedPreferences store;
 
-  public RemoteStoreStrategy(Context context) {
+  public RemoteSharedPreferencesStoreStrategy(Context context) {
     store = new RemotePreferences(context, AUTHORITY, STORE_NAME);
   }
 

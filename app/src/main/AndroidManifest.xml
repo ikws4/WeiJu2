@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.ikws4.weiju">
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
@@ -11,6 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeiJu">
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="Make Xposed Scirptable" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="56" />
+        <meta-data
+            android:name="xposedsharedprefs"
+            android:value="true"/>
 
         <activity android:name=".MainActivity"
             android:exported="true">
@@ -21,9 +34,11 @@
         </activity>
 
         <provider
-            android:name=".storage.RemoteStoreStrategy$SharedPreferenceProvider"
+            android:name=".storage.RemoteSharedPreferencesStoreStrategy$SharedPreferenceProvider"
             android:authorities="io.ikws4.weiju.storage"
-            android:exported="true"/>
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
     </application>
 
 </manifest>
