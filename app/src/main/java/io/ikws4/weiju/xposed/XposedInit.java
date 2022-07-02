@@ -11,13 +11,11 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.storage.XScriptStore;
 import io.ikws4.weiju.util.Logger;
-import io.ikws4.weiju.util.Strings;
 
 public class XposedInit implements IXposedHookLoadPackage {
     /* package */ static ClassLoader classLoader;
