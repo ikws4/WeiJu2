@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
@@ -15,6 +16,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.view.AppListView;
+import io.ikws4.weiju.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
     // For xposed to hook this variable to indicate
@@ -29,10 +31,13 @@ public class MainActivity extends AppCompatActivity {
 
     private ScriptStore mStorage;
 
+    private MainViewModel mViewModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mStorage = ScriptStore.getInstance(this);
 
@@ -70,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
             mEditor.setText(mStorage.get(pkg.toString()));
         });
 
-        mEditor.setText(mStorage.get(mAppList.getSelectedPkg().toString()));
+        mViewModel.getAppInfos().observe(this, (infos) -> {
+            mAppList.addData(infos);
+            mEditor.setText(mStorage.get(mAppList.getSelectedPkg().toString()));
+        });
     }
 
 }

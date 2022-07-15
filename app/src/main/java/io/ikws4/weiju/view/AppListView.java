@@ -14,14 +14,15 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
-import io.ikws4.weiju.util.AppInfoListLoader;
 import io.ikws4.weiju.util.UnitConverter;
 
 public class AppListView extends RecyclerView {
@@ -39,27 +40,10 @@ public class AppListView extends RecyclerView {
     init();
   }
 
-  public AppListView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    init();
-  }
-
   private void init() {
     mSelectedPosition = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_POSITION, 0);
-
-    List<AppInfo> data = AppInfoListLoader.getUserApplications(getContext());
-    // PackageManager pm = getContext().getPackageManager();
-    // for (ApplicationInfo info : pm.getInstalledApplications(0)) {
-    //     // Skip System Applications
-    //     if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-    //     if (BuildConfig.DEBUG && data.size() > 5) break;
-    //
-    //     CharSequence name = info.loadLabel(pm);
-    //     CharSequence pkg = info.packageName;
-    //     Drawable icon = info.loadIcon(pm);
-    //     data.add(new AppInfo(name, pkg, icon));
-    // }
-    setAdapter(mAdapter = new Adapter(data));
+    mAdapter = new Adapter();
+    setAdapter(mAdapter);
     setLayoutManager(new LinearLayoutManager(getContext()));
   }
 
@@ -68,14 +52,18 @@ public class AppListView extends RecyclerView {
   }
 
   public CharSequence getSelectedPkg() {
-    return mAdapter.data.get(mSelectedPosition).pkg;
+    return mAdapter.getSelectedPkg();
   }
 
-  class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-    private List<AppInfo> data;
+  public void addData(List<AppInfo> data) {
+    mAdapter.addData(data);
+  }
 
-    public Adapter(List<AppInfo> data) {
-      this.data = data;
+  private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+    private final List<AppInfo> mData = new ArrayList<>();
+
+    public Adapter() {
+      mData.add(null);
     }
 
     @NonNull
@@ -90,7 +78,7 @@ public class AppListView extends RecyclerView {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-      if (position < data.size() - 1) {
+      if (position < mData.size() - 1) {
         holder.bind(position);
       } else {
         holder.itemView.setOnClickListener((v -> {
@@ -101,16 +89,26 @@ public class AppListView extends RecyclerView {
 
     @Override
     public int getItemCount() {
-      return data.size();
+      return mData.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-      if (position < data.size() - 1) return 0;
+      if (position < mData.size() - 1) return 0;
       return 1;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public void addData(List<AppInfo> data) {
+      int insertPoint = mData.size() - 1;
+      mData.addAll(insertPoint, data);
+      notifyItemRangeInserted(insertPoint, data.size());
+    }
+
+    public CharSequence getSelectedPkg() {
+      return mData.get(mSelectedPosition).pkg;
+    }
+
+    private class ViewHolder extends RecyclerView.ViewHolder {
       private final AppCompatTextView tvName;
       private final ShapeableImageView imgIcon;
 
@@ -121,12 +119,14 @@ public class AppListView extends RecyclerView {
       }
 
       public void bind(int position) {
-        AppInfo item = data.get(position);
+        AppInfo item = mData.get(position);
 
         tvName.setText(item.name);
-        imgIcon.setImageBitmap(item.icon);
+        Glide.with(getContext())
+            .load(item.info)
+            .into(imgIcon);
 
-        AppInfo lastSelectedItem = data.get(mSelectedPosition);
+        AppInfo lastSelectedItem = mData.get(mSelectedPosition);
         if (item.pkg.equals(lastSelectedItem.pkg)) {
           imgIcon.setStrokeWidth(UnitConverter.dp(2));
           imgIcon.setImageTintList(null);
@@ -153,4 +153,9 @@ public class AppListView extends RecyclerView {
   public interface OnItemClickListener {
     void onClick(CharSequence pkg);
   }
+
+
+  // >>> Dialog
+
+  // <<< Dialog
 }

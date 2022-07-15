@@ -1,16 +1,15 @@
 package io.ikws4.weiju.data;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.content.pm.ApplicationInfo;
 
 public class AppInfo {
   public CharSequence name;
   public CharSequence pkg;
-  public Bitmap icon;
+  public ApplicationInfo info;
 
-  public AppInfo(CharSequence name, CharSequence pkg, Bitmap icon) {
+  public AppInfo(CharSequence name, CharSequence pkg, ApplicationInfo info) {
     this.name = name;
     this.pkg = pkg;
-    this.icon = icon;
+    this.info = info;
   }
 }
