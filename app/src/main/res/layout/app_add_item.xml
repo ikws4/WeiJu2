@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:paddingHorizontal="16dp">
+    android:layout_marginHorizontal="16dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_add"

@@ -28,6 +28,7 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.UnitConverter;
+import io.ikws4.weiju.widget.VerticalSpacingItemDecorator;
 import io.ikws4.weiju.widget.dialog.SearchListDialog;
 
 public class AppListView extends RecyclerView {
@@ -50,6 +51,7 @@ public class AppListView extends RecyclerView {
     mAdapter = new Adapter();
     setAdapter(mAdapter);
     setLayoutManager(new LinearLayoutManager(getContext()));
+    addItemDecoration(new VerticalSpacingItemDecorator(UnitConverter.dp(16)));
   }
 
   public void setOnItemClickListener(OnItemClickListener l) {
