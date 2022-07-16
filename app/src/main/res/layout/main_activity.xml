@@ -24,12 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <io.ikws4.weiju.view.AppListView
-            android:id="@+id/rv_app_list"
+        <io.ikws4.weiju.widget.view.AppListView
+            android:id="@+id/rv_item_list"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/base"
-            tools:listitem="@layout/item_app"
+            tools:listitem="@layout/app_item"
             tools:itemCount="5" />
 
         <com.google.android.material.divider.MaterialDivider

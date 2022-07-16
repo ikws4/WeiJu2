@@ -1,7 +1,9 @@
-package io.ikws4.weiju.view;
+package io.ikws4.weiju.widget.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +21,14 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.UnitConverter;
+import io.ikws4.weiju.widget.dialog.SearchListDialog;
 
 public class AppListView extends RecyclerView {
   private OnItemClickListener mOnItemClickListener;
@@ -69,8 +74,8 @@ public class AppListView extends RecyclerView {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-      int resId = R.layout.item_app;
-      if (viewType == 1) resId = R.layout.item_add_app;
+      int resId = R.layout.app_item;
+      if (viewType == 1) resId = R.layout.app_add_item;
 
       View view = LayoutInflater.from(parent.getContext()).inflate(resId, parent, false);
       return new ViewHolder(view);
@@ -83,6 +88,14 @@ public class AppListView extends RecyclerView {
       } else {
         holder.itemView.setOnClickListener((v -> {
           Toast.makeText(v.getContext(), "Add app", Toast.LENGTH_SHORT).show();
+          SearchListDialog searchListDialog = new SearchListDialog(getContext());
+          searchListDialog.setItems(
+              mData.stream()
+                  .filter(Objects::nonNull)
+                  .map(item -> new SearchListDialog.Item(item.name, new ColorDrawable(Color.WHITE)))
+                  .collect(Collectors.toList())
+          );
+          searchListDialog.show();
         }));
       }
     }
@@ -153,7 +166,6 @@ public class AppListView extends RecyclerView {
   public interface OnItemClickListener {
     void onClick(CharSequence pkg);
   }
-
 
   // >>> Dialog
 

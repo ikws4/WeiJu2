@@ -15,7 +15,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.ikws4.weiju.storage.ScriptStore;
-import io.ikws4.weiju.view.AppListView;
+import io.ikws4.weiju.widget.view.AppListView;
 import io.ikws4.weiju.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mStorage = ScriptStore.getInstance(this);
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         mEditor = findViewById(R.id.code_editor);
         mToolbar = findViewById(R.id.toolbar);
-        mAppList = findViewById(R.id.rv_app_list);
+        mAppList = findViewById(R.id.rv_item_list);
 
         mToolbar.setOnMenuItemClickListener((menu) -> {
             if (menu.getItemId() == R.id.menu_run) {
