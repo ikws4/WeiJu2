@@ -13,17 +13,19 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         app:shapeAppearance="@style/ShapeAppearanceOverlay.WeiJu.Circle"
+        app:tint="@color/subtle"
+        app:tintMode="multiply"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="4dp"
+        android:layout_marginLeft="8dp"
         android:gravity="center"
         android:maxLines="1"
         android:text="Title"
-        android:textColor="@color/text"
-        android:textSize="12sp" />
+        android:textColor="@color/subtle"
+        android:textSize="13sp" />
 
 </LinearLayout>

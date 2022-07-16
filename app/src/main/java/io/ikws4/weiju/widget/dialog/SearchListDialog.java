@@ -50,7 +50,6 @@ public class SearchListDialog extends Dialog {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
         lp.width = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * 0.85);
-        lp.height = (int) (Resources.getSystem().getDisplayMetrics().heightPixels * 0.48);
         getWindow().setAttributes(lp);
 
         RecyclerView rv = findViewById(R.id.rv_item_list);
