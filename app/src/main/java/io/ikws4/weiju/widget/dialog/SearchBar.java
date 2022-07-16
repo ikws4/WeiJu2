@@ -74,19 +74,23 @@ public class SearchBar extends Dialog {
             @Override
             public void afterTextChanged(Editable s) {
                 filter(s);
-
-                if (mDisplayItems.size() == 0) {
-                    vDivider.setVisibility(View.GONE);
-                } else {
-                    vDivider.setVisibility(View.VISIBLE);
-                }
             }
         });
+
     }
 
     private void filter(CharSequence s) {
         mDisplayItems = mSourceItems.stream().filter((item) -> isSubsequence(s, item.title)).collect(Collectors.toList());
+        updateDividerVisibility();
         mAdapter.notifyDataSetChanged();
+    }
+
+    private void updateDividerVisibility() {
+        if (mDisplayItems == null || mDisplayItems.size() == 0) {
+            vDivider.setVisibility(View.GONE);
+        } else {
+            vDivider.setVisibility(View.VISIBLE);
+        }
     }
 
     // check a if the subsequence of b
