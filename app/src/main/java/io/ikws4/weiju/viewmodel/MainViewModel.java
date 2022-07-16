@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.ikws4.weiju.data.AppInfo;
@@ -36,6 +37,7 @@ public class MainViewModel extends AndroidViewModel {
     private void loadApplicationInfos() {
         PackageManager pm = getApplication().getPackageManager();
 
+        List<AppInfo> data = new ArrayList<>();
         disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
             .filter(info -> (info.flags & ApplicationInfo.FLAG_SYSTEM) == 0)
@@ -43,7 +45,8 @@ public class MainViewModel extends AndroidViewModel {
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
-                appInfos.setValue(infos);
+                data.addAll(infos);
+                appInfos.setValue(data);
             }));
     }
 

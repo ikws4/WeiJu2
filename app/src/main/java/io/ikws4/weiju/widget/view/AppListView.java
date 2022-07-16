@@ -6,12 +6,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,8 +20,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.data.AppInfo;
@@ -60,15 +59,27 @@ public class AppListView extends RecyclerView {
         return mAdapter.getSelectedPkg();
     }
 
-    public void addData(List<AppInfo> data) {
-        mAdapter.addData(data);
+    public void setData(List<AppInfo> data) {
+        // mAdapter.addData(data);
+        mAdapter.submitList(data);
     }
 
-    private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-        private final List<AppInfo> mData = new ArrayList<>();
+    private static final DiffUtil.ItemCallback<AppInfo> CALLBACK = new DiffUtil.ItemCallback<AppInfo>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
+    private class Adapter extends ListAdapter<AppInfo, Adapter.ViewHolder> {
 
         public Adapter() {
-            mData.add(null);
+            super(CALLBACK);
         }
 
         @NonNull
@@ -83,18 +94,17 @@ public class AppListView extends RecyclerView {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (position < mData.size() - 1) {
+            if (position < getRealItemCount()) {
                 holder.bind(position);
             } else {
                 holder.itemView.setOnClickListener((v -> {
-                    Toast.makeText(v.getContext(), "Add app", Toast.LENGTH_SHORT).show();
+                    List<SearchBar.Item> items = new ArrayList<>();
+                    for (int i = 0; i < getRealItemCount(); i++) {
+                        AppInfo info = getItem(i);
+                        items.add(new SearchBar.Item(info.name, info.imgUri));
+                    }
                     new SearchBar.Builder(getContext())
-                        .setItems(
-                            mData.stream()
-                                .filter(Objects::nonNull)
-                                .map(item -> new SearchBar.Item(item.name, item.imgUri))
-                                .collect(Collectors.toList())
-                        )
+                        .setItems(items)
                         .onItemClick(item -> true)
                         .show();
                 }));
@@ -103,23 +113,25 @@ public class AppListView extends RecyclerView {
 
         @Override
         public int getItemCount() {
-            return mData.size();
+            return super.getItemCount() + 1;
+        }
+
+        public int getRealItemCount() {
+            return super.getItemCount();
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position < mData.size() - 1) return 0;
+            if (position < getItemCount() - 1) return 0;
             return 1;
         }
 
-        public void addData(List<AppInfo> data) {
-            int insertPoint = mData.size() - 1;
-            mData.addAll(insertPoint, data);
-            notifyItemRangeInserted(insertPoint, data.size());
-        }
-
         public CharSequence getSelectedPkg() {
-            return mData.get(mSelectedPosition).pkg;
+            if (0 <= mSelectedPosition && mSelectedPosition < getRealItemCount()) {
+                return getItem(mSelectedPosition).pkg;
+            } else {
+                return "";
+            }
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {
@@ -133,14 +145,14 @@ public class AppListView extends RecyclerView {
             }
 
             public void bind(int position) {
-                AppInfo item = mData.get(position);
+                AppInfo item = getItem(position);
 
                 tvName.setText(item.name);
                 Glide.with(getContext())
                     .load(item.imgUri)
                     .into(imgIcon);
 
-                if (mSelectedPosition < mData.size() && item.pkg.equals(mData.get(mSelectedPosition).pkg)) {
+                if (mSelectedPosition < getRealItemCount() && item.pkg.equals(getItem(mSelectedPosition).pkg)) {
                     imgIcon.setStrokeWidth(UnitConverter.dp(2));
                     imgIcon.setImageTintList(null);
                     tvName.setTextColor(getContext().getColor(R.color.text));

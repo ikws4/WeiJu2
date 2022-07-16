@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mViewModel.getAppInfos().observe(this, (infos) -> {
-            mAppList.addData(infos);
+            mAppList.setData(infos);
             mEditor.setText(mStorage.get(mAppList.getSelectedPkg().toString()));
         });
     }
