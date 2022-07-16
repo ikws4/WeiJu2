@@ -5,12 +5,16 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 
+import java.util.Set;
+import java.util.function.Function;
+
 public class Preferences {
   private static final String STORE_NAME = "preference";
   private final SharedPreferences storage;
 
   /// Keys
-  public static final String APP_LIST_SELECTED_POSITION = "app_list_selected_position";
+  public static final String APP_LIST_SELECTED_PACKAGE = "app_list_selected_package";
+  public static final String APP_LIST = "app_list";
 
   private Preferences(Context context) {
     storage = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
@@ -37,6 +41,13 @@ public class Preferences {
     return storage.getBoolean(key, defValue);
   }
 
+  public Set<String> get(String key, Function<Void, Set<String>> defValue) {
+    if (storage.contains(key)) {
+      return storage.getStringSet(key, null);
+    }
+    return storage.getStringSet(key, defValue.apply(null));
+  }
+
   public boolean contains(String key) {
     return storage.contains(key);
   }
@@ -59,6 +70,10 @@ public class Preferences {
 
   public void put(String key, boolean value) {
     storage.edit().putBoolean(key, value).apply();
+  }
+
+  public void put(String key, Set<String> value) {
+    storage.edit().putStringSet(key, value).apply();
   }
 
   public void remove(String key) {

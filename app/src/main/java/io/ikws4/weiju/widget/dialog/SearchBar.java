@@ -159,10 +159,12 @@ public class SearchBar extends Dialog {
     public static class Item {
         public final CharSequence title;
         public final String iconUri;
+        public final Object userData;
 
-        public Item(CharSequence title, String iconUri) {
+        public Item(CharSequence title, String iconUri, Object userData) {
             this.title = title;
             this.iconUri = iconUri;
+            this.userData= userData;
         }
     }
 

@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.ikws4.weiju.R;
@@ -26,12 +25,12 @@ import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.UnitConverter;
 import io.ikws4.weiju.widget.VerticalSpacingItemDecorator;
-import io.ikws4.weiju.widget.dialog.SearchBar;
 
 public class AppListView extends RecyclerView {
     private OnItemClickListener mOnItemClickListener;
+    private View.OnClickListener mOnAddAppClickListener;
     private Adapter mAdapter;
-    private int mSelectedPosition;
+    private String mSelectedPackage;
 
     public AppListView(@NonNull Context context) {
         super(context);
@@ -44,7 +43,7 @@ public class AppListView extends RecyclerView {
     }
 
     private void init() {
-        mSelectedPosition = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_POSITION, 0);
+        mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
         mAdapter = new Adapter();
         setAdapter(mAdapter);
         setLayoutManager(new LinearLayoutManager(getContext()));
@@ -55,12 +54,11 @@ public class AppListView extends RecyclerView {
         mOnItemClickListener = l;
     }
 
-    public CharSequence getSelectedPkg() {
-        return mAdapter.getSelectedPkg();
+    public void setOnAddAppClickListener(OnClickListener onAddAppClickListener) {
+        mOnAddAppClickListener = onAddAppClickListener;
     }
 
     public void setData(List<AppInfo> data) {
-        // mAdapter.addData(data);
         mAdapter.submitList(data);
     }
 
@@ -97,17 +95,7 @@ public class AppListView extends RecyclerView {
             if (position < getRealItemCount()) {
                 holder.bind(position);
             } else {
-                holder.itemView.setOnClickListener((v -> {
-                    List<SearchBar.Item> items = new ArrayList<>();
-                    for (int i = 0; i < getRealItemCount(); i++) {
-                        AppInfo info = getItem(i);
-                        items.add(new SearchBar.Item(info.name, info.imgUri));
-                    }
-                    new SearchBar.Builder(getContext())
-                        .setItems(items)
-                        .onItemClick(item -> true)
-                        .show();
-                }));
+                holder.itemView.setOnClickListener(mOnAddAppClickListener);
             }
         }
 
@@ -124,14 +112,6 @@ public class AppListView extends RecyclerView {
         public int getItemViewType(int position) {
             if (position < getItemCount() - 1) return 0;
             return 1;
-        }
-
-        public CharSequence getSelectedPkg() {
-            if (0 <= mSelectedPosition && mSelectedPosition < getRealItemCount()) {
-                return getItem(mSelectedPosition).pkg;
-            } else {
-                return "";
-            }
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {
@@ -152,7 +132,7 @@ public class AppListView extends RecyclerView {
                     .load(item.imgUri)
                     .into(imgIcon);
 
-                if (mSelectedPosition < getRealItemCount() && item.pkg.equals(getItem(mSelectedPosition).pkg)) {
+                if (item.pkg.equals(mSelectedPackage)) {
                     imgIcon.setStrokeWidth(UnitConverter.dp(2));
                     imgIcon.setImageTintList(null);
                     tvName.setTextColor(getContext().getColor(R.color.text));
@@ -163,12 +143,20 @@ public class AppListView extends RecyclerView {
                 }
 
                 itemView.setOnClickListener((v) -> {
-                    mOnItemClickListener.onClick(item.pkg);
-                    if (position != mSelectedPosition) {
-                        notifyItemChanged(position);
-                        notifyItemChanged(mSelectedPosition);
-                        mSelectedPosition = position;
-                        Preferences.getInstance(getContext()).put(Preferences.APP_LIST_SELECTED_POSITION, position);
+                    if (mOnAddAppClickListener != null) {
+                        mOnItemClickListener.onClick(item.pkg);
+                    }
+                    AppInfo info = getItem(getLayoutPosition());
+                    if (!info.pkg.equals(mSelectedPackage)) {
+                        for (int i = 0; i < getRealItemCount(); i++) {
+                            if (getItem(i).pkg.equals(mSelectedPackage)) {
+                                notifyItemChanged(i);
+                                break;
+                            }
+                        }
+                        notifyItemChanged(getLayoutPosition());
+                        mSelectedPackage = info.pkg;
+                        Preferences.getInstance(getContext()).put(Preferences.APP_LIST_SELECTED_PACKAGE, mSelectedPackage);
                     }
                 });
             }
@@ -176,10 +164,6 @@ public class AppListView extends RecyclerView {
     }
 
     public interface OnItemClickListener {
-        void onClick(CharSequence pkg);
+        void onClick(String pkg);
     }
-
-    // >>> Dialog
-
-    // <<< Dialog
 }
