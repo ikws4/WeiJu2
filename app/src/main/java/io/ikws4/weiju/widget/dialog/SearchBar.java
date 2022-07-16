@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
 
-public class SearchListDialog extends Dialog {
+public class SearchBar extends Dialog {
     private OnItemClickListener mOnItemClickListener;
     private final List<Item> mSourceItems = new ArrayList<>();
     private List<Item> mDisplayItems;
@@ -38,7 +38,7 @@ public class SearchListDialog extends Dialog {
     private final ImageButton vSearch;
     private final MaterialDivider vDivider;
 
-    public SearchListDialog(@NonNull Context context) {
+    private SearchBar(@NonNull Context context) {
         super(context);
         setContentView(R.layout.search_list_dialog);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -146,7 +146,9 @@ public class SearchListDialog extends Dialog {
                     .into(vIcon);
                 itemView.setOnClickListener((v) -> {
                     if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onClick(item);
+                        if (mOnItemClickListener.onClick(item)) {
+                            dismiss();
+                        }
                     }
                 });
             }
@@ -165,6 +167,31 @@ public class SearchListDialog extends Dialog {
     }
 
     public interface OnItemClickListener {
-        void onClick(Item item);
+        /**
+         * @return true dismiss the search bar
+         */
+        boolean onClick(Item item);
+    }
+
+    public static class Builder {
+        private final SearchBar mSearchBar;
+
+        public Builder(Context context) {
+            mSearchBar = new SearchBar(context);
+        }
+
+        public Builder setItems(List<Item> items) {
+            mSearchBar.setItems(items);
+            return this;
+        }
+
+        public Builder onItemClick(OnItemClickListener l) {
+            mSearchBar.setOnItemClickListener(l);
+            return this;
+        }
+
+        public void show() {
+            mSearchBar.show();
+        }
     }
 }
