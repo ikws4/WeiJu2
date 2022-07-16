@@ -21,7 +21,7 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
-import io.ikws4.weiju.viewmodel.MainViewModel;
+import io.ikws4.weiju.viewmodel.AppListViewModel;
 import io.ikws4.weiju.widget.dialog.SearchBar;
 import io.ikws4.weiju.widget.view.AppListView;
 
@@ -39,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private ScriptStore mStorage;
     private Preferences mPreferences;
 
-    private MainViewModel mViewModel;
+    private AppListViewModel mViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AppListViewModel.class);
 
         mStorage = ScriptStore.getInstance(this);
         mPreferences = Preferences.getInstance(this);

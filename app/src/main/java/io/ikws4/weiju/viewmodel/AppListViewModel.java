@@ -10,9 +10,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
@@ -21,7 +24,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MainViewModel extends AndroidViewModel {
+public class AppListViewModel extends AndroidViewModel {
     private final MutableLiveData<List<AppInfo>> selectedAppInfos = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<AppInfo>> unSelectedAppInfos = new MutableLiveData<>(new ArrayList<>());
 
@@ -29,7 +32,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private final Preferences mPreferences;
 
-    public MainViewModel(@NonNull Application application) {
+    public AppListViewModel(@NonNull Application application) {
         super(application);
         mPreferences = Preferences.getInstance(getApplication());
         loadApplicationInfos();
@@ -45,7 +48,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void selectApp(String pkg) {
         Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>()));
-        selected.add(pkg);
+        selected.add(pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
 
         unSelectedAppInfos.getValue()
@@ -55,6 +58,7 @@ public class MainViewModel extends AndroidViewModel {
             .ifPresent(info -> {
                 List<AppInfo> infos = selectedAppInfos.getValue();
                 infos.add(info);
+
                 selectedAppInfos.setValue(new ArrayList<>(infos));
 
                 infos = unSelectedAppInfos.getValue();
@@ -64,25 +68,35 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     private void loadApplicationInfos() {
-        loadApplicationInfos(true, selectedAppInfos);
-        loadApplicationInfos(false, unSelectedAppInfos);
-    }
-
-    private void loadApplicationInfos(boolean isLoadSelected, MutableLiveData<List<AppInfo>> liveData) {
         PackageManager pm = getApplication().getPackageManager();
-        Set<String> selected = mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>());
+        Set<String> selectedAppWithTime = mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>());
+        Map<String, Long> map = selectedAppWithTime.stream()
+            .collect(Collectors.toMap(it -> it.split(",")[0], it -> Long.valueOf(it.split(",")[1])));
 
-        List<AppInfo> data = new ArrayList<>();
+        List<AppInfo> selectedData = new ArrayList<>();
         disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
-            .filter(info -> selected.contains(info.packageName) == isLoadSelected)
-            .map((info) -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, isSystemApp(info)))
-            .sorted((a, b) -> Boolean.compare(a.isSystemApp, b.isSystemApp))
+            .filter(info -> map.containsKey(info.packageName))
+            .map(info -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, isSystemApp(info)))
+            .sorted(Comparator.comparingLong(a -> map.get(a.pkg)))
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
-                data.addAll(infos);
-                liveData.setValue(data);
+                selectedData.addAll(infos);
+                selectedAppInfos.setValue(selectedData);
+            }));
+
+        List<AppInfo> unSelectedData = new ArrayList<>();
+        disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
+            .subscribeOn(Schedulers.io())
+            .filter(info -> !map.containsKey(info.packageName))
+            .map(info -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, isSystemApp(info)))
+            .sorted(AppInfo::compareTo)
+            .buffer(5, 5)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(infos -> {
+                unSelectedData.addAll(infos);
+                unSelectedAppInfos.setValue(unSelectedData);
             }));
     }
 
