@@ -37,8 +37,7 @@ dependencies {
 
     implementation project(path: ':jsitter')
     implementation project(path: ':glide')
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 
     implementation 'org.luaj:luaj-jse:3.0.1'
     implementation 'com.crossbowffs.remotepreferences:remotepreferences:0.8'

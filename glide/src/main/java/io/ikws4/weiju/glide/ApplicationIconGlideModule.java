@@ -16,6 +16,6 @@ public class ApplicationIconGlideModule extends LibraryGlideModule {
 
     @Override
     public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
-        registry.prepend(ApplicationInfo.class, Drawable.class, new ApplicationIconModelLoader.Factory(context));
+        registry.append(ApplicationInfo.class, Drawable.class, new ApplicationIconModelLoader.Factory(context));
     }
 }
