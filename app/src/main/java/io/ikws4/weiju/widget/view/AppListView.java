@@ -2,8 +2,6 @@ package io.ikws4.weiju.widget.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,7 +92,7 @@ public class AppListView extends RecyclerView {
           searchListDialog.setItems(
               mData.stream()
                   .filter(Objects::nonNull)
-                  .map(item -> new SearchListDialog.Item(item.name, new ColorDrawable(Color.WHITE)))
+                  .map(item -> new SearchListDialog.Item(item.name, item.imgUri))
                   .collect(Collectors.toList())
           );
           searchListDialog.show();
@@ -138,7 +136,7 @@ public class AppListView extends RecyclerView {
 
         tvName.setText(item.name);
         Glide.with(getContext())
-            .load(item.info)
+            .load(item.imgUri)
             .into(imgIcon);
 
         if (mSelectedPosition < mData.size() && item.pkg.equals(mData.get(mSelectedPosition).pkg)) {

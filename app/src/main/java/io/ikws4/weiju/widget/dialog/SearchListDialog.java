@@ -3,7 +3,6 @@ package io.ikws4.weiju.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -20,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
@@ -142,7 +142,9 @@ public class SearchListDialog extends Dialog {
 
             public void bind(Item item) {
                 vTitle.setText(item.title);
-                vIcon.setImageDrawable(item.icon);
+                Glide.with(getContext())
+                    .load(item.iconUri)
+                    .into(vIcon);
                 itemView.setOnClickListener((v) -> {
                     if (mOnItemClickListener != null) {
                         mOnItemClickListener.onClick(item);
@@ -155,29 +157,11 @@ public class SearchListDialog extends Dialog {
 
     public static class Item {
         public final CharSequence title;
-        public final Drawable icon;
+        public final String iconUri;
 
-        public Item(CharSequence title, Drawable icon) {
+        public Item(CharSequence title, String iconUri) {
             this.title = title;
-            this.icon = icon;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Item item = (Item) o;
-
-            if (title != null ? !title.equals(item.title) : item.title != null) return false;
-            return icon != null ? icon.equals(item.icon) : item.icon == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = title != null ? title.hashCode() : 0;
-            result = 31 * result + (icon != null ? icon.hashCode() : 0);
-            return result;
+            this.iconUri = iconUri;
         }
     }
 

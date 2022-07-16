@@ -1,7 +1,6 @@
 package io.ikws4.weiju.glide;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,9 @@ import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.signature.ObjectKey;
 
-public class ApplicationIconModelLoader implements ModelLoader<ApplicationInfo, Drawable> {
+public class ApplicationIconModelLoader implements ModelLoader<String, Drawable> {
+    private static final String PREFIX = "pkg:";
+
     private final Context mContext;
 
     public ApplicationIconModelLoader(Context context) {
@@ -20,16 +21,16 @@ public class ApplicationIconModelLoader implements ModelLoader<ApplicationInfo, 
     }
 
     @Override
-    public LoadData<Drawable> buildLoadData(@NonNull ApplicationInfo info, int width, int height, @NonNull Options options) {
-        return new LoadData<>(new ObjectKey(info), new ApplicationIconDataFetcher(mContext, info));
+    public LoadData<Drawable> buildLoadData(@NonNull String s, int width, int height, @NonNull Options options) {
+        return new LoadData<>(new ObjectKey(s), new ApplicationIconDataFetcher(mContext, s.substring(PREFIX.length())));
     }
 
     @Override
-    public boolean handles(@NonNull ApplicationInfo info) {
-        return true;
+    public boolean handles(@NonNull String s) {
+        return s.startsWith(PREFIX);
     }
 
-    public static class Factory implements ModelLoaderFactory<ApplicationInfo, Drawable> {
+    public static class Factory implements ModelLoaderFactory<String, Drawable> {
         private final Context mContext;
 
         public Factory(Context context) {
@@ -38,7 +39,7 @@ public class ApplicationIconModelLoader implements ModelLoader<ApplicationInfo, 
 
         @NonNull
         @Override
-        public ModelLoader<ApplicationInfo, Drawable> build(@NonNull MultiModelLoaderFactory multiFactory) {
+        public ModelLoader<String, Drawable> build(@NonNull MultiModelLoaderFactory multiFactory) {
             return new ApplicationIconModelLoader(mContext);
         }
 

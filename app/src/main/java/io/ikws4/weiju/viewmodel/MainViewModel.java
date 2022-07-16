@@ -39,7 +39,7 @@ public class MainViewModel extends AndroidViewModel {
         disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
             .filter(info -> (info.flags & ApplicationInfo.FLAG_SYSTEM) == 0)
-            .map((info) -> new AppInfo(info.loadLabel(pm), info.packageName, info))
+            .map((info) -> new AppInfo(info.loadLabel(pm), info.packageName))
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
