@@ -1,51 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/surface"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:elevation="0dp"
+    app:cardBackgroundColor="@color/base"
+    app:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_input"
-            android:layout_width="0dp"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <EditText
+                android:id="@+id/et_input"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:imeOptions="actionSearch"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                android:textCursorDrawable="@drawable/cursor">
+
+                <requestFocus />
+
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/btn_search"
+                style="@style/Widget.AppCompat.ActionButton"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_search" />
+
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            app:dividerColor="@color/surface"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_item_list"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:imeOptions="actionSearch"
-            android:inputType="textAutoComplete"
-            android:maxLines="1"
-            android:textCursorDrawable="@drawable/cursor">
-
-            <requestFocus />
-
-        </EditText>
-
-
-        <ImageButton
-            android:id="@+id/btn_search"
-            style="@style/Widget.AppCompat.ActionButton"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_search" />
-
+            tools:itemCount="5"
+            tools:listitem="@layout/search_list_item" />
     </LinearLayout>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_item_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:itemCount="5"
-        tools:listitem="@layout/search_list_item" />
-</LinearLayout>
+</androidx.cardview.widget.CardView>

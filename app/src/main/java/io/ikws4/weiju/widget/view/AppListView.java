@@ -141,8 +141,7 @@ public class AppListView extends RecyclerView {
             .load(item.info)
             .into(imgIcon);
 
-        AppInfo lastSelectedItem = mData.get(mSelectedPosition);
-        if (item.pkg.equals(lastSelectedItem.pkg)) {
+        if (mSelectedPosition < mData.size() && item.pkg.equals(mData.get(mSelectedPosition).pkg)) {
           imgIcon.setStrokeWidth(UnitConverter.dp(2));
           imgIcon.setImageTintList(null);
           tvName.setTextColor(getContext().getColor(R.color.text));

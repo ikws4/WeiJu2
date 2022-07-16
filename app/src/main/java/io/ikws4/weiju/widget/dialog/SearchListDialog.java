@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
-import io.ikws4.weiju.util.UnitConverter;
-import io.ikws4.weiju.widget.VerticalSpacingItemDecorator;
 
 public class SearchListDialog extends Dialog {
     private OnItemClickListener mOnItemClickListener;
@@ -43,22 +41,22 @@ public class SearchListDialog extends Dialog {
     public SearchListDialog(@NonNull Context context) {
         super(context);
         setContentView(R.layout.search_list_dialog);
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         getWindow().setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         // bluring
         getWindow().setDimAmount(0.3f);
-        //  50% height
+        //  48% height
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
-        lp.width = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * 0.9);
-        lp.height = (int) (Resources.getSystem().getDisplayMetrics().heightPixels * 0.45);
+        lp.width = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * 0.85);
+        lp.height = (int) (Resources.getSystem().getDisplayMetrics().heightPixels * 0.48);
         getWindow().setAttributes(lp);
 
         RecyclerView rv = findViewById(R.id.rv_item_list);
         mAdapter = new Adapter();
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(mAdapter);
-        rv.addItemDecoration(new VerticalSpacingItemDecorator(UnitConverter.dp(8)));
 
         vInput = findViewById(R.id.et_input);
         vSearch = findViewById(R.id.btn_search);
