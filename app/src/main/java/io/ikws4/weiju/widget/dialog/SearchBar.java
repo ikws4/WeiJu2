@@ -38,7 +38,7 @@ public class SearchBar extends Dialog {
     private final ImageButton vSearch;
     private final MaterialDivider vDivider;
 
-    private SearchBar(@NonNull Context context) {
+    public SearchBar(@NonNull Context context) {
         super(context);
         setContentView(R.layout.search_list_dialog);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -76,7 +76,6 @@ public class SearchBar extends Dialog {
                 filter(s);
             }
         });
-
     }
 
     private void filter(CharSequence s) {
@@ -110,10 +109,19 @@ public class SearchBar extends Dialog {
 
     public void setItems(List<Item> items) {
         mSourceItems.clear();
-        mSourceItems.addAll(items);
-        filter("");
+        addItems(items);
     }
 
+    public void addItems(List<Item> items) {
+        mSourceItems.addAll(items);
+        filter(vInput.getText());
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        vInput.setText("");
+    }
 
     private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         @NonNull
@@ -179,25 +187,25 @@ public class SearchBar extends Dialog {
         boolean onClick(Item item);
     }
 
-    public static class Builder {
-        private final SearchBar mSearchBar;
-
-        public Builder(Context context) {
-            mSearchBar = new SearchBar(context);
-        }
-
-        public Builder setItems(List<Item> items) {
-            mSearchBar.setItems(items);
-            return this;
-        }
-
-        public Builder onItemClick(OnItemClickListener l) {
-            mSearchBar.setOnItemClickListener(l);
-            return this;
-        }
-
-        public void show() {
-            mSearchBar.show();
-        }
-    }
+    // public static class Builder {
+    //     private final SearchBar mSearchBar;
+    //
+    //     public Builder(Context context) {
+    //         mSearchBar = new SearchBar(context);
+    //     }
+    //
+    //     public Builder setItems(List<Item> items) {
+    //         mSearchBar.setItems(items);
+    //         return this;
+    //     }
+    //
+    //     public Builder onItemClick(OnItemClickListener l) {
+    //         mSearchBar.setOnItemClickListener(l);
+    //         return this;
+    //     }
+    //
+    //     public SearchBar build() {
+    //         return mSearchBar;
+    //     }
+    // }
 }

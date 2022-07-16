@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-public class AppInfo implements Comparable<AppInfo>{
+public class AppInfo {
     public final String name;
     public final String pkg;
     public final String imgUri;
@@ -28,14 +28,5 @@ public class AppInfo implements Comparable<AppInfo>{
     @Override
     public int hashCode() {
         return Objects.hash(name, pkg, imgUri, isSystemApp);
-    }
-
-    @Override
-    public int compareTo(AppInfo o) {
-        int res = Boolean.compare(isSystemApp, o.isSystemApp) ;
-        if (res == 0) {
-            return pkg.compareTo(o.pkg);
-        }
-        return res;
     }
 }

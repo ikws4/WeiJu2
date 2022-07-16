@@ -77,8 +77,8 @@ public class AppListViewModel extends AndroidViewModel {
         disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
             .filter(info -> map.containsKey(info.packageName))
+            .sorted(Comparator.comparingLong(a -> map.get(a.packageName)))
             .map(info -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, isSystemApp(info)))
-            .sorted(Comparator.comparingLong(a -> map.get(a.pkg)))
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
@@ -90,8 +90,14 @@ public class AppListViewModel extends AndroidViewModel {
         disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
             .filter(info -> !map.containsKey(info.packageName))
+            .sorted((a, b) -> {
+                int res = Boolean.compare(isSystemApp(a), isSystemApp(b));
+                if (res == 0) {
+                    return a.packageName.compareTo(b.packageName);
+                }
+                return res;
+            })
             .map(info -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, isSystemApp(info)))
-            .sorted(AppInfo::compareTo)
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {

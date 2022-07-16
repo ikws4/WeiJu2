@@ -7,18 +7,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import io.github.rosemoe.sora.widget.CodeEditor;
-import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.viewmodel.AppListViewModel;
@@ -84,21 +81,21 @@ public class MainActivity extends AppCompatActivity {
             mEditor.setText(mStorage.get(pkg));
         });
 
-        mAppList.setOnAddAppClickListener(v -> {
-            LiveData<List<AppInfo>> liveData = mViewModel.getUnSelectedAppInfos();
-            List<AppInfo> infos = liveData.getValue();
-            List<SearchBar.Item> items = new ArrayList<>();
-            for (AppInfo info : infos) {
-                items.add(new SearchBar.Item(info.name, info.imgUri, info.pkg));
-            }
+        SearchBar searchBar = new SearchBar(this);
+        searchBar.setOnItemClickListener(item -> {
+            mViewModel.selectApp((String) item.userData);
+            return true;
+        });
 
-            new SearchBar.Builder(this)
-                .setItems(items)
-                .onItemClick(item -> {
-                    mViewModel.selectApp((String) item.userData);
-                    return true;
-                })
-                .show();
+        mViewModel.getUnSelectedAppInfos().observe(this, it -> {
+            searchBar.setItems(
+                it.stream()
+                    .map(info -> new SearchBar.Item(info.name, info.imgUri, info.pkg))
+                    .collect(Collectors.toList()));
+        });
+
+        mAppList.setOnAddAppClickListener(v -> {
+            searchBar.show();
         });
 
         mViewModel.getSelectedAppInfos().observe(this, infos -> {
