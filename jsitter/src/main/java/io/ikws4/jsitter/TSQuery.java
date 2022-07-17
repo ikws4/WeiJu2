@@ -60,7 +60,7 @@ public class TSQuery implements AutoCloseable {
     }
 
     public Iterable<TSQueryMatch> matchIter(TSNode node, int startRow, int endRow) {
-        TreeSitter.queryCursorSetPointRange(queryCursorPtr, startRow, 0, endRow, -0);
+        TreeSitter.queryCursorSetPointRange(queryCursorPtr, startRow, 0, endRow, 0);
         TreeSitter.queryCursorExec(queryCursorPtr, ptr, node.id, node.treePtr, node.context0, node.context1, node.context2, node.context3);
 
         return new Iterable<TSQueryMatch>() {
