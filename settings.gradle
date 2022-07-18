@@ -15,5 +15,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Weiju"
 include ':app'
-include ':jsitter'
+//include ':jsitter'
 include ':glide'
+//include ':editor'

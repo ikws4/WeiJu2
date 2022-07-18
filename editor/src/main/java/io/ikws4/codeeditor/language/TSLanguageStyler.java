@@ -99,7 +99,7 @@ public abstract class TSLanguageStyler implements LanguageStyler {
     @Override
     public void editSyntaxTree(int startByte, int oldEndByte, int newEndByte, int startRow, int startColumn, int oldEndRow, int oldEndColumn, int newEndRow, int newEndColumn) {
         if (mTree == null) return;
-        mTree.edit(startByte, oldEndByte, newEndByte, startRow, startColumn, oldEndRow, oldEndColumn, newEndRow, newEndColumn);
+        // mTree.edit(startByte, oldEndByte, newEndByte, startRow, startColumn, oldEndRow, oldEndColumn, newEndRow, newEndColumn);
     }
 
     /**

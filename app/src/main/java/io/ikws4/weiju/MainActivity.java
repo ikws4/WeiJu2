@@ -10,12 +10,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.util.stream.Collectors;
 
-import io.github.rosemoe.sora.widget.CodeEditor;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.viewmodel.AppListViewModel;
@@ -27,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     // that xposed works.
     private static boolean XPOSED_ENABLED = false;
 
-    private CodeEditor mEditor;
+    // private CodeEditor mEditor;
     private Toolbar mToolbar;
     private AppListView mAppList;
 
@@ -49,15 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
         Globals globals = JsePlatform.standardGlobals();
 
-        mEditor = findViewById(R.id.code_editor);
+        // mEditor = findViewById(R.id.code_editor);
         mToolbar = findViewById(R.id.toolbar);
         mAppList = findViewById(R.id.rv_item_list);
 
         mToolbar.setOnMenuItemClickListener((menu) -> {
             if (menu.getItemId() == R.id.menu_run) {
-                LuaValue chunk = globals.load(mEditor.getText().toString());
-                LuaValue result = chunk.call();
-                Toast.makeText(this, result + "", Toast.LENGTH_SHORT).show();
+                // LuaValue chunk = globals.load(mEditor.getText().toString());
+                // LuaValue result = chunk.call();
+                // Toast.makeText(this, result + "", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (menu.getItemId() == R.id.menu_toggle_zem_mode) {
                 if (mZenMode) {
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 mZenMode = !mZenMode;
             } else if (menu.getItemId() == R.id.menu_save) {
-                mStorage.put(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""), mEditor.getText().toString());
+                // mStorage.put(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""), mEditor.getText().toString());
             } else if (menu.getItemId() == R.id.menu_xposed_status) {
                 Toast.makeText(this, "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
             }
@@ -78,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
 
         mAppList.setOnItemClickListener(pkg -> {
-            mEditor.setText(mStorage.get(pkg));
+            // mEditor.setText(mStorage.get(pkg));
         });
 
         SearchBar searchBar = new SearchBar(this);

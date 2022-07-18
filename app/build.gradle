@@ -29,6 +29,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        pickFirst 'license/*'
+    }
 }
 
 dependencies {
@@ -37,13 +41,15 @@ dependencies {
     implementation "androidx.core:core-ktx:1.8.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation project(path: ':jsitter')
+//    implementation project(path: ':jsitter')
+//    implementation project(path: ':editor')
     implementation project(path: ':glide')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 
     implementation 'org.luaj:luaj-jse:3.0.1'
     implementation 'com.crossbowffs.remotepreferences:remotepreferences:0.8'
-    implementation 'io.github.Rosemoe.sora-editor:editor:0.14.0'
+    implementation 'io.github.Rosemoe.sora-editor:editor:0.15.0-dev-1'
+    implementation 'io.github.Rosemoe.sora-editor:language-textmate:0.15.0-dev-1'
     implementation "io.reactivex.rxjava3:rxjava:3.1.5"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
