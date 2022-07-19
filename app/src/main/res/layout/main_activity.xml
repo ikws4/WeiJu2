@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -13,10 +14,10 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            app:title="@string/app_name"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/base"
             app:menu="@menu/menu_home"
-            android:layout_height="?attr/actionBarSize" />
+            app:title="@string/app_name" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -28,27 +29,112 @@
             android:id="@+id/rv_item_list"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/base"
-            tools:listitem="@layout/app_item"
-            tools:itemCount="5" />
+            tools:itemCount="5"
+            tools:listitem="@layout/app_item" />
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="1dp"
-            app:dividerColor="@color/surface"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:dividerColor="@color/surface" />
 
-<!--        <io.ikws4.codeeditor.CodeEditor-->
-<!--            android:id="@+id/code_editor"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:layout_height="match_parent"/>-->
+        <!--        <io.ikws4.codeeditor.CodeEditor-->
+        <!--            android:id="@+id/code_editor"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:layout_height="match_parent"/>-->
 
-        <io.ikws4.weiju.editor.Editor
-            android:id="@+id/code_editor"
+        <!--        <io.ikws4.weiju.editor.Editor-->
+        <!--            android:id="@+id/code_editor"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:layout_height="match_parent"/>-->
+        <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="My Scripts"
+                    android:textColor="@color/subtle"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btn_add_script"
+                    style="?android:attr/actionButtonStyle"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_add"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView"
+                    app:tint="@color/subtle" />
+
+                <io.ikws4.weiju.widget.dialog.ScriptListView
+                    android:id="@+id/rv_my_scripts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_min="288dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/script_item" />
+
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Avaliable Scripts"
+                    android:textColor="@color/subtle"
+                    android:textSize="20sp"
+                    android:textStyle="bold|italic"
+                    app:layout_constraintStart_toStartOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_my_scripts" />
+
+                <ImageButton
+                    android:id="@+id/btn_script_help"
+                    style="?android:attr/actionButtonStyle"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_help"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textView2"
+                    app:tint="@color/subtle" />
+
+                <io.ikws4.weiju.widget.dialog.ScriptListView
+                    android:id="@+id/rv_avaliable_scripts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    tools:listitem="@layout/script_item" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 

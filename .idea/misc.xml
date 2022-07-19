@@ -11,18 +11,21 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_fullscreen.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_fullscreen_exit.xml" value="0.2895" />
+        <entry key="app/src/main/res/drawable/ic_help.xml" value="0.109" />
         <entry key="app/src/main/res/drawable/ic_info.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_run.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selection_background.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/shape_circle.xml" value="0.2685" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.49274444580078125" />
         <entry key="app/src/main/res/layout/app_add_item.xml" value="0.29074074074074074" />
-        <entry key="app/src/main/res/layout/app_item.xml" value="0.29074074074074074" />
+        <entry key="app/src/main/res/layout/app_item.xml" value="0.648388671875" />
         <entry key="app/src/main/res/layout/editor_context_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_add_app.xml" value="0.863793436686198" />
         <entry key="app/src/main/res/layout/item_app.xml" value="0.4987847900390625" />
-        <entry key="app/src/main/res/layout/main_activity.xml" value="0.1657142857142857" />
+        <entry key="app/src/main/res/layout/main_activity.xml" value="0.13389121338912133" />
+        <entry key="app/src/main/res/layout/script_item.xml" value="0.4588450113932292" />
         <entry key="app/src/main/res/layout/search_list_dialog.xml" value="0.34841628959276016" />
         <entry key="app/src/main/res/layout/search_list_item.xml" value="0.6194905774346715" />
         <entry key="app/src/main/res/layout/text_compose_panel.xml" value="0.49244051332826977" />

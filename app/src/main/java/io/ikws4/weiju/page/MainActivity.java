@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.JsePlatform;
@@ -27,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
     // that xposed works.
     private static boolean XPOSED_ENABLED = false;
 
-    private Editor mEditor;
-    private Toolbar mToolbar;
-    private AppListView mAppList;
+    private Editor vEditor;
+    private Toolbar vToolbar;
+    private AppListView vAppList;
+    private RecyclerView vMyScripts;
+    private RecyclerView vAvaliableScripts;
 
     private boolean mZenMode;
 
@@ -49,11 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
         Globals globals = JsePlatform.standardGlobals();
 
-        mEditor = findViewById(R.id.code_editor);
-        mToolbar = findViewById(R.id.toolbar);
-        mAppList = findViewById(R.id.rv_item_list);
+        // mEditor = findViewById(R.id.code_editor);
+        vToolbar = findViewById(R.id.toolbar);
+        vAppList = findViewById(R.id.rv_item_list);
+        vMyScripts = findViewById(R.id.rv_my_scripts);
+        vAvaliableScripts = findViewById(R.id.rv_avaliable_scripts);
 
-        mToolbar.setOnMenuItemClickListener((menu) -> {
+        vToolbar.setOnMenuItemClickListener((menu) -> {
             if (menu.getItemId() == R.id.menu_run) {
                 // LuaValue chunk = globals.load(mEditor.getText().toString());
                 // LuaValue result = chunk.call();
@@ -62,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
             } else if (menu.getItemId() == R.id.menu_toggle_zem_mode) {
                 if (mZenMode) {
                     menu.setIcon(R.drawable.ic_fullscreen);
-                    mAppList.setVisibility(View.VISIBLE);
+                    vAppList.setVisibility(View.VISIBLE);
                 } else {
                     menu.setIcon(R.drawable.ic_fullscreen_exit);
-                    mAppList.setVisibility(View.GONE);
+                    vAppList.setVisibility(View.GONE);
                 }
                 mZenMode = !mZenMode;
             } else if (menu.getItemId() == R.id.menu_save) {
@@ -75,26 +80,26 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-        mToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
+        vToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
 
-        mAppList.setOnItemClickListener(pkg -> {
+        vAppList.setOnItemClickListener(pkg -> {
             // mEditor.setText(mStorage.get(pkg));
         });
 
         SearchBar searchBar = new SearchBar(this, new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
             mViewModel.selectApp((AppInfo) item.userData);
-            mAppList.scrollToBottom();
+            vAppList.scrollToBottom();
             return true;
         });
 
-        mAppList.setOnAddAppClickListener(v -> {
+        vAppList.setOnAddAppClickListener(v -> {
             searchBar.show();
         });
 
         mViewModel.getSelectedAppInfos().observe(this, infos -> {
-            mAppList.setData(infos);
-            mAppList.scrollToSelectedPkgPosition();
+            vAppList.setData(infos);
+            vAppList.scrollToSelectedPkgPosition();
             // mEditor.setText(mStorage.get(mAppList.getSelectedPkg()));
         });
     }
