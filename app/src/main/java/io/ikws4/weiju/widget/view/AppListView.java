@@ -65,6 +65,15 @@ public class AppListView extends RecyclerView {
         mAdapter.notifySelectedPkgPositionChanged();
     }
 
+    public void scrollToBottom() {
+        smoothScrollToPosition(mAdapter.getItemCount());
+    }
+
+    public void scrollToSelectedPkgPosition() {
+        int i = mAdapter.getSelectedPkgPosition();
+        smoothScrollToPosition(i + 1);
+    }
+
     private static final DiffUtil.ItemCallback<AppInfo> CALLBACK = new DiffUtil.ItemCallback<AppInfo>() {
         @Override
         public boolean areItemsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
@@ -118,12 +127,17 @@ public class AppListView extends RecyclerView {
         }
 
         public void notifySelectedPkgPositionChanged() {
+            int i = getSelectedPkgPosition();
+            if (i != -1) notifyItemChanged(i);
+        }
+
+        public int getSelectedPkgPosition() {
             for (int i = 0; i < getRealItemCount(); i++) {
                 if (getItem(i).pkg.equals(mSelectedPackage)) {
-                    notifyItemChanged(i);
-                    return;
+                    return i;
                 }
             }
+            return -1;
         }
 
         private class ViewHolder extends RecyclerView.ViewHolder {

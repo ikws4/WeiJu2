@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         SearchBar searchBar = new SearchBar(this, new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
             mViewModel.selectApp((AppInfo) item.userData);
+            mAppList.scrollToBottom();
             return true;
         });
 
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
         mViewModel.getSelectedAppInfos().observe(this, infos -> {
             mAppList.setData(infos);
+            mAppList.scrollToSelectedPkgPosition();
             // mEditor.setText(mStorage.get(mAppList.getSelectedPkg()));
         });
     }
