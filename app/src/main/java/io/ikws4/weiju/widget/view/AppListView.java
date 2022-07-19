@@ -59,8 +59,8 @@ public class AppListView extends RecyclerView {
     }
 
     public void setData(List<AppInfo> data) {
-        mAdapter.notifySelectedPkgPositionChanged();
         mAdapter.submitList(data);
+        mAdapter.notifySelectedPkgPositionChanged();
         mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
         mAdapter.notifySelectedPkgPositionChanged();
     }

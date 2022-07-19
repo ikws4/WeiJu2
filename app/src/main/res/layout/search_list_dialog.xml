@@ -39,11 +39,20 @@
 
             </EditText>
 
+            <ProgressBar
+                android:id="@+id/pb_loading"
+                style="@style/Widget.AppCompat.ActionButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:indeterminateTint="@color/subtle"
+                android:indeterminateTintMode="multiply" />
+
             <ImageButton
                 android:id="@+id/btn_search"
                 style="@style/Widget.AppCompat.ActionButton"
                 android:layout_width="48dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_search" />
 
         </LinearLayout>

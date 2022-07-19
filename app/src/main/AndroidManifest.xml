@@ -25,7 +25,7 @@
             android:name="xposedsharedprefs"
             android:value="true"/>
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".page.MainActivity"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>

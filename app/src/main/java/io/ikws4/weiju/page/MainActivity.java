@@ -1,4 +1,4 @@
-package io.ikws4.weiju;
+package io.ikws4.weiju.page;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,14 +12,14 @@ import androidx.lifecycle.ViewModelProvider;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import io.ikws4.weiju.R;
+import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.viewmodel.AppListViewModel;
-import io.ikws4.weiju.widget.dialog.SearchBar;
+import io.ikws4.weiju.widget.dialog.SearchBar.SearchBar;
+import io.ikws4.weiju.widget.dialog.SearchBar.SelectedAppInfoItemLoader;
 import io.ikws4.weiju.widget.view.AppListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,18 +81,10 @@ public class MainActivity extends AppCompatActivity {
             // mEditor.setText(mStorage.get(pkg));
         });
 
-        SearchBar searchBar = new SearchBar(this);
+        SearchBar searchBar = new SearchBar(this, new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
-            mViewModel.selectApp((String) item.userData);
+            mViewModel.selectApp((AppInfo) item.userData);
             return true;
-        });
-
-        mViewModel.getUnSelectedAppInfos().observe(this, it -> {
-            List<SearchBar.Item> items = it.stream()
-                .skip(searchBar.getItemCount())
-                .map(info -> new SearchBar.Item(info.name, info.imgUri, info.pkg))
-                .collect(Collectors.toList());
-            searchBar.addItems(items);
         });
 
         mAppList.setOnAddAppClickListener(v -> {

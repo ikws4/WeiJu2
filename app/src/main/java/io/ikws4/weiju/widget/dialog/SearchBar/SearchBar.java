@@ -1,4 +1,4 @@
-package io.ikws4.weiju.widget.dialog;
+package io.ikws4.weiju.widget.dialog.SearchBar;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.util.Logger;
 
 public class SearchBar extends Dialog {
     private OnItemClickListener mOnItemClickListener;
@@ -40,9 +42,13 @@ public class SearchBar extends Dialog {
 
     private final EditText vInput;
     private final ImageButton vSearch;
+    private final ProgressBar vLoading;
     private final MaterialDivider vDivider;
 
-    public SearchBar(@NonNull Context context) {
+    private ItemLoader mItemLoader;
+    private ItemLoader.Callback mItemLoaderCallback;
+
+    public SearchBar(@NonNull Context context, @NonNull ItemLoader itemLoader) {
         super(context);
         setContentView(R.layout.search_list_dialog);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -64,6 +70,7 @@ public class SearchBar extends Dialog {
         vInput = findViewById(R.id.et_input);
         vSearch = findViewById(R.id.btn_search);
         vDivider = findViewById(R.id.divider);
+        vLoading = findViewById(R.id.pb_loading);
 
         vInput.setOnEditorActionListener((v, a, e) -> true);
         vInput.addTextChangedListener(new TextWatcher() {
@@ -80,6 +87,27 @@ public class SearchBar extends Dialog {
                 filter(s);
             }
         });
+
+        mItemLoader = itemLoader;
+        mItemLoaderCallback = new ItemLoader.Callback() {
+            @Override
+            public void send(List<Item> items) {
+                mSourceItems.addAll(items);
+                filter("");
+            }
+
+            @Override
+            public void error(Throwable e) {
+                Logger.e(e);
+            }
+
+            @Override
+            public void finish() {
+                vLoading.setVisibility(View.GONE);
+                vSearch.setVisibility(View.VISIBLE);
+            }
+        };
+        mItemLoader.setContext(context);
     }
 
     private void filter(CharSequence s) {
@@ -111,18 +139,27 @@ public class SearchBar extends Dialog {
         mOnItemClickListener = onItemClickListener;
     }
 
-    public void setItems(List<Item> items) {
+    @Override
+    public void show() {
         mSourceItems.clear();
-        addItems(items);
+        filter("");
+
+        if (mItemLoader != null) {
+            mItemLoader.load(mItemLoaderCallback);
+            vSearch.setVisibility(View.GONE);
+            vLoading.setVisibility(View.VISIBLE);
+        } else {
+            vSearch.setVisibility(View.VISIBLE);
+            vLoading.setVisibility(View.GONE);
+        }
+
+        super.show();
     }
 
-    public void addItems(List<Item> items) {
-        mSourceItems.addAll(items);
-        filter(vInput.getText());
-    }
-
-    public int getItemCount() {
-        return mSourceItems.size();
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mItemLoader.clear();
     }
 
     @Override
@@ -222,6 +259,30 @@ public class SearchBar extends Dialog {
          * @return true dismiss the search bar
          */
         boolean onClick(Item item);
+    }
+
+    public static abstract class ItemLoader {
+        private Context mContext;
+
+        protected abstract void load(Callback callback);
+
+        protected void clear() {}
+
+        void setContext(Context context) {
+            mContext = context;
+        }
+
+        public Context getContext() {
+            return mContext;
+        }
+
+        public interface Callback {
+            void send(List<Item> items);
+
+            void error(Throwable e);
+
+            void finish();
+        }
     }
 
     // public static class Builder {

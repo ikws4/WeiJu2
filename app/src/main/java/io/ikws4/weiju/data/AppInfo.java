@@ -1,5 +1,7 @@
 package io.ikws4.weiju.data;
 
+import android.content.pm.ApplicationInfo;
+
 import androidx.annotation.NonNull;
 
 import java.util.Objects;
@@ -15,6 +17,10 @@ public class AppInfo {
         this.pkg = pkg;
         this.imgUri = "pkg:" + pkg;
         this.isSystemApp = isSystemApp;
+    }
+
+    public static boolean isSystemApp(ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
     }
 
     @Override
