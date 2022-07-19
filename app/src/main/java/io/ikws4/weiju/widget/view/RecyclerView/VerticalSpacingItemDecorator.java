@@ -1,4 +1,4 @@
-package io.ikws4.weiju.widget;
+package io.ikws4.weiju.widget.view.RecyclerView;
 
 import android.graphics.Rect;
 import android.view.View;
