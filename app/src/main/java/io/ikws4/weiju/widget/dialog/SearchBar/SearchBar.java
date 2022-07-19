@@ -56,7 +56,6 @@ public class SearchBar extends Dialog {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         // bluring
         getWindow().setDimAmount(0.3f);
-        //  48% height
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
         lp.width = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * 0.85);
