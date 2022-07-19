@@ -68,9 +68,12 @@
             android:id="@+id/rv_item_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbars="vertical"
             app:layout_constraintHeight_max="288dp"
+            android:fadeScrollbars="true"
+            android:scrollbarThumbVertical="@drawable/scroll_bar_thumb"
             app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:itemCount="5"
+            tools:itemCount="7"
             tools:listitem="@layout/search_list_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
