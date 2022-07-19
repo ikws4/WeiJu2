@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import io.ikws4.weiju.editor.Editor;
@@ -87,10 +88,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mViewModel.getUnSelectedAppInfos().observe(this, it -> {
-            searchBar.setItems(
-                it.stream()
-                    .map(info -> new SearchBar.Item(info.name, info.imgUri, info.pkg))
-                    .collect(Collectors.toList()));
+            List<SearchBar.Item> items = it.stream()
+                .skip(searchBar.getItemCount())
+                .map(info -> new SearchBar.Item(info.name, info.imgUri, info.pkg))
+                .collect(Collectors.toList());
+            searchBar.addItems(items);
         });
 
         mAppList.setOnAddAppClickListener(v -> {

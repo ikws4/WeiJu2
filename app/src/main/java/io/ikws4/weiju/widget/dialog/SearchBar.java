@@ -16,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +27,7 @@ import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
@@ -81,7 +85,7 @@ public class SearchBar extends Dialog {
     private void filter(CharSequence s) {
         mDisplayItems = mSourceItems.stream().filter((item) -> isSubsequence(s, item.title)).collect(Collectors.toList());
         updateDividerVisibility();
-        mAdapter.notifyDataSetChanged();
+        mAdapter.submitList(mDisplayItems);
     }
 
     private void updateDividerVisibility() {
@@ -117,13 +121,34 @@ public class SearchBar extends Dialog {
         filter(vInput.getText());
     }
 
+    public int getItemCount() {
+        return mSourceItems.size();
+    }
+
     @Override
     public void dismiss() {
         super.dismiss();
         vInput.setText("");
     }
 
-    private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+    private static final DiffUtil.ItemCallback<Item> CALLBACK = new DiffUtil.ItemCallback<Item>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
+    private class Adapter extends ListAdapter<Item, Adapter.ViewHolder> {
+
+        protected Adapter() {
+            super(CALLBACK);
+        }
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -133,12 +158,7 @@ public class SearchBar extends Dialog {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.bind(mDisplayItems.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDisplayItems.size();
+            holder.bind(getItem(position));
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -173,10 +193,27 @@ public class SearchBar extends Dialog {
         public final String iconUri;
         public final Object userData;
 
-        public Item(CharSequence title, String iconUri, Object userData) {
+        public Item(@NonNull CharSequence title, @NonNull String iconUri) {
+            this(title, iconUri, null);
+        }
+
+        public Item(@NonNull CharSequence title, @NonNull String iconUri, @Nullable Object userData) {
             this.title = title;
             this.iconUri = iconUri;
-            this.userData= userData;
+            this.userData = userData;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Item item = (Item) o;
+            return title.equals(item.title) && iconUri.equals(item.iconUri) && Objects.equals(userData, item.userData);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(title, iconUri, userData);
         }
     }
 
