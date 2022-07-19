@@ -14,6 +14,20 @@ public class Strings {
         return sb.toString();
     }
 
+    public static int leadingSpaceCount(CharSequence str) {
+        int i = 0;
+        while (i < str.length() && str.charAt(i) == ' ') i++;
+        return i;
+    }
+
+    public static boolean isOnlySpaces(CharSequence s) {
+        if (s.length() == 0) return false;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != ' ') return false;
+        }
+        return true;
+    }
+
     public static String join(CharSequence delimiter, CharSequence... strs) {
         return join(delimiter, Arrays.asList(strs));
     }

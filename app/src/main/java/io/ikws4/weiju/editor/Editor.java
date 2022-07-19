@@ -10,11 +10,6 @@ import androidx.core.content.res.ResourcesCompat;
 import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
 import org.eclipse.tm4e.core.theme.IRawTheme;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.ikws4.weiju.R;
@@ -35,27 +30,25 @@ public class Editor extends CodeEditor {
         setCursorWidth(2 * getDpUnit());
         setDividerWidth(0);
         setLineNumberAlign(Paint.Align.RIGHT);
+        setTabWidth(2);
 
         getComponent(Magnifier.class).setEnabled(false);
 
-        setLanguageAndTheme("lua", "rose-pine");
+        setLanguageAndTheme();
     }
 
-    private void setLanguageAndTheme(String lang, String theme) {
+    private void setLanguageAndTheme() {
         try {
-            InputStream in = getContext().getAssets().open("textmate/lang/" + lang + "/language-configuration.json");
-            String grammarPath = "textmate/lang/" + lang + "/tmLanguage.json";
-
-            String themePath = "textmate/theme/" + theme + ".json";
+            String themePath = "textmate/theme/rose-pine.json";
             IRawTheme _theme = ThemeReader.readThemeSync(themePath, getContext().getAssets().open(themePath));
 
-            TextMateLanguage language = TextMateLanguage.create(grammarPath, getContext().getAssets().open(grammarPath), new InputStreamReader(in), _theme);
+            LuaLanguage language = new LuaLanguage(this, _theme);
+            language.setTabSize(getTabWidth());
             setEditorLanguage(language);
             setColorScheme(new RosepineColorScheme(_theme));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
 

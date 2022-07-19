@@ -14,6 +14,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.util.stream.Collectors;
 
+import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.viewmodel.AppListViewModel;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     // that xposed works.
     private static boolean XPOSED_ENABLED = false;
 
-    // private CodeEditor mEditor;
+    private Editor mEditor;
     private Toolbar mToolbar;
     private AppListView mAppList;
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         Globals globals = JsePlatform.standardGlobals();
 
-        // mEditor = findViewById(R.id.code_editor);
+        mEditor = findViewById(R.id.code_editor);
         mToolbar = findViewById(R.id.toolbar);
         mAppList = findViewById(R.id.rv_item_list);
 
@@ -101,5 +102,4 @@ public class MainActivity extends AppCompatActivity {
             // mEditor.setText(mStorage.get(mAppList.getSelectedPkg()));
         });
     }
-
 }
