@@ -59,7 +59,10 @@ public class AppListView extends RecyclerView {
     }
 
     public void setData(List<AppInfo> data) {
+        mAdapter.notifySelectedPkgPositionChanged();
         mAdapter.submitList(data);
+        mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        mAdapter.notifySelectedPkgPositionChanged();
     }
 
     private static final DiffUtil.ItemCallback<AppInfo> CALLBACK = new DiffUtil.ItemCallback<AppInfo>() {
@@ -93,7 +96,7 @@ public class AppListView extends RecyclerView {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if (position < getRealItemCount()) {
-                holder.bind(position);
+                holder.bind(getItem(position));
             } else {
                 holder.itemView.setOnClickListener(mOnAddAppClickListener);
             }
@@ -114,6 +117,15 @@ public class AppListView extends RecyclerView {
             return 1;
         }
 
+        public void notifySelectedPkgPositionChanged() {
+            for (int i = 0; i < getRealItemCount(); i++) {
+                if (getItem(i).pkg.equals(mSelectedPackage)) {
+                    notifyItemChanged(i);
+                    return;
+                }
+            }
+        }
+
         private class ViewHolder extends RecyclerView.ViewHolder {
             private final AppCompatTextView tvName;
             private final ShapeableImageView imgIcon;
@@ -124,9 +136,7 @@ public class AppListView extends RecyclerView {
                 imgIcon = itemView.findViewById(R.id.img_icon);
             }
 
-            public void bind(int position) {
-                AppInfo item = getItem(position);
-
+            public void bind(AppInfo item) {
                 tvName.setText(item.name);
                 Glide.with(getContext())
                     .load(item.imgUri)
@@ -148,12 +158,7 @@ public class AppListView extends RecyclerView {
                     }
                     AppInfo info = getItem(getLayoutPosition());
                     if (!info.pkg.equals(mSelectedPackage)) {
-                        for (int i = 0; i < getRealItemCount(); i++) {
-                            if (getItem(i).pkg.equals(mSelectedPackage)) {
-                                notifyItemChanged(i);
-                                break;
-                            }
-                        }
+                        notifySelectedPkgPositionChanged();
                         notifyItemChanged(getLayoutPosition());
                         mSelectedPackage = info.pkg;
                         Preferences.getInstance(getContext()).put(Preferences.APP_LIST_SELECTED_PACKAGE, mSelectedPackage);

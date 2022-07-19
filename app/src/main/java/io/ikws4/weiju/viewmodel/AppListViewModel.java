@@ -50,6 +50,7 @@ public class AppListViewModel extends AndroidViewModel {
         Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>()));
         selected.add(pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
+        mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
 
         unSelectedAppInfos.getValue()
             .stream()
