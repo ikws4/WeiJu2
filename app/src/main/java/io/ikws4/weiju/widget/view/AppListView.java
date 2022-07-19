@@ -71,7 +71,7 @@ public class AppListView extends RecyclerView {
 
     public void scrollToSelectedPkgPosition() {
         int i = mAdapter.getSelectedPkgPosition();
-        smoothScrollToPosition(i + 1);
+        if (i != -1) smoothScrollToPosition(i);
     }
 
     private static final DiffUtil.ItemCallback<AppInfo> CALLBACK = new DiffUtil.ItemCallback<AppInfo>() {
