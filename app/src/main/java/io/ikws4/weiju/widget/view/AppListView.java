@@ -167,6 +167,8 @@ public class AppListView extends RecyclerView {
                 }
 
                 itemView.setOnClickListener((v) -> {
+                    if (mSelectedPackage.equals(item.pkg)) return;
+
                     if (mOnAddAppClickListener != null) {
                         mOnItemClickListener.onClick(item);
                     }

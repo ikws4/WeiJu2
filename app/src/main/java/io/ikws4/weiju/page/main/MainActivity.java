@@ -86,16 +86,16 @@ public class MainActivity extends AppCompatActivity {
         });
         vToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
 
-        vAppList.setOnItemClickListener(pkg -> {
-            // mEditor.setText(mStorage.get(pkg));
-            mViewModel.switchApp(pkg);
-        });
-
         SearchBar searchBar = new SearchBar(this, new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
             mViewModel.selectApp((AppInfo) item.userData);
             vAppList.scrollToBottom();
             return true;
+        });
+
+        vAppList.setOnItemClickListener(pkg -> {
+            // mEditor.setText(mStorage.get(pkg));
+            mViewModel.switchApp(pkg);
         });
 
         vAppList.setOnAddAppClickListener(v -> {
