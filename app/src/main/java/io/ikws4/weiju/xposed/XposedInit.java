@@ -59,7 +59,7 @@ public class XposedInit implements IXposedHookLoadPackage {
     }
 
     private void updateHostXposedStatus() {
-        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.page.MainActivity", classLoader);
+        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.page.main.MainActivity", classLoader);
         XposedHelpers.setStaticBooleanField(clazz, "XPOSED_ENABLED", true);
     }
 }

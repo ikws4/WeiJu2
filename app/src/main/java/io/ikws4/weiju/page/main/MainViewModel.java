@@ -1,4 +1,4 @@
-package io.ikws4.weiju.viewmodel;
+package io.ikws4.weiju.page.main;
 
 import android.app.Application;
 import android.content.pm.PackageManager;
@@ -23,14 +23,14 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class AppListViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
     private final MutableLiveData<List<AppInfo>> selectedAppInfos = new MutableLiveData<>(new ArrayList<>());
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     private final Preferences mPreferences;
 
-    public AppListViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
         mPreferences = Preferences.getInstance(getApplication());
         loadApplicationInfos();

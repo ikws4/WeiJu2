@@ -1,4 +1,4 @@
-package io.ikws4.weiju.page;
+package io.ikws4.weiju.page.main;
 
 import android.os.Bundle;
 import android.view.View;
@@ -18,9 +18,8 @@ import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
-import io.ikws4.weiju.viewmodel.AppListViewModel;
-import io.ikws4.weiju.widget.dialog.SearchBar.SearchBar;
-import io.ikws4.weiju.widget.dialog.SearchBar.SelectedAppInfoItemLoader;
+import io.ikws4.weiju.widget.dialog.searchbar.SearchBar;
+import io.ikws4.weiju.widget.dialog.searchbar.SelectedAppInfoItemLoader;
 import io.ikws4.weiju.widget.view.AppListView;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private ScriptStore mStorage;
     private Preferences mPreferences;
 
-    private AppListViewModel mViewModel;
+    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        mViewModel = new ViewModelProvider(this).get(AppListViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mStorage = ScriptStore.getInstance(this);
         mPreferences = Preferences.getInstance(this);

@@ -24,7 +24,7 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.UnitConverter;
-import io.ikws4.weiju.widget.view.RecyclerView.VerticalSpacingItemDecorator;
+import io.ikws4.weiju.widget.view.recyclerview.VerticalSpacingItemDecorator;
 
 public class AppListView extends RecyclerView {
     private OnItemClickListener mOnItemClickListener;

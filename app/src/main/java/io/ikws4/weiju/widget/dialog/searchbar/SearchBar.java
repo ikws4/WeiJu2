@@ -1,4 +1,4 @@
-package io.ikws4.weiju.widget.dialog.SearchBar;
+package io.ikws4.weiju.widget.dialog.searchbar;
 
 import android.app.Dialog;
 import android.content.Context;
