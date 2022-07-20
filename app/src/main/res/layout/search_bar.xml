@@ -26,12 +26,12 @@
                 android:id="@+id/et_input"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:paddingLeft="8dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:imeOptions="actionSearch"
                 android:inputType="textAutoComplete"
                 android:maxLines="1"
+                android:paddingLeft="8dp"
                 android:textColor="@color/subtle"
                 android:textCursorDrawable="@drawable/dialog_cursor">
 
@@ -41,7 +41,7 @@
 
             <ProgressBar
                 android:id="@+id/pb_loading"
-                style="@style/Widget.AppCompat.ActionButton"
+                style="@style/Widget.WeiJu.ProgressBar"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:indeterminateTint="@color/subtle"
@@ -68,10 +68,10 @@
             android:id="@+id/rv_item_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layout_constraintHeight_max="288dp"
             android:fadeScrollbars="true"
             android:scrollbarThumbVertical="@drawable/scroll_bar_thumb"
+            android:scrollbars="vertical"
+            app:layout_constraintHeight_max="288dp"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:itemCount="7"
             tools:listitem="@layout/search_bar_item" />

@@ -82,18 +82,38 @@
                     app:layout_constraintTop_toTopOf="@+id/textView"
                     app:tint="@color/subtle" />
 
-                <io.ikws4.weiju.widget.dialog.ScriptListView
-                    android:id="@+id/rv_my_scripts"
+                <ViewFlipper
+                    android:id="@+id/vf_my_scripts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:inAnimation="@android:anim/fade_in"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_min="288dp"
+                    app:layout_constraintHeight_min="240dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/script_item" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginEnd="48dp"
+                        android:fontFamily="@font/jetbrains_mono_regular"
+                        android:text="click  button to create a new script"
+                        android:textAlignment="center"
+                        android:textColor="@color/muted"
+                        android:textSize="12sp" />
+
+                    <io.ikws4.weiju.widget.dialog.ScriptListView
+                        android:id="@+id/rv_my_scripts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:itemCount="5"
+                        tools:listitem="@layout/script_item" />
+
+                </ViewFlipper>
 
 
                 <TextView
@@ -101,12 +121,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Avaliable Scripts"
+                    android:text="Available Scripts"
                     android:textColor="@color/subtle"
                     android:textSize="20sp"
                     android:textStyle="bold|italic"
                     app:layout_constraintStart_toStartOf="@+id/textView"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_my_scripts" />
+                    app:layout_constraintTop_toBottomOf="@+id/vf_my_scripts" />
 
                 <ImageButton
                     android:id="@+id/btn_script_help"
@@ -120,17 +140,43 @@
                     app:layout_constraintTop_toTopOf="@+id/textView2"
                     app:tint="@color/subtle" />
 
-                <io.ikws4.weiju.widget.dialog.ScriptListView
-                    android:id="@+id/rv_avaliable_scripts"
+                <ViewFlipper
+                    android:id="@+id/vf_available_scripts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:inAnimation="@android:anim/fade_in"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_min="240dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
-                    tools:listitem="@layout/script_item" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView2">
 
+                    <ProgressBar
+                        style="@style/Widget.WeiJu.ProgressBar"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginEnd="48dp"
+                        android:fontFamily="@font/jetbrains_mono_regular"
+                        android:text="No scripts have been found for this app, but don't worry, creating your own scripts is pretty simple"
+                        android:textAlignment="center"
+                        android:textColor="@color/muted"
+                        android:textSize="12sp" />
+
+                    <io.ikws4.weiju.widget.dialog.ScriptListView
+                        android:id="@+id/rv_avaliable_scripts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/script_item" />
+
+                </ViewFlipper>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

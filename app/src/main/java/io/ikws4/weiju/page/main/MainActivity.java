@@ -3,6 +3,7 @@ package io.ikws4.weiju.page.main;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private AppListView vAppList;
     private ScriptListView vMyScripts;
     private ScriptListView vAvaliableScripts;
+    private ViewFlipper vMyScriptsViewFlipper;
+    private ViewFlipper vAvailableScriptsViewFlipper;
 
     private boolean mZenMode;
 
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         vAppList = findViewById(R.id.rv_item_list);
         vMyScripts = findViewById(R.id.rv_my_scripts);
         vAvaliableScripts = findViewById(R.id.rv_avaliable_scripts);
+        vMyScriptsViewFlipper = findViewById(R.id.vf_my_scripts);
+        vAvailableScriptsViewFlipper = findViewById(R.id.vf_available_scripts);
 
         vToolbar.setOnMenuItemClickListener((menu) -> {
             if (menu.getItemId() == R.id.menu_run) {
@@ -103,7 +108,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mViewModel.getAvaliableScripts().observe(this, scripts -> {
-            vAvaliableScripts.setData(scripts);
+            if (scripts == null) {
+                // loading
+                vAvailableScriptsViewFlipper.setDisplayedChild(0);
+            } else if (scripts.isEmpty()) {
+                vAvailableScriptsViewFlipper.setDisplayedChild(1);
+            } else {
+                vAvaliableScripts.setData(scripts);
+                vAvailableScriptsViewFlipper.setDisplayedChild(2);
+            }
         });
     }
 }

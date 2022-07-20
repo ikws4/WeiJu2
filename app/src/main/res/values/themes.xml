@@ -18,4 +18,13 @@
     <style name="Widget.WeiJu.PopupMenu" parent="Widget.Material3.PopupMenu.Overflow">
         <item name="android:popupBackground">@color/surface</item>
     </style>
+
+    <style name="Widget.WeiJu.ProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/subtle</item>
+        <item name="android:indeterminateTintMode">multiply</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleType">center</item>
+    </style>
 </resources>

@@ -33,7 +33,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainViewModel extends AndroidViewModel {
     private final MutableLiveData<List<AppInfo>> mSelectedAppInfos = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveData<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final Preferences mPreferences;
     private final Globals mLuaGlobals;
