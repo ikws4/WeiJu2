@@ -125,11 +125,11 @@ public class SearchBar extends Dialog {
 
     // check a if the subsequence of b
     private boolean isSubsequence(CharSequence a, CharSequence b) {
-        int i = 0, j = 0;
-        while (i < a.length()) {
-            while (j < b.length() && Character.toLowerCase(b.charAt(j)) != Character.toLowerCase(a.charAt(i))) j++;
-            if (j == b.length()) break;
-            i++;
+        int i = 0;
+        for (int j = 0; j < b.length() && i < a.length(); j++) {
+            if (Character.toLowerCase(a.charAt(i)) == Character.toLowerCase(b.charAt(j))) {
+                i++;
+            }
         }
         return i == a.length();
     }
