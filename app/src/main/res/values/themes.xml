@@ -3,9 +3,14 @@
     <style name="Theme.WeiJu" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:statusBarColor">@color/base</item>
         <item name="dividerColor">@color/surface</item>
+        <item name="actionOverflowButtonStyle">@style/Widget.WeiJu.ActionButton.Overflow</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.WeiJu.Circle" parent="">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Widget.WeiJu.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="tint">@color/text</item>
     </style>
 </resources>
