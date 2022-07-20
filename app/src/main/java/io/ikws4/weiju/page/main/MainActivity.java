@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 vAvailableScriptsViewFlipper.setDisplayedChild(0);
             } else if (scripts.isEmpty()) {
                 vAvailableScriptsViewFlipper.setDisplayedChild(1);
+                vAvaliableScripts.setData(scripts);
             } else {
                 vAvaliableScripts.setData(scripts);
                 vAvailableScriptsViewFlipper.setDisplayedChild(2);
