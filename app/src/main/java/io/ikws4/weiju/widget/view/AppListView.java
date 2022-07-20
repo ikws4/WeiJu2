@@ -168,7 +168,7 @@ public class AppListView extends RecyclerView {
 
                 itemView.setOnClickListener((v) -> {
                     if (mOnAddAppClickListener != null) {
-                        mOnItemClickListener.onClick(item.pkg);
+                        mOnItemClickListener.onClick(item);
                     }
                     AppInfo info = getItem(getLayoutPosition());
                     if (!info.pkg.equals(mSelectedPackage)) {
@@ -183,6 +183,6 @@ public class AppListView extends RecyclerView {
     }
 
     public interface OnItemClickListener {
-        void onClick(String pkg);
+        void onClick(AppInfo pkg);
     }
 }

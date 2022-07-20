@@ -43,7 +43,7 @@ public class MainViewModel extends AndroidViewModel {
         mLuaGlobals = JsePlatform.standardGlobals();
         mPreferences = Preferences.getInstance(getApplication());
         loadApplicationInfos();
-        loadAvaliableScripts("io.ikws4.weiju");
+        loadAvaliableScripts(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
     }
 
     public LiveData<List<ScriptListView.ScriptItem>> getAvaliableScripts() {
@@ -55,18 +55,27 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void selectApp(AppInfo info) {
+        switchApp(info);
+
         String pkg = info.pkg;
         Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>()));
         selected.add(pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
-        mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
 
         List<AppInfo> infos = mSelectedAppInfos.getValue();
         infos.add(info);
         mSelectedAppInfos.setValue(infos);
     }
 
+    public void switchApp(AppInfo info) {
+        String pkg = info.pkg;
+        mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
+        loadAvaliableScripts(pkg);
+    }
+
     private void loadAvaliableScripts(String pkg) {
+        mAvaliableScripts.setValue(null);
+
         disposables.add(API.getInstance().getScopeConfig()
             .subscribeOn(Schedulers.io())
             .subscribe(it -> {
@@ -109,15 +118,14 @@ public class MainViewModel extends AndroidViewModel {
 
                                     // Using the metadate to create ScriptItem
                                     scriptItems.add(new ScriptListView.ScriptItem(name, author, description, content));
-                                    mAvaliableScripts.postValue(scriptItems);
-                                }));
+                                }, Logger::e));
                         },
                         Logger::e,
                         () -> {
                             mAvaliableScripts.postValue(scriptItems);
                         }
                     ));
-            }));
+            }, Logger::e));
     }
 
     private void loadApplicationInfos() {

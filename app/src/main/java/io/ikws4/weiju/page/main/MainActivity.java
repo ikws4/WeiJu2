@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         vAppList.setOnItemClickListener(pkg -> {
             // mEditor.setText(mStorage.get(pkg));
+            mViewModel.switchApp(pkg);
         });
 
         SearchBar searchBar = new SearchBar(this, new SelectedAppInfoItemLoader());
