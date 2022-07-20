@@ -50,7 +50,7 @@ public class SearchBar extends Dialog {
 
     public SearchBar(@NonNull Context context, @NonNull ItemLoader itemLoader) {
         super(context);
-        setContentView(R.layout.search_list_dialog);
+        setContentView(R.layout.search_bar);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         getWindow().setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -188,7 +188,7 @@ public class SearchBar extends Dialog {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_bar_item, parent, false);
             return new ViewHolder(view);
         }
 

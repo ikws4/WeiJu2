@@ -18,7 +18,7 @@
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:gravity="center_horizontal"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -26,7 +26,7 @@
                 android:id="@+id/et_input"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
+                android:paddingLeft="8dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:imeOptions="actionSearch"
@@ -74,7 +74,7 @@
             android:scrollbarThumbVertical="@drawable/scroll_bar_thumb"
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:itemCount="7"
-            tools:listitem="@layout/search_list_item" />
+            tools:listitem="@layout/search_bar_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
