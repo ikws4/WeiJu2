@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/drawable/script_item_leading_icon_background_unpressed.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/scroll_bar_thumb.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/selection_background.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/selection_background_circle.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/selection_background_rounded.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/shape_circle.xml" value="0.2685" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.49274444580078125" />

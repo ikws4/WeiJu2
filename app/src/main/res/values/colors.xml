@@ -15,4 +15,16 @@
     <color name="highlight_low">#21202e</color>
     <color name="highlight_med">#44415a</color>
     <color name="highlight_high">#56526e</color>
+
+    <color name="transparent_10">#F6FFFFFF</color>
+    <color name="transparent_20">#CCFFFFFF</color>
+    <color name="transparent_30">#B3FFFFFF</color>
+    <color name="transparent_40">#99FFFFFF</color>
+    <color name="transparent_50">#80FFFFFF</color>
+    <color name="transparent_60">#66FFFFFF</color>
+    <color name="transparent_70">#4DFFFFFF</color>
+    <color name="transparent_80">#33FFFFFF</color>
+    <color name="transparent_90">#1AFFFFFF</color>
+    <color name="transparent_95">#0DFFFFFF</color>
+    <color name="transparent_100">#00FFFFFF</color>
 </resources>
