@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.JsePlatform;
@@ -18,6 +17,7 @@ import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
+import io.ikws4.weiju.widget.dialog.ScriptListView;
 import io.ikws4.weiju.widget.dialog.searchbar.SearchBar;
 import io.ikws4.weiju.widget.dialog.searchbar.SelectedAppInfoItemLoader;
 import io.ikws4.weiju.widget.view.AppListView;
@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private Editor vEditor;
     private Toolbar vToolbar;
     private AppListView vAppList;
-    private RecyclerView vMyScripts;
-    private RecyclerView vAvaliableScripts;
+    private ScriptListView vMyScripts;
+    private ScriptListView vAvaliableScripts;
 
     private boolean mZenMode;
 
@@ -100,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
             vAppList.setData(infos);
             vAppList.scrollToSelectedPkgPosition();
             // mEditor.setText(mStorage.get(mAppList.getSelectedPkg()));
+        });
+
+        mViewModel.getAvaliableScripts().observe(this, scripts -> {
+            vAvaliableScripts.setData(scripts);
         });
     }
 }

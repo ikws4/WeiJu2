@@ -8,6 +8,11 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -16,28 +21,37 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.ikws4.weiju.api.API;
 import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
+import io.ikws4.weiju.util.Logger;
+import io.ikws4.weiju.widget.dialog.ScriptListView;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainViewModel extends AndroidViewModel {
-    private final MutableLiveData<List<AppInfo>> selectedAppInfos = new MutableLiveData<>(new ArrayList<>());
-
+    private final MutableLiveData<List<AppInfo>> mSelectedAppInfos = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveData<>(new ArrayList<>());
     private final CompositeDisposable disposables = new CompositeDisposable();
-
     private final Preferences mPreferences;
+    private final Globals mLuaGlobals;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
+        mLuaGlobals = JsePlatform.standardGlobals();
         mPreferences = Preferences.getInstance(getApplication());
         loadApplicationInfos();
+        loadAvaliableScripts("io.ikws4.weiju");
+    }
+
+    public LiveData<List<ScriptListView.ScriptItem>> getAvaliableScripts() {
+        return mAvaliableScripts;
     }
 
     public LiveData<List<AppInfo>> getSelectedAppInfos() {
-        return selectedAppInfos;
+        return mSelectedAppInfos;
     }
 
     public void selectApp(AppInfo info) {
@@ -47,9 +61,63 @@ public class MainViewModel extends AndroidViewModel {
         mPreferences.put(Preferences.APP_LIST, selected);
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
 
-        List<AppInfo> infos = selectedAppInfos.getValue();
+        List<AppInfo> infos = mSelectedAppInfos.getValue();
         infos.add(info);
-        selectedAppInfos.setValue(infos);
+        mSelectedAppInfos.setValue(infos);
+    }
+
+    private void loadAvaliableScripts(String pkg) {
+        disposables.add(API.getInstance().getScopeConfig()
+            .subscribeOn(Schedulers.io())
+            .subscribe(it -> {
+                // Get all avaliable scripts for this pkg
+                List<String> avaliableScripts = new ArrayList<>();
+                String scopeConfigLuaCode = it.getContent();
+                LuaTable config = mLuaGlobals.load(scopeConfigLuaCode).call().checktable();
+                for (LuaValue key : config.keys()) {
+                    LuaValue scope = config.get(key);
+                    if (scope.isstring()) {
+                        if (pkg.matches(scope.checkjstring())) {
+                            avaliableScripts.add(key.checkjstring());
+                        }
+                    } else if (scope.istable()) {
+                        LuaTable _scope = (LuaTable) scope;
+                        for (int i = 0; i < _scope.keyCount(); i++) {
+                            String v = _scope.get(i).checkjstring();
+                            if (pkg.matches(v)) {
+                                avaliableScripts.add(v);
+                            }
+                        }
+                    }
+                }
+
+                // Fetch scritps contents
+                List<ScriptListView.ScriptItem> scriptItems = new ArrayList<>();
+
+                disposables.add(Observable.fromIterable(avaliableScripts)
+                    .map(script -> API.getInstance().getScript(script))
+                    .observeOn(Schedulers.io())
+                    .buffer(5, 5)
+                    .subscribe(observables -> {
+                            observables.stream().forEach(observable ->
+                                observable.blockingSubscribe(contentFile -> {
+                                    String content = contentFile.getContent();
+                                    LuaTable metadata = mLuaGlobals.load(content).call().checktable();
+                                    String name = metadata.get("name").checkjstring();
+                                    String author = metadata.get("author").checkjstring();
+                                    String description = metadata.get("description").checkjstring();
+
+                                    // Using the metadate to create ScriptItem
+                                    scriptItems.add(new ScriptListView.ScriptItem(name, author, description, content));
+                                    mAvaliableScripts.postValue(scriptItems);
+                                }));
+                        },
+                        Logger::e,
+                        () -> {
+                            mAvaliableScripts.postValue(scriptItems);
+                        }
+                    ));
+            }));
     }
 
     private void loadApplicationInfos() {
@@ -68,7 +136,7 @@ public class MainViewModel extends AndroidViewModel {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
                 selectedData.addAll(infos);
-                selectedAppInfos.setValue(selectedData);
+                mSelectedAppInfos.setValue(selectedData);
             }));
     }
 

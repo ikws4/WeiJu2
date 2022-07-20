@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,13 +36,16 @@ public class ScriptListView extends RecyclerView {
         mAdapter = new Adapter();
         setAdapter(mAdapter);
 
-        List<ScriptItem> items = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            items.add(new ScriptItem("System variables", "ikws4", "Change the variables like your phone model", ""));
-        }
-        mAdapter.submitList(items);
+        // List<ScriptItem> items = new ArrayList<>();
+        // for (int i = 0; i < 10; i++) {
+        //     items.add(new ScriptItem("System variables", "ikws4", "Change the variables like your phone model", ""));
+        // }
+        // mAdapter.submitList(items);
     }
 
+    public void setData(List<ScriptItem> data) {
+        mAdapter.submitList(data);
+    }
 
     private static final DiffUtil.ItemCallback<ScriptItem> CALLBACK = new DiffUtil.ItemCallback<ScriptItem>() {
         @Override
@@ -56,7 +59,7 @@ public class ScriptListView extends RecyclerView {
         }
     };
 
-    class Adapter extends ListAdapter<ScriptItem, Adapter.ViewHolder> {
+    static class Adapter extends ListAdapter<ScriptItem, Adapter.ViewHolder> {
 
         protected Adapter() {
             super(CALLBACK);
@@ -74,7 +77,7 @@ public class ScriptListView extends RecyclerView {
             holder.bind(getItem(position));
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             private final TextView vIconLabel, vName, vAuthor, vDescription;
 
             public ViewHolder(@NonNull View itemView) {
@@ -87,6 +90,7 @@ public class ScriptListView extends RecyclerView {
 
             public void bind(ScriptItem item) {
                 itemView.setOnClickListener(v -> {
+                    Toast.makeText(v.getContext(), item.script, Toast.LENGTH_SHORT).show();
                 });
                 vIconLabel.setText(String.valueOf(item.name.charAt(0)));
                 vName.setText(item.name);
