@@ -1,6 +1,7 @@
 package io.ikws4.weiju.page.home.view;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
@@ -299,7 +299,8 @@ public class ScriptListView extends RecyclerView {
             layoutParams.rightMargin = UnitConverter.dp(48);
             setLayoutParams(layoutParams);
             setGravity(Gravity.CENTER);
-            setTypeface(ResourcesCompat.getFont(getContext(), R.font.jetbrains_mono_regular));
+            Typeface font = Typeface.createFromAsset(getContext().getAssets(), "font/jetbrains_mono_regular.ttf");
+            setTypeface(font);
             setText(msg);
             setTextColor(getContext().getResources().getColor(R.color.muted, null));
             setTextAlignment(TEXT_ALIGNMENT_CENTER);

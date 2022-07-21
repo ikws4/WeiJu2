@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
-    api 'com.github.bumptech.glide:glide:4.13.2'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+    implementation project(path: ':util')
+    implementation 'io.github.Rosemoe.sora-editor:editor:0.15.0-dev-1'
+    implementation 'io.github.Rosemoe.sora-editor:language-textmate:0.15.0-dev-1'
 }
