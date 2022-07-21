@@ -43,16 +43,20 @@ public class HomeFragment extends Fragment {
         SearchBar searchBar = new SearchBar(getContext(), new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
             vm.selectApp((AppListView.AppItem) item.userData);
-            vApps.scrollToBottom();
             return true;
         });
 
-        vApps.setOnItemClickListener(app -> {
-            vm.switchApp(app.pkg);
-        });
+        vApps.registerCallbacks(new AppListView.Callbacks() {
 
-        vApps.setOnAddAppClickListener(v -> {
-            searchBar.show();
+            @Override
+            public void onSwitchToApp(AppListView.AppItem app) {
+                vm.switchApp(app.pkg);
+            }
+
+            @Override
+            public void onRequireAddNewApp() {
+                searchBar.show();
+            }
         });
 
         vm.getSelectedApps().observe(getViewLifecycleOwner(), infos -> {

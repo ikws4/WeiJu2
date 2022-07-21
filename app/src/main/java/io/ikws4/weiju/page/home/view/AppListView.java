@@ -28,10 +28,9 @@ import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.UnitConverter;
 
 public class AppListView extends RecyclerView {
-    private OnItemClickListener mOnItemClickListener;
-    private View.OnClickListener mOnAddAppClickListener;
     private Adapter mAdapter;
     private String mSelectedPackage;
+    private Callbacks mCallbacks = new EmptyCallbask();
 
     public AppListView(@NonNull Context context) {
         super(context);
@@ -51,12 +50,8 @@ public class AppListView extends RecyclerView {
         addItemDecoration(new VerticalSpacingItemDecorator(UnitConverter.dp(16)));
     }
 
-    public void setOnItemClickListener(OnItemClickListener l) {
-        mOnItemClickListener = l;
-    }
-
-    public void setOnAddAppClickListener(OnClickListener onAddAppClickListener) {
-        mOnAddAppClickListener = onAddAppClickListener;
+    public void registerCallbacks(Callbacks callbacks) {
+        mCallbacks = callbacks;
     }
 
     public void setData(List<AppItem> data) {
@@ -64,10 +59,6 @@ public class AppListView extends RecyclerView {
         mAdapter.notifySelectedPkgPositionChanged();
         mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
         mAdapter.notifySelectedPkgPositionChanged();
-    }
-
-    public void scrollToBottom() {
-        smoothScrollToPosition(mAdapter.getItemCount());
     }
 
     public void scrollToSelectedPkgPosition() {
@@ -87,7 +78,9 @@ public class AppListView extends RecyclerView {
         }
     };
 
-    private class Adapter extends ListAdapter<AppItem, Adapter.ViewHolder> {
+    private class Adapter extends ListAdapter<AppItem, RecyclerView.ViewHolder> {
+        private static final int VIEW_TYPE_ITEM = 0;
+        private static final int VIEW_TYPE_ADD_APP = 1;
 
         public Adapter() {
             super(CALLBACK);
@@ -95,26 +88,32 @@ public class AppListView extends RecyclerView {
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            int resId = R.layout.app_item;
-            if (viewType == 1) resId = R.layout.app_add_item;
-
-            View view = LayoutInflater.from(parent.getContext()).inflate(resId, parent, false);
-            return new ViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view;
+            switch (viewType) {
+                case VIEW_TYPE_ITEM:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.app_item, parent, false);
+                    return new ItemViewHolder(view);
+                case VIEW_TYPE_ADD_APP:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_app_item, parent, false);
+                    return new AddAppViewHodler(view);
+                default:
+                    throw new IllegalStateException("Unexpected value: " + viewType);
+            }
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (position < getRealItemCount()) {
-                holder.bind(getItem(position));
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof ItemViewHolder) {
+                ((ItemViewHolder) holder).bind(getItem(position));
             } else {
-                holder.itemView.setOnClickListener(mOnAddAppClickListener);
+                ((AddAppViewHodler)holder).bind();
             }
         }
 
         @Override
         public int getItemCount() {
-            return super.getItemCount() + 1;
+            return getRealItemCount() + 1;
         }
 
         public int getRealItemCount() {
@@ -123,8 +122,8 @@ public class AppListView extends RecyclerView {
 
         @Override
         public int getItemViewType(int position) {
-            if (position < getItemCount() - 1) return 0;
-            return 1;
+            if (position < getItemCount() - 1) return VIEW_TYPE_ITEM;
+            return VIEW_TYPE_ADD_APP;
         }
 
         public void notifySelectedPkgPositionChanged() {
@@ -141,11 +140,11 @@ public class AppListView extends RecyclerView {
             return -1;
         }
 
-        private class ViewHolder extends RecyclerView.ViewHolder {
+        private class ItemViewHolder extends RecyclerView.ViewHolder {
             private final AppCompatTextView tvName;
             private final ShapeableImageView imgIcon;
 
-            public ViewHolder(@NonNull View itemView) {
+            public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 tvName = itemView.findViewById(R.id.tv_name);
                 imgIcon = itemView.findViewById(R.id.img_icon);
@@ -170,9 +169,7 @@ public class AppListView extends RecyclerView {
                 itemView.setOnClickListener((v) -> {
                     if (mSelectedPackage.equals(item.pkg)) return;
 
-                    if (mOnAddAppClickListener != null) {
-                        mOnItemClickListener.onClick(item);
-                    }
+                    mCallbacks.onSwitchToApp(item);
                     AppItem info = getItem(getLayoutPosition());
                     if (!info.pkg.equals(mSelectedPackage)) {
                         notifySelectedPkgPositionChanged();
@@ -180,6 +177,18 @@ public class AppListView extends RecyclerView {
                         mSelectedPackage = info.pkg;
                         Preferences.getInstance(getContext()).put(Preferences.APP_LIST_SELECTED_PACKAGE, mSelectedPackage);
                     }
+                });
+            }
+        }
+
+        private class AddAppViewHodler extends RecyclerView.ViewHolder {
+            public AddAppViewHodler(@NonNull View itemView) {
+                super(itemView);
+            }
+
+            public void bind() {
+                itemView.setOnClickListener((v) -> {
+                    mCallbacks.onRequireAddNewApp();
                 });
             }
         }
@@ -233,10 +242,22 @@ public class AppListView extends RecyclerView {
         }
     }
 
+    public interface Callbacks {
+        void onSwitchToApp(AppItem app);
 
-    public interface OnItemClickListener {
-        void onClick(AppItem pkg);
+        void onRequireAddNewApp();
     }
 
+    static class EmptyCallbask implements Callbacks {
 
+        @Override
+        public void onSwitchToApp(AppItem app) {
+
+        }
+
+        @Override
+        public void onRequireAddNewApp() {
+
+        }
+    }
 }
