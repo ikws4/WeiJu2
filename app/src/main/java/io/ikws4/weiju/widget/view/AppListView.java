@@ -77,7 +77,7 @@ public class AppListView extends RecyclerView {
     private static final DiffUtil.ItemCallback<AppInfo> CALLBACK = new DiffUtil.ItemCallback<AppInfo>() {
         @Override
         public boolean areItemsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
-            return oldItem == newItem;
+            return oldItem.equals(newItem);
         }
 
         @Override

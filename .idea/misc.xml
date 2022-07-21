@@ -18,6 +18,9 @@
         <entry key="app/src/main/res/drawable/ic_more_vert.xml" value="0.2685" />
         <entry key="app/src/main/res/drawable/ic_run.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/popup_menu_background.xml" value="0.208" />
+        <entry key="app/src/main/res/drawable/script_drag_target_foreground.xml" value="0.133" />
+        <entry key="app/src/main/res/drawable/script_drag_target_foreground_outlined.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/script_item_leading_icon_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/script_item_leading_icon_background_pressed.xml" value="0.186" />
         <entry key="app/src/main/res/drawable/script_item_leading_icon_background_unpressed.xml" value="0.1" />
@@ -29,18 +32,21 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.49274444580078125" />
         <entry key="app/src/main/res/layout/app_add_item.xml" value="0.29074074074074074" />
         <entry key="app/src/main/res/layout/app_item.xml" value="0.648388671875" />
+        <entry key="app/src/main/res/layout/available_scripts_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/editor_context_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_add_app.xml" value="0.863793436686198" />
         <entry key="app/src/main/res/layout/item_app.xml" value="0.4987847900390625" />
         <entry key="app/src/main/res/layout/list_view.xml" value="0.15092592592592594" />
-        <entry key="app/src/main/res/layout/main_activity.xml" value="0.19852600097656253" />
+        <entry key="app/src/main/res/layout/main_activity.xml" value="0.2800491333007813" />
         <entry key="app/src/main/res/layout/script_empty_item.xml" value="0.3194444444444444" />
-        <entry key="app/src/main/res/layout/script_empty_placeholder.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/script_empty_placeholder.xml" value="0.17341613769531256" />
+        <entry key="app/src/main/res/layout/script_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/script_item.xml" value="0.6239430745442709" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.1" />
         <entry key="app/src/main/res/layout/search_list_dialog.xml" value="0.23670212765957446" />
         <entry key="app/src/main/res/layout/search_list_item.xml" value="0.6194905774346715" />
         <entry key="app/src/main/res/layout/text_compose_panel.xml" value="0.49244051332826977" />
+        <entry key="app/src/main/res/menu/available_script_item_actions.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.24493560791015623" />
         <entry key="editor/src/main/res/layout/editor.xml" value="0.1059322033898305" />
         <entry key="editor/src/main/res/layout/toolbar.xml" value="0.1" />

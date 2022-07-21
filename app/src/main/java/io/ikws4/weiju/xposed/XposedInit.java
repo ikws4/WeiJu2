@@ -50,7 +50,7 @@ public class XposedInit implements IXposedHookLoadPackage {
             return;
         }
 
-        String script = XScriptStore.getInstance(context).get(pkg);
+        String script = XScriptStore.getInstance(context).get(pkg, "");
         Globals globals = JsePlatform.standardGlobals();
         globals.set("lpparam", LuaValue.userdataOf(lpparam));
         globals.load(new XposedLib());

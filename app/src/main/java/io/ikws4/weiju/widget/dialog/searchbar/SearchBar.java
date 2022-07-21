@@ -170,7 +170,7 @@ public class SearchBar extends Dialog {
     private static final DiffUtil.ItemCallback<Item> CALLBACK = new DiffUtil.ItemCallback<Item>() {
         @Override
         public boolean areItemsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
-            return oldItem == newItem;
+            return oldItem.equals(newItem);
         }
 
         @Override

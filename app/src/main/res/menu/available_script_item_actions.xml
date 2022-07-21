@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add_to_my_scripts"
+        android:title="Add To My Scripts" />
+
+    <item
+        android:id="@+id/more_about_this_script"
+        android:title="More About This Script" />
+</menu>

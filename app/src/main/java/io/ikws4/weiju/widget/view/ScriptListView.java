@@ -1,0 +1,422 @@
+package io.ikws4.weiju.widget.view;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import io.ikws4.weiju.R;
+import io.ikws4.weiju.util.Logger;
+import io.ikws4.weiju.util.Strings;
+import io.ikws4.weiju.util.UnitConverter;
+
+public class ScriptListView extends RecyclerView {
+    private Adapter mAdapter;
+    private Callbacks mCallbacks = new EmptyCallbacks();
+
+    public ScriptListView(@NonNull Context context) {
+        super(context);
+        init();
+    }
+
+    public ScriptListView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        mAdapter = new Adapter();
+        LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        setLayoutManager(layoutManager);
+        setAdapter(mAdapter);
+        setData(null, null);
+
+        // List<ScriptItem> items = new ArrayList<>();
+        // for (int i = 0; i < 10; i++) {
+        //     items.add(new ScriptItem("System variables", "ikws4", "Change the variables like your phone model", ""));
+        // }
+        // mAdapter.submitList(items);
+    }
+
+    public void setData(@Nullable List<ScriptItem> myScripts, @Nullable List<ScriptItem> availableScripts) {
+        List<Item> items = new ArrayList<>();
+
+        items.add(new Item(Item.MY_SCRIPTS_HEADER));
+        if (myScripts == null) {
+            items.add(new Item(Item.MY_SCRIPTS_LOADING_PLACEHOLDER));
+        } else if (myScripts.isEmpty()) {
+            items.add(new Item(Item.MY_SCRIPTS_EMPTY_PLACEHOLDER));
+        } else {
+            for (ScriptItem item : myScripts) {
+                items.add(new Item(Item.MY_SCRIPT_ITEM, item));
+            }
+        }
+
+        items.add(new Item(Item.AVAILABLE_SCRIPTS_HEADER));
+        if (availableScripts == null) {
+            items.add(new Item(Item.AVAILABLE_SCRIPTS_LOADING_PLACEHOLDER));
+        } else if (availableScripts.isEmpty()) {
+            items.add(new Item(Item.AVAILABLE_SCRIPTS_EMPTY_PLACEHOLDER));
+        } else {
+            for (ScriptItem item : availableScripts) {
+                items.add(new Item(Item.AVAILABLE_SCRIPT_ITEM, item));
+            }
+        }
+
+        mAdapter.submitList(items);
+    }
+
+    public void registerCallbacks(Callbacks callbacks) {
+        mCallbacks = callbacks;
+    }
+
+    private static final DiffUtil.ItemCallback<Item> CALLBACK = new DiffUtil.ItemCallback<Item>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
+            return oldItem.equals(newItem);
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
+
+    class Adapter extends ListAdapter<Item, RecyclerView.ViewHolder> {
+
+        protected Adapter() {
+            super(CALLBACK);
+        }
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view;
+            switch (viewType) {
+                case Item.MY_SCRIPTS_HEADER:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.script_header, parent, false);
+                    return new MyScriptHeaderViewHolder(view);
+                case Item.MY_SCRIPTS_LOADING_PLACEHOLDER:
+                    view = new LoadingView(getContext(), 192);
+                    return new ViewHolder(view);
+                case Item.MY_SCRIPTS_EMPTY_PLACEHOLDER:
+                    view = new EmptyView(getContext(), "click  button to create a new script", 192);
+                    return new ViewHolder(view);
+                case Item.MY_SCRIPT_ITEM:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.script_item, parent, false);
+                    return new MyScriptItemViewHolder(view);
+
+                case Item.AVAILABLE_SCRIPTS_HEADER:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.script_header, parent, false);
+                    return new AvaiableScriptsHeaderViewHolder(view);
+                case Item.AVAILABLE_SCRIPTS_LOADING_PLACEHOLDER:
+                    view = new LoadingView(getContext(), 192);
+                    return new ViewHolder(view);
+                case Item.AVAILABLE_SCRIPTS_EMPTY_PLACEHOLDER:
+                    view = new EmptyView(getContext(), "No more scripts available for this app", 96);
+                    return new ViewHolder(view);
+                case Item.AVAILABLE_SCRIPT_ITEM:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.script_item, parent, false);
+                    return new AvaiableScriptItemViewHolder(view);
+
+                default:
+                    throw new IllegalStateException("Unexpected value: " + viewType);
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof MyScriptItemViewHolder) {
+                ((MyScriptItemViewHolder) holder).bind(getItem(position).scriptItem);
+            } else if (holder instanceof AvaiableScriptItemViewHolder) {
+                ((AvaiableScriptItemViewHolder) holder).bind(getItem(position).scriptItem);
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return getItem(position).type;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+            }
+        }
+
+        class MyScriptHeaderViewHolder extends RecyclerView.ViewHolder {
+
+            public MyScriptHeaderViewHolder(@NonNull View itemView) {
+                super(itemView);
+                TextView vTitle = itemView.findViewById(R.id.tv_title);
+                vTitle.setText("My Scripts");
+
+                ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
+                vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_add_circle));
+                vHelp.setOnClickListener((v) -> {
+                    Toast.makeText(v.getContext(), "Add", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }
+
+        class AvaiableScriptsHeaderViewHolder extends RecyclerView.ViewHolder {
+
+            public AvaiableScriptsHeaderViewHolder(@NonNull View itemView) {
+                super(itemView);
+                TextView vTitle = itemView.findViewById(R.id.tv_title);
+                vTitle.setText("Avaiable Scripts");
+
+                ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
+                vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_help));
+                vHelp.setOnClickListener((v) -> {
+                    Toast.makeText(v.getContext(), "Help", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }
+
+        class MyScriptItemViewHolder extends RecyclerView.ViewHolder {
+            private final TextView vIconLabel, vName, vAuthor, vDescription;
+
+            public MyScriptItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                vIconLabel = itemView.findViewById(R.id.tv_icon_label);
+                vName = itemView.findViewById(R.id.tv_name);
+                vAuthor = itemView.findViewById(R.id.tv_author);
+                vDescription = itemView.findViewById(R.id.tv_description);
+            }
+
+            public void bind(ScriptItem item) {
+                itemView.setOnClickListener(v -> {
+                    Toast.makeText(v.getContext(), item.script, Toast.LENGTH_SHORT).show();
+                });
+                vIconLabel.setText(String.valueOf(item.name.charAt(0)));
+                vName.setText(item.name);
+                vAuthor.setText(item.author);
+                vDescription.setText(item.description);
+
+                itemView.setOnLongClickListener((v) -> {
+                    showActionMenu(v, item);
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    return true;
+                });
+            }
+
+            private void showActionMenu(View v, ScriptItem item) {
+                PopupMenu popup = new PopupMenu(getContext(), v);
+                popup.inflate(R.menu.my_script_item_actions);
+                popup.setGravity(Gravity.END);
+                popup.setOnMenuItemClickListener(it -> {
+                    if (it.getItemId() == R.id.remove_from_my_scripts) {
+                        mCallbacks.onRemoveFromMyScripts(v, item);
+                    }
+                    return true;
+                });
+                popup.show();
+            }
+        }
+
+        class AvaiableScriptItemViewHolder extends RecyclerView.ViewHolder {
+            private final TextView vIconLabel, vName, vAuthor, vDescription;
+
+            public AvaiableScriptItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+                vIconLabel = itemView.findViewById(R.id.tv_icon_label);
+                vName = itemView.findViewById(R.id.tv_name);
+                vAuthor = itemView.findViewById(R.id.tv_author);
+                vDescription = itemView.findViewById(R.id.tv_description);
+            }
+
+            public void bind(ScriptItem item) {
+                itemView.setOnClickListener(v -> {
+                    Toast.makeText(v.getContext(), item.script, Toast.LENGTH_SHORT).show();
+                });
+                vIconLabel.setText(String.valueOf(item.name.charAt(0)));
+                vName.setText(item.name);
+                vAuthor.setText(item.author);
+                vDescription.setText(item.description);
+
+                itemView.setOnLongClickListener((v) -> {
+                    showActionMenu(v, item);
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    return true;
+                });
+            }
+
+            private void showActionMenu(View v, ScriptItem item) {
+                PopupMenu popup = new PopupMenu(getContext(), v);
+                popup.inflate(R.menu.available_script_item_actions);
+                popup.setGravity(Gravity.END);
+                popup.setOnMenuItemClickListener(it -> {
+                    if (it.getItemId() == R.id.add_to_my_scripts) {
+                        mCallbacks.onAddToMyScripts(v, item);
+                    } else if (it.getItemId() == R.id.more_about_this_script) {
+                        Toast.makeText(v.getContext(), "TODO: More about this script", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                });
+                popup.show();
+            }
+        }
+    }
+
+    private static class LoadingView extends FrameLayout {
+
+        public LoadingView(Context context, int height) {
+            super(context, null, 0, R.style.Widget_WeiJu_ProgressBar);
+            setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, UnitConverter.dp(height), Gravity.CENTER));
+            ProgressBar progressBar = new ProgressBar(context, null, 0, R.style.Widget_WeiJu_ProgressBar);
+            addView(progressBar, new LayoutParams(UnitConverter.dp(64), UnitConverter.dp(64), Gravity.CENTER));
+        }
+    }
+
+    private static class EmptyView extends androidx.appcompat.widget.AppCompatTextView {
+
+        public EmptyView(Context context, String msg, int height) {
+            super(context);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, UnitConverter.dp(height));
+            layoutParams.leftMargin = UnitConverter.dp(48);
+            layoutParams.rightMargin = UnitConverter.dp(48);
+            setLayoutParams(layoutParams);
+            setGravity(Gravity.CENTER);
+            setTypeface(ResourcesCompat.getFont(getContext(), R.font.jetbrains_mono_regular));
+            setText(msg);
+            setTextColor(getContext().getResources().getColor(R.color.muted, null));
+            setTextAlignment(TEXT_ALIGNMENT_CENTER);
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        }
+    }
+
+    private static class Item {
+        public static final int MY_SCRIPT_ITEM = 0;
+        public static final int AVAILABLE_SCRIPT_ITEM = 1;
+        public static final int AVAILABLE_SCRIPTS_HEADER = 2;
+        public static final int MY_SCRIPTS_HEADER = 3;
+        public static final int MY_SCRIPTS_EMPTY_PLACEHOLDER = 4;
+        public static final int AVAILABLE_SCRIPTS_EMPTY_PLACEHOLDER = 5;
+        public static final int MY_SCRIPTS_LOADING_PLACEHOLDER = 6;
+        public static final int AVAILABLE_SCRIPTS_LOADING_PLACEHOLDER = 7;
+
+        public final int type;
+        public final ScriptItem scriptItem;
+
+        public Item(int type) {
+            this(type, null);
+        }
+
+        public Item(int type, @Nullable ScriptItem item) {
+            this.type = type;
+            scriptItem = item;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Item item = (Item) o;
+            return type == item.type && Objects.equals(scriptItem, item.scriptItem);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, scriptItem);
+        }
+    }
+
+    public static class ScriptItem {
+        private static final Globals sGlobals = JsePlatform.standardGlobals();
+        private static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
+
+        public final String id;
+        public final String name;
+        public final String author;
+        public final String version;
+        public final String description;
+        public final String script;
+
+        private ScriptItem(@NonNull String name, @NonNull String author, @NonNull String version, @NonNull String description, @NonNull String script) {
+            this.id = Strings.join("-", name, author, version);
+            this.name = name;
+            this.author = author;
+            this.version = version;
+            this.description = description;
+            this.script = script;
+        }
+
+        public static ScriptItem from(String script) {
+            LuaTable metadata = sGlobals.load(script).call().checktable();
+            try {
+                String name = metadata.get("name").checkjstring();
+                String author = metadata.get("author").checkjstring();
+                String version = metadata.get("version").checkjstring();
+                String description = metadata.get("description").checkjstring();
+
+                // Using the metadate to create ScriptItem
+                return new ScriptItem(name, author, version, description, script);
+            } catch (LuaError e) {
+                Logger.d(e);
+            }
+            return EMPTY_ITEM;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ScriptItem item = (ScriptItem) o;
+            return name.equals(item.name) && author.equals(item.author) && version.equals(item.version) && description.equals(item.description) && script.equals(item.script);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, author, version, description, script);
+        }
+    }
+
+    public interface Callbacks {
+        void onAddToMyScripts(View v, ScriptItem item);
+
+        void onRemoveFromMyScripts(View v, ScriptItem item);
+    }
+
+    public static class EmptyCallbacks implements Callbacks {
+
+        @Override
+        public void onAddToMyScripts(View v, ScriptItem item) {
+
+        }
+
+        @Override
+        public void onRemoveFromMyScripts(View v, ScriptItem item) {
+
+        }
+    }
+}

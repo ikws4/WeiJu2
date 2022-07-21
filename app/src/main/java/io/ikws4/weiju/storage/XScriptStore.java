@@ -3,6 +3,9 @@ package io.ikws4.weiju.storage;
 import android.content.Context;
 import android.os.Build;
 
+import java.util.Set;
+import java.util.function.Function;
+
 import io.ikws4.weiju.util.Logger;
 
 public class XScriptStore {
@@ -22,8 +25,12 @@ public class XScriptStore {
         }
     }
 
-    public String get(String k) {
-        return strategy.get(k);
+    public String get(String k, String defValue) {
+        return strategy.get(k, defValue);
+    }
+
+    public Set<String> get(String key, Function<Void, Set<String>> defValue) {
+        return strategy.get(key, defValue);
     }
 
     private static XScriptStore instance;

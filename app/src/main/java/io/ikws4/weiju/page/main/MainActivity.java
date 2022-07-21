@@ -18,10 +18,10 @@ import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
-import io.ikws4.weiju.widget.dialog.ScriptListView;
 import io.ikws4.weiju.widget.dialog.searchbar.SearchBar;
 import io.ikws4.weiju.widget.dialog.searchbar.SelectedAppInfoItemLoader;
 import io.ikws4.weiju.widget.view.AppListView;
+import io.ikws4.weiju.widget.view.ScriptListView;
 
 public class MainActivity extends AppCompatActivity {
     // For xposed to hook this variable to indicate
@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private Editor vEditor;
     private Toolbar vToolbar;
     private AppListView vAppList;
-    private ScriptListView vMyScripts;
-    private ScriptListView vAvaliableScripts;
+    private ScriptListView vScripts;
+    // private ScriptListView vAvaliableScripts;
     private ViewFlipper vMyScriptsViewFlipper;
     private ViewFlipper vAvailableScriptsViewFlipper;
 
@@ -57,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
         // mEditor = findViewById(R.id.code_editor);
         vToolbar = findViewById(R.id.toolbar);
         vAppList = findViewById(R.id.rv_item_list);
-        vMyScripts = findViewById(R.id.rv_my_scripts);
-        vAvaliableScripts = findViewById(R.id.rv_avaliable_scripts);
-        vMyScriptsViewFlipper = findViewById(R.id.vf_my_scripts);
-        vAvailableScriptsViewFlipper = findViewById(R.id.vf_available_scripts);
+        vScripts = findViewById(R.id.rv_scripts);
+        // vMyScripts = findViewById(R.id.rv_my_scripts);
+        // vAvaliableScripts = findViewById(R.id.rv_avaliable_scripts);
+        // vMyScriptsViewFlipper = findViewById(R.id.vf_my_scripts);
+        // vAvailableScriptsViewFlipper = findViewById(R.id.vf_available_scripts);
 
         vToolbar.setOnMenuItemClickListener((menu) -> {
             if (menu.getItemId() == R.id.menu_run) {
@@ -86,6 +87,64 @@ public class MainActivity extends AppCompatActivity {
         });
         vToolbar.getMenu().findItem(R.id.menu_xposed_status).setVisible(!XPOSED_ENABLED);
 
+
+        vScripts.registerCallbacks(new ScriptListView.Callbacks() {
+            @Override
+            public void onAddToMyScripts(View v, ScriptListView.ScriptItem item) {
+                mViewModel.removeFromAvaliableScripts(item);
+                mViewModel.addToMyScript(item);
+            }
+
+            @Override
+            public void onRemoveFromMyScripts(View v, ScriptListView.ScriptItem item) {
+                mViewModel.removeFromMyScripts(item);
+            }
+        });
+        // Drag script from avaliable scripts to my scripts
+        // vAvaliableScripts.setItemLongClickListener((v, x, y, item) -> {
+        //     ClipData.Item clipDataItem = new ClipData.Item(item.name);
+        //     ClipData data = new ClipData(item.name, new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, clipDataItem);
+        //     View.DragShadowBuilder shadow = new View.DragShadowBuilder(v) {
+        //         @Override
+        //         public void onProvideShadowMetrics(Point outShadowSize, Point outShadowTouchPoint) {
+        //             outShadowSize.set(v.getWidth(), v.getHeight());
+        //             outShadowTouchPoint.set((int) x, (int) y);
+        //         }
+        //     };
+        //     v.startDragAndDrop(data, shadow, new Pair<>(v, item), 0);
+        //     v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+        // });
+        //
+        // vMyScriptsViewFlipper.setOnDragListener((v, event) -> {
+        //     Pair<View, ScriptListView.ScriptItem> data = (Pair<View, ScriptListView.ScriptItem>) event.getLocalState();
+        //     View dragView = data.first;
+        //     ScriptListView.ScriptItem item = data.second;
+        //     switch (event.getAction()) {
+        //         case DragEvent.ACTION_DRAG_STARTED:
+        //             mViewModel.removeFromAvaliableScripts(item);
+        //             vMyScriptsViewFlipper.setForeground(AppCompatResources.getDrawable(this, R.drawable.script_drag_target_foreground));
+        //             return true;
+        //         case DragEvent.ACTION_DRAG_ENTERED:
+        //             vMyScriptsViewFlipper.setForeground(AppCompatResources.getDrawable(this, R.drawable.script_drag_target_foreground_outlined));
+        //             return true;
+        //         case DragEvent.ACTION_DROP:
+        //             mViewModel.addToMyScript(item);
+        //             vMyScriptsViewFlipper.setForeground(null);
+        //             return true;
+        //         case DragEvent.ACTION_DRAG_ENDED:
+        //             if (event.getResult() == false) {
+        //                 mViewModel.addToAvaliableScripts(item);
+        //             }
+        //             vMyScriptsViewFlipper.setForeground(null);
+        //             return true;
+        //         case DragEvent.ACTION_DRAG_EXITED:
+        //         case DragEvent.ACTION_DRAG_LOCATION:
+        //             return true;
+        //     }
+        //
+        //     return false;
+        // });
+
         SearchBar searchBar = new SearchBar(this, new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
             mViewModel.selectApp((AppInfo) item.userData);
@@ -93,9 +152,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        vAppList.setOnItemClickListener(pkg -> {
+        vAppList.setOnItemClickListener(app -> {
             // mEditor.setText(mStorage.get(pkg));
-            mViewModel.switchApp(pkg);
+            mViewModel.switchApp(app.pkg);
         });
 
         vAppList.setOnAddAppClickListener(v -> {
@@ -109,16 +168,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mViewModel.getAvaliableScripts().observe(this, scripts -> {
-            if (scripts == null) {
-                // loading
-                vAvailableScriptsViewFlipper.setDisplayedChild(0);
-            } else if (scripts.isEmpty()) {
-                vAvailableScriptsViewFlipper.setDisplayedChild(1);
-                vAvaliableScripts.setData(scripts);
-            } else {
-                vAvaliableScripts.setData(scripts);
-                vAvailableScriptsViewFlipper.setDisplayedChild(2);
-            }
+            vScripts.setData(mViewModel.getMyScripts().getValue(), scripts);
         });
+
+        mViewModel.getMyScripts().observe(this, scripts -> {
+            vScripts.setData(scripts, mViewModel.getAvaliableScripts().getValue());
+        });
+
+        // mViewModel.getAvaliableScripts().observe(this, scripts -> {
+        //     if (scripts == null) {
+        //         // loading
+        //         vAvailableScriptsViewFlipper.setDisplayedChild(0);
+        //     } else if (scripts.isEmpty()) {
+        //         vAvailableScriptsViewFlipper.setDisplayedChild(1);
+        //         vAvaliableScripts.setData(scripts);
+        //     } else {
+        //         vAvaliableScripts.setData(scripts);
+        //         vAvailableScriptsViewFlipper.setDisplayedChild(2);
+        //     }
+        // });
+        //
+        // mViewModel.getMyScripts().observe(this, scripts -> {
+        //     if (scripts.isEmpty()) {
+        //         vMyScriptsViewFlipper.setDisplayedChild(0);
+        //         vMyScripts.setData(scripts);
+        //     } else {
+        //         vMyScripts.setData(scripts);
+        //         vMyScriptsViewFlipper.setDisplayedChild(1);
+        //     }
+        // });
     }
 }

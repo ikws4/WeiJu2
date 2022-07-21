@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaTable;
@@ -23,31 +22,40 @@ import java.util.stream.Collectors;
 
 import io.ikws4.weiju.api.API;
 import io.ikws4.weiju.data.AppInfo;
+import io.ikws4.weiju.ext.MutableLiveDataExt;
 import io.ikws4.weiju.storage.Preferences;
+import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.util.Logger;
-import io.ikws4.weiju.widget.dialog.ScriptListView;
+import io.ikws4.weiju.widget.view.ScriptListView;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainViewModel extends AndroidViewModel {
-    private final MutableLiveData<List<AppInfo>> mSelectedAppInfos = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveData<>();
+    private final MutableLiveDataExt<List<AppInfo>> mSelectedAppInfos = new MutableLiveDataExt<>(new ArrayList<>());
+    private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveDataExt<>();
+    private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mMyScripts = new MutableLiveDataExt<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final Preferences mPreferences;
+    private final ScriptStore mScriptStore;
     private final Globals mLuaGlobals;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         mLuaGlobals = JsePlatform.standardGlobals();
         mPreferences = Preferences.getInstance(getApplication());
+        mScriptStore = ScriptStore.getInstance(getApplication());
         loadApplicationInfos();
-        loadAvaliableScripts(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+        switchApp(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
     }
 
     public LiveData<List<ScriptListView.ScriptItem>> getAvaliableScripts() {
         return mAvaliableScripts;
+    }
+
+    public LiveData<List<ScriptListView.ScriptItem>> getMyScripts() {
+        return mMyScripts;
     }
 
     public LiveData<List<AppInfo>> getSelectedAppInfos() {
@@ -55,9 +63,9 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void selectApp(AppInfo info) {
-        switchApp(info);
-
         String pkg = info.pkg;
+        switchApp(pkg);
+
         Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>()));
         selected.add(pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
@@ -67,10 +75,42 @@ public class MainViewModel extends AndroidViewModel {
         mSelectedAppInfos.setValue(infos);
     }
 
-    public void switchApp(AppInfo info) {
-        String pkg = info.pkg;
+    public void switchApp(String pkg) {
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
         loadAvaliableScripts(pkg);
+        loadMyScripts(pkg);
+    }
+
+    public void addToMyScript(ScriptListView.ScriptItem item) {
+        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+
+        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, (v) -> new HashSet<>()));
+        ids.add(item.id);
+        mScriptStore.put(pkg, ids);
+        mScriptStore.put(item.id, item.script);
+
+        mMyScripts.getValue().add(item);
+        mMyScripts.publish();
+    }
+
+    public void removeFromMyScripts(ScriptListView.ScriptItem item) {
+        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+
+        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, (v) -> new HashSet<>()));
+        ids.remove(item.id);
+        mScriptStore.put(pkg, ids);
+        mScriptStore.put(item.id, "");
+
+        mMyScripts.getValue().remove(item);
+        mMyScripts.publish();
+
+        // reload avaliable script from server
+        loadAvaliableScripts(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+    }
+
+    public void removeFromAvaliableScripts(ScriptListView.ScriptItem item) {
+        mAvaliableScripts.getValue().remove(item);
+        mAvaliableScripts.publish();
     }
 
     private void loadAvaliableScripts(String pkg) {
@@ -110,14 +150,10 @@ public class MainViewModel extends AndroidViewModel {
                     .subscribe(observables -> {
                             observables.stream().forEach(observable ->
                                 observable.blockingSubscribe(contentFile -> {
-                                    String content = contentFile.getContent();
-                                    LuaTable metadata = mLuaGlobals.load(content).call().checktable();
-                                    String name = metadata.get("name").checkjstring();
-                                    String author = metadata.get("author").checkjstring();
-                                    String description = metadata.get("description").checkjstring();
-
-                                    // Using the metadate to create ScriptItem
-                                    scriptItems.add(new ScriptListView.ScriptItem(name, author, description, content));
+                                    ScriptListView.ScriptItem item = ScriptListView.ScriptItem.from(contentFile.getContent());
+                                    if (mMyScripts.getValue() == null || !mMyScripts.getValue().contains(item)) {
+                                        scriptItems.add(item);
+                                    }
                                 }, Logger::e));
                         },
                         Logger::e,
@@ -126,6 +162,16 @@ public class MainViewModel extends AndroidViewModel {
                         }
                     ));
             }, Logger::e));
+    }
+
+    private void loadMyScripts(String pkg) {
+        Set<String> scriptIds = mScriptStore.get(pkg, (v) -> new HashSet<>());
+
+        mMyScripts.setValue(
+            scriptIds.stream()
+                .map(id -> ScriptListView.ScriptItem.from(mScriptStore.get(id, "")))
+                .collect(Collectors.toList())
+        );
     }
 
     private void loadApplicationInfos() {
@@ -146,6 +192,16 @@ public class MainViewModel extends AndroidViewModel {
                 selectedData.addAll(infos);
                 mSelectedAppInfos.setValue(selectedData);
             }));
+    }
+
+    private boolean filterOutInMyScriptsItem(String id) {
+        List<ScriptListView.ScriptItem> items = mMyScripts.getValue();
+        if (items != null) {
+            for (ScriptListView.ScriptItem item : items) {
+                if (item.id.equals(id)) return false;
+            }
+        }
+        return true;
     }
 
     @Override
