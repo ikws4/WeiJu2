@@ -364,8 +364,8 @@ public class ScriptListView extends RecyclerView {
         }
 
         public static ScriptItem from(String script) {
-            LuaTable metadata = sGlobals.load(script).call().checktable();
             try {
+                LuaTable metadata = sGlobals.load(script).call().checktable();
                 String name = metadata.get("name").checkjstring();
                 String author = metadata.get("author").checkjstring();
                 String version = metadata.get("version").checkjstring();

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.ikws4.weiju.widget.view.AppListView
+        android:id="@+id/rv_item_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:itemCount="5"
+        tools:listitem="@layout/app_item" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        app:dividerColor="@color/surface" />
+
+    <io.ikws4.weiju.widget.view.ScriptListView
+        android:id="@+id/rv_scripts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:itemCount="3"
+        tools:listitem="@layout/script_item" />
+
+</LinearLayout>

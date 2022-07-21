@@ -1,4 +1,4 @@
-package io.ikws4.weiju.page.main;
+package io.ikws4.weiju.page.home;
 
 import android.app.Application;
 import android.content.pm.PackageManager;
@@ -32,7 +32,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MainViewModel extends AndroidViewModel {
+public class HomeViewModel extends AndroidViewModel {
     private final MutableLiveDataExt<List<AppInfo>> mSelectedAppInfos = new MutableLiveDataExt<>(new ArrayList<>());
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mMyScripts = new MutableLiveDataExt<>();
@@ -41,7 +41,7 @@ public class MainViewModel extends AndroidViewModel {
     private final ScriptStore mScriptStore;
     private final Globals mLuaGlobals;
 
-    public MainViewModel(@NonNull Application application) {
+    public HomeViewModel(@NonNull Application application) {
         super(application);
         mLuaGlobals = JsePlatform.standardGlobals();
         mPreferences = Preferences.getInstance(getApplication());
@@ -192,16 +192,6 @@ public class MainViewModel extends AndroidViewModel {
                 selectedData.addAll(infos);
                 mSelectedAppInfos.setValue(selectedData);
             }));
-    }
-
-    private boolean filterOutInMyScriptsItem(String id) {
-        List<ScriptListView.ScriptItem> items = mMyScripts.getValue();
-        if (items != null) {
-            for (ScriptListView.ScriptItem item : items) {
-                if (item.id.equals(id)) return false;
-            }
-        }
-        return true;
     }
 
     @Override

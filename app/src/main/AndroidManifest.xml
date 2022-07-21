@@ -28,7 +28,7 @@
             android:value="true" />
 
         <activity
-            android:name=".page.main.MainActivity"
+            android:name=".page.MainActivity"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

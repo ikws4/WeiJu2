@@ -3,28 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_xposed_status"
+        android:id="@+id/xposed_status"
         android:icon="@drawable/ic_info"
         android:title="Status"
         android:visible="false"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_toggle_zem_mode"
-        android:icon="@drawable/ic_fullscreen"
-        android:title="Toggle Zen Mode"
-        app:showAsAction="always" />
 
     <item
-        android:id="@+id/menu_run"
-        android:icon="@drawable/ic_run"
-        android:title="Run"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/menu_save"
-        android:title="Save" />
-
-    <item
-        android:id="@+id/menu_settings"
+        android:id="@+id/settings"
         android:title="Settings" />
 </menu>
