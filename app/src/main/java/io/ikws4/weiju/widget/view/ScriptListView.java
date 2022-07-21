@@ -264,10 +264,8 @@ public class ScriptListView extends RecyclerView {
                 vAuthor.setText(item.author);
                 vDescription.setText(item.description);
 
-                itemView.setOnLongClickListener((v) -> {
+                itemView.setOnClickListener((v) -> {
                     showActionMenu(v, item);
-                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    return true;
                 });
             }
 
