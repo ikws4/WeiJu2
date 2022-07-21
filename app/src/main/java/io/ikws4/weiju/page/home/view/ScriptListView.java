@@ -1,4 +1,4 @@
-package io.ikws4.weiju.widget.view;
+package io.ikws4.weiju.page.home.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

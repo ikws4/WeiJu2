@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.ikws4.weiju.widget.view.AppListView
+    <io.ikws4.weiju.page.home.view.AppListView
         android:id="@+id/rv_item_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         app:dividerColor="@color/surface" />
 
-    <io.ikws4.weiju.widget.view.ScriptListView
+    <io.ikws4.weiju.page.home.view.ScriptListView
         android:id="@+id/rv_scripts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

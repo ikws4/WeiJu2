@@ -1,4 +1,4 @@
-package io.ikws4.weiju.widget.dialog.searchbar;
+package io.ikws4.weiju.widget.searchbar;
 
 import android.content.pm.PackageManager;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.ikws4.weiju.data.AppInfo;
+import io.ikws4.weiju.page.home.view.AppListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -31,13 +31,13 @@ public class SelectedAppInfoItemLoader extends SearchBar.ItemLoader {
             .subscribeOn(Schedulers.io())
             .filter(info -> !map.containsKey(info.packageName))
             .sorted((a, b) -> {
-                int res = Boolean.compare(AppInfo.isSystemApp(a), AppInfo.isSystemApp(b));
+                int res = Boolean.compare(AppListView.AppItem.isSystemApp(a), AppListView.AppItem.isSystemApp(b));
                 if (res == 0) {
                     return a.packageName.compareTo(b.packageName);
                 }
                 return res;
             })
-            .map(info -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, AppInfo.isSystemApp(info)))
+            .map(info -> new AppListView.AppItem(info.loadLabel(pm).toString(), info.packageName, AppListView.AppItem.isSystemApp(info)))
             .map(info -> new SearchBar.Item(info.name, info.imgUri, info))
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())

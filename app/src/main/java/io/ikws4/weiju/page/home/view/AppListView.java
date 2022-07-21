@@ -1,7 +1,9 @@
-package io.ikws4.weiju.widget.view;
+package io.ikws4.weiju.page.home.view;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.res.ColorStateList;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +21,11 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
+import java.util.Objects;
 
 import io.ikws4.weiju.R;
-import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.UnitConverter;
-import io.ikws4.weiju.widget.view.recyclerview.VerticalSpacingItemDecorator;
 
 public class AppListView extends RecyclerView {
     private OnItemClickListener mOnItemClickListener;
@@ -58,7 +59,7 @@ public class AppListView extends RecyclerView {
         mOnAddAppClickListener = onAddAppClickListener;
     }
 
-    public void setData(List<AppInfo> data) {
+    public void setData(List<AppItem> data) {
         mAdapter.submitList(data);
         mAdapter.notifySelectedPkgPositionChanged();
         mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
@@ -74,19 +75,19 @@ public class AppListView extends RecyclerView {
         if (i != -1) smoothScrollToPosition(i);
     }
 
-    private static final DiffUtil.ItemCallback<AppInfo> CALLBACK = new DiffUtil.ItemCallback<AppInfo>() {
+    private static final DiffUtil.ItemCallback<AppItem> CALLBACK = new DiffUtil.ItemCallback<AppItem>() {
         @Override
-        public boolean areItemsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
+        public boolean areItemsTheSame(@NonNull AppItem oldItem, @NonNull AppItem newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull AppInfo oldItem, @NonNull AppInfo newItem) {
+        public boolean areContentsTheSame(@NonNull AppItem oldItem, @NonNull AppItem newItem) {
             return oldItem.equals(newItem);
         }
     };
 
-    private class Adapter extends ListAdapter<AppInfo, Adapter.ViewHolder> {
+    private class Adapter extends ListAdapter<AppItem, Adapter.ViewHolder> {
 
         public Adapter() {
             super(CALLBACK);
@@ -150,7 +151,7 @@ public class AppListView extends RecyclerView {
                 imgIcon = itemView.findViewById(R.id.img_icon);
             }
 
-            public void bind(AppInfo item) {
+            public void bind(AppItem item) {
                 tvName.setText(item.name);
                 Glide.with(getContext())
                     .load(item.imgUri)
@@ -172,7 +173,7 @@ public class AppListView extends RecyclerView {
                     if (mOnAddAppClickListener != null) {
                         mOnItemClickListener.onClick(item);
                     }
-                    AppInfo info = getItem(getLayoutPosition());
+                    AppItem info = getItem(getLayoutPosition());
                     if (!info.pkg.equals(mSelectedPackage)) {
                         notifySelectedPkgPositionChanged();
                         notifyItemChanged(getLayoutPosition());
@@ -184,7 +185,58 @@ public class AppListView extends RecyclerView {
         }
     }
 
-    public interface OnItemClickListener {
-        void onClick(AppInfo pkg);
+    public static class AppItem {
+        public final String name;
+        public final String pkg;
+        public final String imgUri;
+        public final boolean isSystemApp;
+
+        public AppItem(@NonNull String name, @NonNull String pkg, boolean isSystemApp) {
+            this.name = name;
+            this.pkg = pkg;
+            this.imgUri = "pkg:" + pkg;
+            this.isSystemApp = isSystemApp;
+        }
+
+        public static boolean isSystemApp(ApplicationInfo info) {
+            return (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AppItem info = (AppItem) o;
+            return isSystemApp == info.isSystemApp && Objects.equals(name, info.name) && Objects.equals(pkg, info.pkg) && Objects.equals(imgUri, info.imgUri);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, pkg, imgUri, isSystemApp);
+        }
     }
+
+    static class VerticalSpacingItemDecorator extends RecyclerView.ItemDecoration {
+        private final int mSpacing;
+
+        public VerticalSpacingItemDecorator(int spacing) {
+            mSpacing = spacing;
+        }
+
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = mSpacing;
+            }
+            outRect.bottom = mSpacing;
+        }
+    }
+
+
+    public interface OnItemClickListener {
+        void onClick(AppItem pkg);
+    }
+
+
 }

@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.ikws4.weiju.R;
-import io.ikws4.weiju.data.AppInfo;
-import io.ikws4.weiju.widget.dialog.searchbar.SearchBar;
-import io.ikws4.weiju.widget.dialog.searchbar.SelectedAppInfoItemLoader;
-import io.ikws4.weiju.widget.view.AppListView;
-import io.ikws4.weiju.widget.view.ScriptListView;
+import io.ikws4.weiju.widget.searchbar.SearchBar;
+import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
+import io.ikws4.weiju.page.home.view.AppListView;
+import io.ikws4.weiju.page.home.view.ScriptListView;
 
 public class HomeFragment extends Fragment {
 
@@ -25,7 +24,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         HomeViewModel vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
-        AppListView vAppList = view.findViewById(R.id.rv_item_list);
+        AppListView vApps = view.findViewById(R.id.rv_item_list);
         ScriptListView vScripts = view.findViewById(R.id.rv_scripts);
 
         vScripts.registerCallbacks(new ScriptListView.Callbacks() {
@@ -43,22 +42,22 @@ public class HomeFragment extends Fragment {
 
         SearchBar searchBar = new SearchBar(getContext(), new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
-            vm.selectApp((AppInfo) item.userData);
-            vAppList.scrollToBottom();
+            vm.selectApp((AppListView.AppItem) item.userData);
+            vApps.scrollToBottom();
             return true;
         });
 
-        vAppList.setOnItemClickListener(app -> {
+        vApps.setOnItemClickListener(app -> {
             vm.switchApp(app.pkg);
         });
 
-        vAppList.setOnAddAppClickListener(v -> {
+        vApps.setOnAddAppClickListener(v -> {
             searchBar.show();
         });
 
-        vm.getSelectedAppInfos().observe(getViewLifecycleOwner(), infos -> {
-            vAppList.setData(infos);
-            vAppList.scrollToSelectedPkgPosition();
+        vm.getSelectedApps().observe(getViewLifecycleOwner(), infos -> {
+            vApps.setData(infos);
+            vApps.scrollToSelectedPkgPosition();
         });
 
         vm.getAvaliableScripts().observe(getViewLifecycleOwner(), scripts -> {

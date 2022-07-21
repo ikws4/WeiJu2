@@ -21,19 +21,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.ikws4.weiju.api.API;
-import io.ikws4.weiju.data.AppInfo;
 import io.ikws4.weiju.ext.MutableLiveDataExt;
+import io.ikws4.weiju.page.home.view.AppListView;
+import io.ikws4.weiju.page.home.view.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.util.Logger;
-import io.ikws4.weiju.widget.view.ScriptListView;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeViewModel extends AndroidViewModel {
-    private final MutableLiveDataExt<List<AppInfo>> mSelectedAppInfos = new MutableLiveDataExt<>(new ArrayList<>());
+    private final MutableLiveDataExt<List<AppListView.AppItem>> mSelectedApps = new MutableLiveDataExt<>(new ArrayList<>());
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mMyScripts = new MutableLiveDataExt<>();
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -58,11 +58,11 @@ public class HomeViewModel extends AndroidViewModel {
         return mMyScripts;
     }
 
-    public LiveData<List<AppInfo>> getSelectedAppInfos() {
-        return mSelectedAppInfos;
+    public LiveData<List<AppListView.AppItem>> getSelectedApps() {
+        return mSelectedApps;
     }
 
-    public void selectApp(AppInfo info) {
+    public void selectApp(AppListView.AppItem info) {
         String pkg = info.pkg;
         switchApp(pkg);
 
@@ -70,9 +70,9 @@ public class HomeViewModel extends AndroidViewModel {
         selected.add(pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
 
-        List<AppInfo> infos = mSelectedAppInfos.getValue();
+        List<AppListView.AppItem> infos = mSelectedApps.getValue();
         infos.add(info);
-        mSelectedAppInfos.setValue(infos);
+        mSelectedApps.setValue(infos);
     }
 
     public void switchApp(String pkg) {
@@ -180,17 +180,17 @@ public class HomeViewModel extends AndroidViewModel {
         Map<String, Long> map = selectedAppWithTime.stream()
             .collect(Collectors.toMap(it -> it.split(",")[0], it -> Long.valueOf(it.split(",")[1])));
 
-        List<AppInfo> selectedData = new ArrayList<>();
+        List<AppListView.AppItem> selectedData = new ArrayList<>();
         disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
             .filter(info -> map.containsKey(info.packageName))
             .sorted(Comparator.comparingLong(a -> map.get(a.packageName)))
-            .map(info -> new AppInfo(info.loadLabel(pm).toString(), info.packageName, AppInfo.isSystemApp(info)))
+            .map(info -> new AppListView.AppItem(info.loadLabel(pm).toString(), info.packageName, AppListView.AppItem.isSystemApp(info)))
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
                 selectedData.addAll(infos);
-                mSelectedAppInfos.setValue(selectedData);
+                mSelectedApps.setValue(selectedData);
             }));
     }
 
