@@ -58,12 +58,6 @@ public class ScriptListView extends RecyclerView {
         setLayoutManager(layoutManager);
         setAdapter(mAdapter);
         setData(null, null);
-
-        // List<ScriptItem> items = new ArrayList<>();
-        // for (int i = 0; i < 10; i++) {
-        //     items.add(new ScriptItem("System variables", "ikws4", "Change the variables like your phone model", ""));
-        // }
-        // mAdapter.submitList(items);
     }
 
     public void setData(@Nullable List<ScriptItem> myScripts, @Nullable List<ScriptItem> availableScripts) {
