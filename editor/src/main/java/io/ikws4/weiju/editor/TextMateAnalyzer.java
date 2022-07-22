@@ -193,7 +193,7 @@ class TextMateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState, Span> imp
                                 break;
                             }
                         }
-                        if (flag) {
+                        if (flag && !isKeywords(line, _startIndex, _end)) {
                             identifiers.add(line.substring(_startIndex, _end + 1));
                         }
                     }
@@ -211,6 +211,24 @@ class TextMateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState, Span> imp
             tokens.add(span);
         }
         return new LineTokenizeResult<>(new MyState(lineTokens.getRuleStack(), cachedRegExp == null ? null : cachedRegExp.search(new OnigString(line), 0), IndentRange.computeIndentLevel(((ContentLine) lineC).getRawData(), line.length() - 1, language.getTabSize()), identifiers), null, tokens);
+    }
+
+    private boolean isKeywords(String line, int l, int r) {
+        String[] keywords = language.autoComplete.getKeywords();
+        int len = r - l + 1;
+        for (String keyword : keywords) {
+            if (len == keyword.length()) {
+                boolean flag = true;
+                for (int j = 0; j < len; j++) {
+                    if (line.charAt(l + j) != keyword.charAt(j)) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) return true;
+            }
+        }
+        return false;
     }
 
     @Override

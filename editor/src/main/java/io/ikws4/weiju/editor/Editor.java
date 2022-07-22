@@ -146,7 +146,7 @@ public class Editor extends CodeEditor {
         private final WeakReference<Editor> mEditor;
 
         static {
-            KIND.put("Identifier", "");
+            KIND.put("Identifier", "");
 
             KIND.put("Text", "");
             KIND.put("Method", "");

@@ -24,7 +24,7 @@ class TextMateLanguage extends EmptyLanguage {
 
     private TextMateAnalyzer textMateAnalyzer;
     private int tabSize = 4;
-    private final IdentifierAutoComplete autoComplete = new IdentifierAutoComplete();
+    final IdentifierAutoComplete autoComplete = new IdentifierAutoComplete();
     boolean autoCompleteEnabled;
     final boolean createIdentifiers;
 
