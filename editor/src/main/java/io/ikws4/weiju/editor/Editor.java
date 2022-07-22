@@ -117,7 +117,7 @@ public class Editor extends CodeEditor {
 
         @Override
         public void setLocation(int x, int y) {
-            x -= UnitConverter.dp(20);
+            x -= UnitConverter.dp(22);
             y -= getEditor().getTextSizePx() / 2;
             super.setLocation(x, y);
         }
