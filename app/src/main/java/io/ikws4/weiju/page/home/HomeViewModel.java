@@ -99,7 +99,6 @@ public class HomeViewModel extends AndroidViewModel {
         Set<String> ids = new HashSet<>(mScriptStore.get(pkg, (v) -> new HashSet<>()));
         ids.remove(item.id);
         mScriptStore.put(pkg, ids);
-        mScriptStore.put(item.id, "");
 
         mMyScripts.getValue().remove(item);
         mMyScripts.publish();
