@@ -172,18 +172,29 @@ class TextMateAnalyzer extends AsyncIncrementalAnalyzeManager<MyState, Span> imp
             int fontStyle = StackElementMetadata.getFontStyle(metadata);
             if (language.createIdentifiers) {
                 var type = StackElementMetadata.getTokenType(metadata);
+
                 if (type == StandardTokenType.Other) {
                     var end = i + 1 == tokensLength ? lineC.length() : lineTokens.getTokens()[2 * (i + 1)];
-                    if (end > startIndex && MyCharacter.isJavaIdentifierStart(line.charAt(startIndex))) {
+
+                    int _startIndex = startIndex;
+                    int _end = end - 1;
+                    while (_startIndex <= _end && line.charAt(_end) == ' ') {
+                        _end--;
+                    }
+                    while (_startIndex <= _end && line.charAt(_startIndex) == ' ') {
+                        _startIndex++;
+                    }
+
+                    if (_startIndex <= _end && MyCharacter.isJavaIdentifierStart(line.charAt(_startIndex))) {
                         var flag = true;
-                        for (int j = startIndex + 1; j < end; j++) {
+                        for (int j = _startIndex + 1; j <= _end; j++) {
                             if (!MyCharacter.isJavaIdentifierPart(line.charAt(j))) {
                                 flag = false;
                                 break;
                             }
                         }
                         if (flag) {
-                            identifiers.add(line.substring(startIndex, end));
+                            identifiers.add(line.substring(_startIndex, _end + 1));
                         }
                     }
                 }
