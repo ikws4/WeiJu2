@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
@@ -301,7 +302,7 @@ public class ScriptListView extends RecyclerView {
             layoutParams.rightMargin = UnitConverter.dp(48);
             setLayoutParams(layoutParams);
             setGravity(Gravity.CENTER);
-            Typeface font = Typeface.createFromAsset(getContext().getAssets(), "font/jetbrains_mono_regular.ttf");
+            Typeface font = ResourcesCompat.getFont(context, io.ikws4.weiju.editor.R.font.jetbrains_mono_regular);
             setTypeface(font);
             setText(msg);
             setTextColor(getContext().getResources().getColor(R.color.muted, null));

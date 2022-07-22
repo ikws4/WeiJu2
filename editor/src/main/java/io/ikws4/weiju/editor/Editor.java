@@ -5,6 +5,8 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
 import org.eclipse.tm4e.core.theme.IRawTheme;
 
@@ -18,7 +20,7 @@ public class Editor extends CodeEditor {
         super(context, attrs);
         mCharWidth = getTextPaint().measureText("1") / 2;
 
-        Typeface font = Typeface.createFromAsset(context.getAssets(), "font/jetbrains_mono_regular.ttf");
+        Typeface font = ResourcesCompat.getFont(context, R.font.jetbrains_mono_regular);
         setTypefaceText(font);
 
         setEdgeEffectColor(RosepineColorScheme.BASE);

@@ -64,16 +64,16 @@ public class EditorSymbolBar extends RecyclerView {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            private final TextView vChar;
+            private final TextView vSymbol;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                vChar = itemView.findViewById(R.id.tv_char);
+                vSymbol = itemView.findViewById(R.id.tv_symbol);
             }
 
             public void bind(String item) {
-                vChar.setText(item);
-                vChar.setOnClickListener((v) -> {
+                vSymbol.setText(item);
+                vSymbol.setOnClickListener((v) -> {
                     mCallbacks.onClickSymbol(item);
                 });
             }
