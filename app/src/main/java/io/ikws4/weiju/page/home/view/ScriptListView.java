@@ -367,6 +367,22 @@ public class ScriptListView extends RecyclerView {
             this.script = script;
         }
 
+        public static ScriptItem from(String script) {
+            try {
+                LuaTable metadata = sGlobals.load(script).call().checktable();
+                String name = metadata.get("name").checkjstring();
+                String author = metadata.get("author").checkjstring();
+                String version = metadata.get("version").checkjstring();
+                String description = metadata.get("description").checkjstring();
+
+                // Using the metadate to create ScriptItem
+                return new ScriptItem(name, author, version, description, script);
+            } catch (LuaError e) {
+                Logger.d(e);
+            }
+            return EMPTY_ITEM;
+        }
+
         protected ScriptItem(Parcel in) {
             id = in.readString();
             name = in.readString();
@@ -403,36 +419,18 @@ public class ScriptListView extends RecyclerView {
             }
         };
 
-        public static ScriptItem from(String script) {
-            try {
-                LuaTable metadata = sGlobals.load(script).call().checktable();
-                String name = metadata.get("name").checkjstring();
-                String author = metadata.get("author").checkjstring();
-                String version = metadata.get("version").checkjstring();
-                String description = metadata.get("description").checkjstring();
-
-                // Using the metadate to create ScriptItem
-                return new ScriptItem(name, author, version, description, script);
-            } catch (LuaError e) {
-                Logger.d(e);
-            }
-            return EMPTY_ITEM;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ScriptItem item = (ScriptItem) o;
-            return name.equals(item.name) && author.equals(item.author) && version.equals(item.version) && description.equals(item.description) && script.equals(item.script);
+            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description) && Objects.equals(script, item.script);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name, author, version, description, script);
+            return Objects.hash(id, name, author, version, description, script);
         }
-
-
     }
 
     public interface Callbacks {
