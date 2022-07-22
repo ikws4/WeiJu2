@@ -8,9 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import io.github.rosemoe.sora.event.ContentChangeEvent;
-import io.github.rosemoe.sora.event.EventReceiver;
-import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
@@ -34,27 +31,6 @@ public class EditorFragment extends Fragment {
         layoutParams.leftMargin = (int) vEditor.getCharWidth();
         vEditor.setLayoutParams(layoutParams);
         vEditor.setText(item.script);
-
-        vEditor.subscribeEvent(ContentChangeEvent.class, new EventReceiver<ContentChangeEvent>() {
-            @Override
-            public void onReceive(ContentChangeEvent event, Unsubscribe unsubscribe) {
-                if (event.getAction() == ContentChangeEvent.ACTION_DELETE) {
-                    Content content = vEditor.getText();
-                    char afterChar = content.charAt(event.getChangeStart().index);
-
-                    CharSequence changed = event.getChangedText();
-                    if (changed.length() == 1) {
-                        char deltedChar = event.getChangedText().charAt(0);
-                        SymbolPairMatch pair = vEditor.getEditorLanguage().getSymbolPairs();
-                        SymbolPairMatch.Replacement replacement = pair.getCompletion(deltedChar);
-                        if (replacement != null && replacement.text.charAt(1) == afterChar) {
-                            vEditor.setSelection(event.getChangeStart().line, event.getChangeStart().column + 1);
-                            vEditor.deleteText();
-                        }
-                    }
-                }
-            }
-        });
 
         EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);
         vSymbolBar.registerCallbacks(new EditorSymbolBar.Callbacks() {
