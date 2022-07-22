@@ -17,7 +17,6 @@ import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentLine;
 import io.github.rosemoe.sora.text.ContentReference;
@@ -39,6 +38,14 @@ class LuaLanguage extends EmptyLanguage {
 
             mTextMateLanguage = TextMateLanguage.create(grammar, assets.open(grammar), new InputStreamReader(assets.open(configuration)), theme);
             mIndentationRule = LanguageConfiguration.load(new InputStreamReader(assets.open(configuration))).getIndentationRule();
+
+            String[] keywords = {
+                "and", "break", "do", "else", "elseif",
+                "end", "false", "for", "function", "if",
+                "in", "local", "nil", "not", "or",
+                "repeat", "return", "then", "true", "until", "while"
+            };
+            mTextMateLanguage.setKeywords(keywords, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
