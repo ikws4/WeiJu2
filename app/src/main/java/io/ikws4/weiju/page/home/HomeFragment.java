@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
 import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 import io.ikws4.weiju.page.home.view.AppListView;
@@ -37,6 +38,25 @@ public class HomeFragment extends Fragment {
             @Override
             public void onRemoveFromMyScripts(View v, ScriptListView.ScriptItem item) {
                 vm.removeFromMyScripts(item);
+            }
+
+            @Override
+            public void onGotoEditorFragment(ScriptListView.ScriptItem item) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("item", item);
+
+                requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                        R.anim.slide_in_bottom,
+                        R.anim.slide_out_top,
+                        R.anim.slide_in_bottom,
+                        R.anim.slide_out_top
+                    )
+                    .add(R.id.fragment_container, EditorFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .commit();
             }
         });
 

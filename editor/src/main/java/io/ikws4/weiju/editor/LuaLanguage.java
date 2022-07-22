@@ -24,7 +24,7 @@ import io.github.rosemoe.sora.text.ContentReference;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.ikws4.weiju.util.Strings;
 
-public class LuaLanguage extends EmptyLanguage {
+class LuaLanguage extends EmptyLanguage {
     private TextMateLanguage mTextMateLanguage;
     private IndentationRule mIndentationRule;
     private final Editor mEditor;

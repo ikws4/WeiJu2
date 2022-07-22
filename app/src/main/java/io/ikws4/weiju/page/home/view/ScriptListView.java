@@ -2,6 +2,8 @@ package io.ikws4.weiju.page.home.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -182,21 +184,6 @@ public class ScriptListView extends RecyclerView {
             }
         }
 
-        class AvaiableScriptsHeaderViewHolder extends RecyclerView.ViewHolder {
-
-            public AvaiableScriptsHeaderViewHolder(@NonNull View itemView) {
-                super(itemView);
-                TextView vTitle = itemView.findViewById(R.id.tv_title);
-                vTitle.setText("Avaiable Scripts");
-
-                ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
-                vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_help));
-                vHelp.setOnClickListener((v) -> {
-                    Toast.makeText(v.getContext(), "Help", Toast.LENGTH_SHORT).show();
-                });
-            }
-        }
-
         class MyScriptItemViewHolder extends RecyclerView.ViewHolder {
             private final TextView vIconLabel, vName, vAuthor, vDescription;
 
@@ -210,7 +197,7 @@ public class ScriptListView extends RecyclerView {
 
             public void bind(ScriptItem item) {
                 itemView.setOnClickListener(v -> {
-                    Toast.makeText(v.getContext(), item.script, Toast.LENGTH_SHORT).show();
+                    mCallbacks.onGotoEditorFragment(item);
                 });
                 vIconLabel.setText(String.valueOf(item.name.charAt(0)));
                 vName.setText(item.name);
@@ -235,6 +222,21 @@ public class ScriptListView extends RecyclerView {
                     return true;
                 });
                 popup.show();
+            }
+        }
+
+        class AvaiableScriptsHeaderViewHolder extends RecyclerView.ViewHolder {
+
+            public AvaiableScriptsHeaderViewHolder(@NonNull View itemView) {
+                super(itemView);
+                TextView vTitle = itemView.findViewById(R.id.tv_title);
+                vTitle.setText("Avaiable Scripts");
+
+                ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
+                vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_help));
+                vHelp.setOnClickListener((v) -> {
+                    Toast.makeText(v.getContext(), "Help", Toast.LENGTH_SHORT).show();
+                });
             }
         }
 
@@ -344,7 +346,7 @@ public class ScriptListView extends RecyclerView {
         }
     }
 
-    public static class ScriptItem {
+    public static class ScriptItem implements Parcelable {
         private static final Globals sGlobals = JsePlatform.standardGlobals();
         private static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
 
@@ -363,6 +365,42 @@ public class ScriptListView extends RecyclerView {
             this.description = description;
             this.script = script;
         }
+
+        protected ScriptItem(Parcel in) {
+            id = in.readString();
+            name = in.readString();
+            author = in.readString();
+            version = in.readString();
+            description = in.readString();
+            script = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(id);
+            dest.writeString(name);
+            dest.writeString(author);
+            dest.writeString(version);
+            dest.writeString(description);
+            dest.writeString(script);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ScriptItem> CREATOR = new Creator<ScriptItem>() {
+            @Override
+            public ScriptItem createFromParcel(Parcel in) {
+                return new ScriptItem(in);
+            }
+
+            @Override
+            public ScriptItem[] newArray(int size) {
+                return new ScriptItem[size];
+            }
+        };
 
         public static ScriptItem from(String script) {
             try {
@@ -392,12 +430,16 @@ public class ScriptListView extends RecyclerView {
         public int hashCode() {
             return Objects.hash(name, author, version, description, script);
         }
+
+
     }
 
     public interface Callbacks {
         void onAddToMyScripts(View v, ScriptItem item);
 
         void onRemoveFromMyScripts(View v, ScriptItem item);
+
+        void onGotoEditorFragment(ScriptItem item);
     }
 
     public static class EmptyCallbacks implements Callbacks {
@@ -410,6 +452,10 @@ public class ScriptListView extends RecyclerView {
         @Override
         public void onRemoveFromMyScripts(View v, ScriptItem item) {
 
+        }
+
+        @Override
+        public void onGotoEditorFragment(ScriptItem item) {
         }
     }
 }

@@ -12,20 +12,24 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.Magnifier;
 
 public class Editor extends CodeEditor {
+    private float mCharWidth = 0;
 
     public Editor(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mCharWidth = getTextPaint().measureText("1") / 2;
 
         Typeface font = Typeface.createFromAsset(context.getAssets(), "font/jetbrains_mono_regular.ttf");
         setTypefaceText(font);
 
         setEdgeEffectColor(RosepineColorScheme.BASE);
         setCursorAnimationEnabled(false);
-        setLineNumberEnabled(false);
+        setHighlightCurrentLine(false);
+
         setLigatureEnabled(true);
         setScrollBarEnabled(false);
         setCursorWidth(2 * getDpUnit());
         setDividerWidth(0);
+        setDividerMargin(mCharWidth);
         setLineNumberAlign(Paint.Align.RIGHT);
         setTabWidth(2);
 
@@ -46,6 +50,15 @@ public class Editor extends CodeEditor {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public float getCharWidth() {
+        return mCharWidth;
+    }
+
+    @Override
+    public void insertText(String text, int selectionOffset) {
+        super.insertText(text, selectionOffset);
     }
 }
 

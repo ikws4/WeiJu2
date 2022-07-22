@@ -26,7 +26,8 @@ android {
 }
 
 dependencies {
+    def editor_version = "0.15.0-dev-1"
     implementation project(path: ':util')
-    implementation 'io.github.Rosemoe.sora-editor:editor:0.15.0-dev-1'
-    implementation 'io.github.Rosemoe.sora-editor:language-textmate:0.15.0-dev-1'
+    api "io.github.Rosemoe.sora-editor:editor:$editor_version"
+    implementation "io.github.Rosemoe.sora-editor:language-textmate:$editor_version"
 }

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.13858695652173914" />
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/magnifier_background.xml" value="0.1105" />
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/round_select_all_20.xml" value="0.1105" />
         <entry key="../../Library/Android/sdk/platforms/android-32/data/res/drawable/list_selector_background.xml" value="0.181" />
@@ -35,6 +36,8 @@
         <entry key="app/src/main/res/layout/app_item.xml" value="0.648388671875" />
         <entry key="app/src/main/res/layout/available_scripts_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/editor_context_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/editor_fragment.xml" value="0.35583190917968754" />
+        <entry key="app/src/main/res/layout/editor_symbol_item.xml" value="0.17864583333333334" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/item_add_app.xml" value="0.863793436686198" />
         <entry key="app/src/main/res/layout/item_app.xml" value="0.4987847900390625" />

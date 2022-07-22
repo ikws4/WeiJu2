@@ -34,8 +34,8 @@ class RosepineColorScheme extends TextMateColorScheme {
 
         setColor(WHOLE_BACKGROUND, BASE);
         setColor(TEXT_NORMAL, TEXT);
-        setColor(UNDERLINE, TEXT);
-        setColor(CURRENT_LINE, HIGHLIGHT_LOW);
+        setColor(UNDERLINE, TRANSPARENT);
+        setColor(CURRENT_LINE, BASE);
 
         setColor(SCROLL_BAR_TRACK, BASE);
         setColor(SCROLL_BAR_THUMB, OVERLAY);
