@@ -18,11 +18,11 @@
         <item name="tint">@color/text</item>
     </style>
 
-    <style name="Widget.WeiJu.PopupMenu.Overflow" parent="Widget.Material3.PopupMenu.Overflow">
+    <style name="Widget.WeiJu.PopupMenu.Overflow" parent="Widget.AppCompat.PopupMenu.Overflow">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
     </style>
 
-    <style name="Widget.WeiJu.PopupMenu" parent="Widget.Material3.PopupMenu">
+    <style name="Widget.WeiJu.PopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
     </style>
 
@@ -33,5 +33,14 @@
         <item name="android:paddingEnd">12dp</item>
         <item name="android:gravity">center</item>
         <item name="android:scaleType">center</item>
+    </style>
+
+    <style name="Dialog.WeiJu.SearchBar" parent="@style/Theme.MaterialComponents.Dialog">
+        <item name="android:windowAnimationStyle">@style/SearchBarDialogAnimation</item>
+    </style>
+
+    <style name="SearchBarDialogAnimation" >
+        <item name="android:windowEnterAnimation">@anim/popup_in</item>
+        <item name="android:windowExitAnimation">@anim/popup_out</item>
     </style>
 </resources>

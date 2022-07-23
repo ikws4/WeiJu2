@@ -49,7 +49,7 @@ public class SearchBar extends Dialog {
     private ItemLoader.Callback mItemLoaderCallback;
 
     public SearchBar(@NonNull Context context, @NonNull ItemLoader itemLoader) {
-        super(context);
+        super(context, R.style.Dialog_WeiJu_SearchBar);
         setContentView(R.layout.search_bar);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         getWindow().setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
@@ -60,6 +60,7 @@ public class SearchBar extends Dialog {
         lp.copyFrom(getWindow().getAttributes());
         lp.width = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * 0.85);
         getWindow().setAttributes(lp);
+
 
         RecyclerView rv = findViewById(R.id.rv_item_list);
         mAdapter = new Adapter();
