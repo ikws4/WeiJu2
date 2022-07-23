@@ -13,6 +13,7 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +67,7 @@ public class HomeViewModel extends AndroidViewModel {
         String pkg = info.pkg;
         switchApp(pkg);
 
-        Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>()));
+        Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, Collections.emptySet()));
         selected.add(pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
 
@@ -84,7 +85,7 @@ public class HomeViewModel extends AndroidViewModel {
     public void addToMyScript(ScriptListView.ScriptItem item) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
 
-        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, (v) -> new HashSet<>()));
+        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
         ids.add(item.id);
         mScriptStore.put(pkg, ids);
         mScriptStore.put(item.id, item.script);
@@ -96,7 +97,7 @@ public class HomeViewModel extends AndroidViewModel {
     public void removeFromMyScripts(ScriptListView.ScriptItem item) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
 
-        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, (v) -> new HashSet<>()));
+        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
         ids.remove(item.id);
         mScriptStore.put(pkg, ids);
 
@@ -164,7 +165,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     private void loadMyScripts(String pkg) {
-        Set<String> scriptIds = mScriptStore.get(pkg, (v) -> new HashSet<>());
+        Set<String> scriptIds = mScriptStore.get(pkg, Collections.emptySet());
 
         mMyScripts.setValue(
             scriptIds.stream()
@@ -175,7 +176,7 @@ public class HomeViewModel extends AndroidViewModel {
 
     private void loadApplicationInfos() {
         PackageManager pm = getApplication().getPackageManager();
-        Set<String> selectedAppWithTime = mPreferences.get(Preferences.APP_LIST, (a) -> new HashSet<>());
+        Set<String> selectedAppWithTime = mPreferences.get(Preferences.APP_LIST, Collections.emptySet());
         Map<String, Long> map = selectedAppWithTime.stream()
             .collect(Collectors.toMap(it -> it.split(",")[0], it -> Long.valueOf(it.split(",")[1])));
 

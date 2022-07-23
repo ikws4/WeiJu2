@@ -1,14 +1,13 @@
-package io.ikws4.weiju.storage;
+package io.ikws4.weiju.storage.strategy;
 
 import java.util.Set;
-import java.util.function.Function;
 
-interface StoreStrategy {
+public interface StoreStrategy {
   String STORE_NAME = "script_store";
 
   String get(String k, String defValue);
 
-  Set<String> get(String key, Function<Void, Set<String>> defValue);
+  Set<String> get(String key, Set<String> defValue);
 
   void put(String k, String v);
 

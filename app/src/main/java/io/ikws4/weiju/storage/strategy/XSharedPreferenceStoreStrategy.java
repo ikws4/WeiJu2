@@ -1,14 +1,13 @@
-package io.ikws4.weiju.storage;
+package io.ikws4.weiju.storage.strategy;
 
 import android.util.Base64;
 
 import java.util.Set;
-import java.util.function.Function;
 
 import de.robv.android.xposed.XSharedPreferences;
 import io.ikws4.weiju.BuildConfig;
 
-class XSharedPreferenceStoreStrategy implements StoreStrategy {
+public class XSharedPreferenceStoreStrategy implements StoreStrategy {
   private final XSharedPreferences store;
 
   public XSharedPreferenceStoreStrategy() {
@@ -26,11 +25,8 @@ class XSharedPreferenceStoreStrategy implements StoreStrategy {
   }
 
   @Override
-  public Set<String> get(String key, Function<Void, Set<String>> defValue) {
-    if (store.contains(key)) {
-      return store.getStringSet(key, null);
-    }
-    return store.getStringSet(key, defValue.apply(null));
+  public Set<String> get(String key, Set<String> defValue) {
+    return store.getStringSet(key, defValue);
   }
 
   @Override

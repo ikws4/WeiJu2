@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import androidx.annotation.Nullable;
 
 import java.util.Set;
-import java.util.function.Function;
 
 public class Preferences {
   private static final String STORE_NAME = "preference";
@@ -41,11 +40,8 @@ public class Preferences {
     return storage.getBoolean(key, defValue);
   }
 
-  public Set<String> get(String key, Function<Void, Set<String>> defValue) {
-    if (storage.contains(key)) {
-      return storage.getStringSet(key, null);
-    }
-    return storage.getStringSet(key, defValue.apply(null));
+  public Set<String> get(String key, Set<String> defValue) {
+    return storage.getStringSet(key, defValue);
   }
 
   public boolean contains(String key) {

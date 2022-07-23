@@ -5,8 +5,9 @@ import android.content.Context;
 import android.os.Build;
 
 import java.util.Set;
-import java.util.function.Function;
 
+import io.ikws4.weiju.storage.strategy.SharedPreferencesStoreStrategy;
+import io.ikws4.weiju.storage.strategy.StoreStrategy;
 import io.ikws4.weiju.util.Logger;
 
 public class ScriptStore {
@@ -32,7 +33,7 @@ public class ScriptStore {
         return strategy.get(k, defValue);
     }
 
-    public Set<String> get(String k, Function<Void, Set<String>> defValue) {
+    public Set<String> get(String k, Set<String> defValue) {
         return strategy.get(k, defValue);
     }
 
@@ -61,5 +62,4 @@ public class ScriptStore {
         }
         return instance;
     }
-
 }

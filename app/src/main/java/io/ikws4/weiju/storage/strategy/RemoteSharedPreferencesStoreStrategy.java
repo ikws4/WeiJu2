@@ -1,4 +1,4 @@
-package io.ikws4.weiju.storage;
+package io.ikws4.weiju.storage.strategy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,7 +9,6 @@ import com.crossbowffs.remotepreferences.RemotePreferences;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-import java.util.function.Function;
 
 public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
     static final String AUTHORITY = "io.ikws4.weiju.storage";
@@ -25,11 +24,11 @@ public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
     }
 
     @Override
-    public Set<String> get(String key, Function<Void, Set<String>> defValue) {
+    public Set<String> get(String key, Set<String> defValue) {
         if (store.contains(key)) {
             return store.getStringSet(key, null);
         }
-        return store.getStringSet(key, defValue.apply(null));
+        return store.getStringSet(key, defValue);
     }
 
     @Override

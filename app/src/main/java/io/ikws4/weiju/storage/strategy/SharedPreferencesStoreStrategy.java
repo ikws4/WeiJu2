@@ -1,4 +1,4 @@
-package io.ikws4.weiju.storage;
+package io.ikws4.weiju.storage.strategy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,9 +6,8 @@ import android.util.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
-import java.util.function.Function;
 
-class SharedPreferencesStoreStrategy implements StoreStrategy {
+public class SharedPreferencesStoreStrategy implements StoreStrategy {
     private final SharedPreferences store;
 
     public SharedPreferencesStoreStrategy(Context context, int mode) {
@@ -21,11 +20,8 @@ class SharedPreferencesStoreStrategy implements StoreStrategy {
     }
 
     @Override
-    public Set<String> get(String key, Function<Void, Set<String>> defValue) {
-        if (store.contains(key)) {
-            return store.getStringSet(key, null);
-        }
-        return store.getStringSet(key, defValue.apply(null));
+    public Set<String> get(String key, Set<String> defValue) {
+        return store.getStringSet(key, defValue);
     }
 
     @Override

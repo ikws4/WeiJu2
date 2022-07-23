@@ -4,8 +4,11 @@ import android.content.Context;
 import android.os.Build;
 
 import java.util.Set;
-import java.util.function.Function;
 
+import io.ikws4.weiju.storage.strategy.EmptyStoreStrategy;
+import io.ikws4.weiju.storage.strategy.RemoteSharedPreferencesStoreStrategy;
+import io.ikws4.weiju.storage.strategy.StoreStrategy;
+import io.ikws4.weiju.storage.strategy.XSharedPreferenceStoreStrategy;
 import io.ikws4.weiju.util.Logger;
 
 public class XScriptStore {
@@ -29,7 +32,7 @@ public class XScriptStore {
         return strategy.get(k, defValue);
     }
 
-    public Set<String> get(String key, Function<Void, Set<String>> defValue) {
+    public Set<String> get(String key, Set<String> defValue) {
         return strategy.get(key, defValue);
     }
 

@@ -2,7 +2,7 @@ package io.ikws4.weiju.widget.searchbar;
 
 import android.content.pm.PackageManager;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,7 +22,7 @@ public class SelectedAppInfoItemLoader extends SearchBar.ItemLoader {
     protected void load(SearchBar.ItemLoader.Callback callback) {
         Preferences preferences = Preferences.getInstance(getContext());
 
-        Set<String> selectedAppWithTime = preferences.get(Preferences.APP_LIST, (a) -> new HashSet<>());
+        Set<String> selectedAppWithTime = preferences.get(Preferences.APP_LIST, Collections.emptySet());
         Map<String, Long> map = selectedAppWithTime.stream()
             .collect(Collectors.toMap(it -> it.split(",")[0], it -> Long.valueOf(it.split(",")[1])));
 
