@@ -1,17 +1,19 @@
 package io.ikws4.weiju.page.home.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
@@ -20,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,10 +58,12 @@ public class AppListView extends RecyclerView {
     }
 
     public void setData(List<AppItem> data) {
-        mAdapter.submitList(data);
-        mAdapter.notifySelectedPkgPositionChanged();
-        mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
-        mAdapter.notifySelectedPkgPositionChanged();
+        mAdapter.submitList(new ArrayList<>(data));
+        if (!Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "").equals(mSelectedPackage)) {
+            mAdapter.notifySelectedPkgPositionChanged();
+            mSelectedPackage = Preferences.getInstance(getContext()).get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+            mAdapter.notifySelectedPkgPositionChanged();
+        }
     }
 
     public void scrollToSelectedPkgPosition() {
@@ -107,7 +112,7 @@ public class AppListView extends RecyclerView {
             if (holder instanceof ItemViewHolder) {
                 ((ItemViewHolder) holder).bind(getItem(position));
             } else {
-                ((AddAppViewHodler)holder).bind();
+                ((AddAppViewHodler) holder).bind();
             }
         }
 
@@ -141,35 +146,37 @@ public class AppListView extends RecyclerView {
         }
 
         private class ItemViewHolder extends RecyclerView.ViewHolder {
-            private final AppCompatTextView tvName;
-            private final ShapeableImageView imgIcon;
+            private final TextView vName;
+            private final ShapeableImageView vIcon;
+            private float x, y;
 
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
-                tvName = itemView.findViewById(R.id.tv_name);
-                imgIcon = itemView.findViewById(R.id.img_icon);
+                vName = itemView.findViewById(R.id.tv_name);
+                vIcon = itemView.findViewById(R.id.img_icon);
             }
 
+            @SuppressLint("ClickableViewAccessibility")
             public void bind(AppItem item) {
-                tvName.setText(item.name);
+                vName.setText(item.name);
                 Glide.with(getContext())
                     .load(item.imgUri)
-                    .into(imgIcon);
+                    .into(vIcon);
 
                 if (item.pkg.equals(mSelectedPackage)) {
-                    imgIcon.setStrokeWidth(UnitConverter.dp(2));
-                    imgIcon.setImageTintList(null);
-                    tvName.setTextColor(getContext().getColor(R.color.text));
+                    vIcon.setStrokeWidth(UnitConverter.dp(2));
+                    vIcon.setImageTintList(null);
+                    vName.setTextColor(getContext().getColor(R.color.text));
                 } else {
-                    imgIcon.setStrokeWidth(0);
-                    imgIcon.setImageTintList(ColorStateList.valueOf(getContext().getColor(R.color.subtle)));
-                    tvName.setTextColor(getContext().getColor(R.color.subtle));
+                    vIcon.setStrokeWidth(0);
+                    vIcon.setImageTintList(ColorStateList.valueOf(getContext().getColor(R.color.subtle)));
+                    vName.setTextColor(getContext().getColor(R.color.subtle));
                 }
 
                 itemView.setOnClickListener((v) -> {
                     if (mSelectedPackage.equals(item.pkg)) return;
 
-                    mCallbacks.onSwitchToApp(item);
+                    mCallbacks.onRequireSwitchApp(item);
                     AppItem info = getItem(getLayoutPosition());
                     if (!info.pkg.equals(mSelectedPackage)) {
                         notifySelectedPkgPositionChanged();
@@ -177,6 +184,18 @@ public class AppListView extends RecyclerView {
                         mSelectedPackage = info.pkg;
                         Preferences.getInstance(getContext()).put(Preferences.APP_LIST_SELECTED_PACKAGE, mSelectedPackage);
                     }
+                });
+
+                itemView.setOnTouchListener((v, event) -> {
+                    x = event.getX();
+                    y = event.getY();
+                    return false;
+                });
+
+                itemView.setOnLongClickListener((v) -> {
+                    mCallbacks.onRequireRemoveApp(vIcon, x, y, getLayoutPosition(), item);
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    return true;
                 });
             }
         }
@@ -188,7 +207,7 @@ public class AppListView extends RecyclerView {
 
             public void bind() {
                 itemView.setOnClickListener((v) -> {
-                    mCallbacks.onRequireAddNewApp();
+                    mCallbacks.onRequireAddApp();
                 });
             }
         }
@@ -243,21 +262,27 @@ public class AppListView extends RecyclerView {
     }
 
     public interface Callbacks {
-        void onSwitchToApp(AppItem app);
+        void onRequireSwitchApp(AppItem app);
 
-        void onRequireAddNewApp();
+        void onRequireAddApp();
+
+        void onRequireRemoveApp(View v, float x, float y, int index, AppItem item);
     }
 
     static class EmptyCallbask implements Callbacks {
 
         @Override
-        public void onSwitchToApp(AppItem app) {
+        public void onRequireSwitchApp(AppItem app) {
 
         }
 
         @Override
-        public void onRequireAddNewApp() {
+        public void onRequireAddApp() {
 
+        }
+
+        @Override
+        public void onRequireRemoveApp(View v, float x, float y, int index, AppItem item) {
         }
     }
 }

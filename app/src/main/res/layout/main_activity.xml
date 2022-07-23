@@ -16,7 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/base"
-            app:title="@string/app_name" />
+            app:subtitle="Test"
+            app:subtitleTextAppearance="@style/TextAppearance.WeiJu.Toolbar.Subtitle"
+            app:subtitleTextColor="@color/muted"
+            app:title="@string/app_name"
+            app:titleTextColor="@color/text" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

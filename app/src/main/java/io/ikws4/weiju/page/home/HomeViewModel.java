@@ -57,23 +57,46 @@ public class HomeViewModel extends BaseViewModel {
         return mSelectedApps;
     }
 
-    public void selectApp(AppListView.AppItem info) {
-        String pkg = info.pkg;
-        switchApp(pkg);
+    public void addApp(AppListView.AppItem app) {
+        addApp(mSelectedApps.getValue().size(), app);
+    }
 
+    public void addApp(int index, AppListView.AppItem app) {
         Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, Collections.emptySet()));
-        selected.add(pkg + "," + System.currentTimeMillis());
+        selected.add(app.pkg + "," + System.currentTimeMillis());
         mPreferences.put(Preferences.APP_LIST, selected);
 
         List<AppListView.AppItem> infos = mSelectedApps.getValue();
-        infos.add(info);
-        mSelectedApps.setValue(infos);
+        mSelectedApps.getValue().add(Math.min(index, infos.size()), app);
+        mSelectedApps.publish();
     }
 
-    public void switchApp(String pkg) {
+    public void switchApp(AppListView.AppItem app) {
+        switchApp(app.pkg);
+    }
+
+    private void switchApp(String pkg) {
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
         loadAvaliableScripts(pkg);
         loadMyScripts(pkg);
+    }
+
+    public void removeApp(AppListView.AppItem app) {
+        Set<String> selected = new HashSet<>(mPreferences.get(Preferences.APP_LIST, Collections.emptySet()));
+        selected.removeIf((it) -> it.split(",")[0].equals(app.pkg));
+        mPreferences.put(Preferences.APP_LIST, selected);
+
+        mSelectedApps.getValue().remove(app);
+        mSelectedApps.publish();
+    }
+
+    public void updateSelectedAppAfterRemove(int index, AppListView.AppItem app) {
+        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        if (app.pkg.equals(pkg)) {
+            int n = mSelectedApps.getValue().size();
+            switchApp(mSelectedApps.getValue().get(Math.min(index, n - 1)));
+            mSelectedApps.publish();
+        }
     }
 
     public void addToMyScript(ScriptListView.ScriptItem item) {

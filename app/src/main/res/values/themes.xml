@@ -43,4 +43,9 @@
         <item name="android:windowEnterAnimation">@anim/popup_in</item>
         <item name="android:windowExitAnimation">@anim/popup_out</item>
     </style>
+
+    <style name="TextAppearance.WeiJu.Toolbar.Subtitle" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/jetbrains_mono_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

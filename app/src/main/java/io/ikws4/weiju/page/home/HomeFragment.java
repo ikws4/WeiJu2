@@ -1,6 +1,10 @@
 package io.ikws4.weiju.page.home;
 
+import android.content.ClipData;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Pair;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,6 +14,8 @@ import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -75,21 +81,65 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
         SearchBar searchBar = new SearchBar(getContext(), new SelectedAppInfoItemLoader());
         searchBar.setOnItemClickListener(item -> {
-            vm.selectApp((AppListView.AppItem) item.userData);
+            AppListView.AppItem app = (AppListView.AppItem) item.userData;
+            vm.switchApp(app);
+            vm.addApp(app);
             return true;
         });
 
         vApps.registerCallbacks(new AppListView.Callbacks() {
 
             @Override
-            public void onSwitchToApp(AppListView.AppItem app) {
-                vm.switchApp(app.pkg);
+            public void onRequireSwitchApp(AppListView.AppItem app) {
+                vm.switchApp(app);
             }
 
             @Override
-            public void onRequireAddNewApp() {
+            public void onRequireAddApp() {
                 searchBar.show();
             }
+
+            @Override
+            public void onRequireRemoveApp(View v, float x, float y, int index, AppListView.AppItem item) {
+                View.DragShadowBuilder shadow = new View.DragShadowBuilder(v) {
+                    @Override
+                    public void onProvideShadowMetrics(Point outShadowSize, Point outShadowTouchPoint) {
+                        super.onProvideShadowMetrics(outShadowSize, outShadowTouchPoint);
+                        outShadowTouchPoint.set((int) x, (int) y);
+                    }
+                };
+                v.startDragAndDrop(ClipData.newPlainText("", ""), shadow, new Pair<>(index, item), 0);
+            }
+        });
+
+        vfScripts.setOnDragListener((v, event) -> {
+            var item = (Pair) event.getLocalState();
+            int index = (int) item.first;
+            AppListView.AppItem app = (AppListView.AppItem) item.second;
+            ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    vm.removeApp(app);
+                    actionBar.setSubtitle("Drag to the right to delete.");
+                    return true;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    actionBar.setSubtitle("Are you sure you want to delete it?");
+                    return true;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    actionBar.setSubtitle("Drag to the right to delete.");
+                    return true;
+                case DragEvent.ACTION_DROP:
+                    return true;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    if (event.getResult() == false) {
+                        vm.addApp(index, app);
+                    } else {
+                        vm.updateSelectedAppAfterRemove(index, app);
+                    }
+                    actionBar.setSubtitle(null);
+                    return true;
+            }
+            return false;
         });
 
         vm.getSelectedApps().observe(getViewLifecycleOwner(), infos -> {
