@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import org.luaj.vm2.Globals;
@@ -23,31 +22,25 @@ import java.util.stream.Collectors;
 
 import io.ikws4.weiju.api.API;
 import io.ikws4.weiju.ext.MutableLiveDataExt;
+import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.page.home.view.AppListView;
 import io.ikws4.weiju.page.home.view.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
-import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.util.Logger;
 import io.ikws4.weiju.util.Strings;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class HomeViewModel extends AndroidViewModel {
+public class HomeViewModel extends BaseViewModel {
     private final MutableLiveDataExt<List<AppListView.AppItem>> mSelectedApps = new MutableLiveDataExt<>(new ArrayList<>());
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mMyScripts = new MutableLiveDataExt<>();
-    private final CompositeDisposable disposables = new CompositeDisposable();
-    private final Preferences mPreferences;
-    private final ScriptStore mScriptStore;
     private final Globals mLuaGlobals;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
         mLuaGlobals = JsePlatform.standardGlobals();
-        mPreferences = Preferences.getInstance(getApplication());
-        mScriptStore = ScriptStore.getInstance(getApplication());
         loadApplicationInfos();
         switchApp(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
     }
@@ -119,10 +112,16 @@ public class HomeViewModel extends AndroidViewModel {
         mAvaliableScripts.publish();
     }
 
+    public void reloadScripts() {
+        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        loadMyScripts(pkg);
+        loadAvaliableScripts(pkg);
+    }
+
     private void loadAvaliableScripts(String pkg) {
         mAvaliableScripts.setValue(null);
 
-        disposables.add(API.getInstance().getScopeConfig()
+        mDisposables.add(API.getInstance().getScopeConfig()
             .subscribeOn(Schedulers.io())
             .subscribe(it -> {
                 // Get all avaliable scripts for this pkg
@@ -149,7 +148,7 @@ public class HomeViewModel extends AndroidViewModel {
                 // Fetch scritps contents
                 List<ScriptListView.ScriptItem> scriptItems = new ArrayList<>();
 
-                disposables.add(Observable.fromIterable(avaliableScripts)
+                mDisposables.add(Observable.fromIterable(avaliableScripts)
                     .map(script -> API.getInstance().getScript(script))
                     .observeOn(Schedulers.io())
                     .buffer(5, 5)
@@ -187,7 +186,7 @@ public class HomeViewModel extends AndroidViewModel {
             .collect(Collectors.toMap(it -> it.split(",")[0], it -> Long.valueOf(it.split(",")[1])));
 
         List<AppListView.AppItem> selectedData = new ArrayList<>();
-        disposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
+        mDisposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
             .filter(info -> map.containsKey(info.packageName))
             .sorted(Comparator.comparingLong(a -> map.get(a.packageName)))
@@ -198,11 +197,5 @@ public class HomeViewModel extends AndroidViewModel {
                 selectedData.addAll(infos);
                 mSelectedApps.setValue(selectedData);
             }));
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        disposables.clear();
     }
 }
