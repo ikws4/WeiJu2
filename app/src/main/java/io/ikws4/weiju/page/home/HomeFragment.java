@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
         AppListView vApps = view.findViewById(R.id.rv_item_list);
         ScriptListView vScripts = view.findViewById(R.id.rv_scripts);
+        ViewFlipper vfScripts = view.findViewById(R.id.vf_scripts);
 
         vScripts.registerCallbacks(new ScriptListView.Callbacks() {
             @Override
@@ -91,8 +93,13 @@ public class HomeFragment extends Fragment implements MenuProvider {
         });
 
         vm.getSelectedApps().observe(getViewLifecycleOwner(), infos -> {
-            vApps.setData(infos);
-            vApps.scrollToSelectedPkgPosition();
+            if (infos.isEmpty()) {
+                vfScripts.setDisplayedChild(0);
+            } else {
+                vApps.setData(infos);
+                vApps.scrollToSelectedPkgPosition();
+                vfScripts.setDisplayedChild(1);
+            }
         });
 
         vm.getAvaliableScripts().observe(getViewLifecycleOwner(), scripts -> {

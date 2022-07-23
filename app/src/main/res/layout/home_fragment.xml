@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,11 +17,28 @@
         android:layout_height="match_parent"
         app:dividerColor="@color/surface" />
 
-    <io.ikws4.weiju.page.home.view.ScriptListView
-        android:id="@+id/rv_scripts"
+    <ViewFlipper
+        android:id="@+id/vf_scripts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:itemCount="3"
-        tools:listitem="@layout/script_item" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="48dp"
+            android:fontFamily="@font/jetbrains_mono_regular"
+            android:gravity="center"
+            android:text="You don't have any hook target..."
+            android:textColor="@color/muted"
+            android:textSize="14sp" />
+
+        <io.ikws4.weiju.page.home.view.ScriptListView
+            android:id="@+id/rv_scripts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:itemCount="3"
+            tools:listitem="@layout/script_item" />
+
+    </ViewFlipper>
 
 </LinearLayout>

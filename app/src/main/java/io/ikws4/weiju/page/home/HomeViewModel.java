@@ -112,12 +112,6 @@ public class HomeViewModel extends BaseViewModel {
         mAvaliableScripts.publish();
     }
 
-    public void reloadScripts() {
-        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
-        loadMyScripts(pkg);
-        loadAvaliableScripts(pkg);
-    }
-
     private void loadAvaliableScripts(String pkg) {
         mAvaliableScripts.setValue(null);
 
