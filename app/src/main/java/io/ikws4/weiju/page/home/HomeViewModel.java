@@ -28,6 +28,7 @@ import io.ikws4.weiju.page.home.view.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.util.Logger;
+import io.ikws4.weiju.util.Strings;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -84,11 +85,13 @@ public class HomeViewModel extends AndroidViewModel {
 
     public void addToMyScript(ScriptListView.ScriptItem item) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        String key = Strings.join("&", pkg, item.id);
 
-        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
-        ids.add(item.id);
-        mScriptStore.put(pkg, ids);
-        mScriptStore.put(item.id, item.script);
+        Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
+        keys.add(key);
+
+        mScriptStore.put(pkg, keys);
+        mScriptStore.put(key, item.script);
 
         mMyScripts.getValue().add(item);
         mMyScripts.publish();
@@ -96,10 +99,13 @@ public class HomeViewModel extends AndroidViewModel {
 
     public void removeFromMyScripts(ScriptListView.ScriptItem item) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        String key = Strings.join("&", pkg, item.id);
 
-        Set<String> ids = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
-        ids.remove(item.id);
-        mScriptStore.put(pkg, ids);
+        Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
+        keys.remove(key);
+
+        mScriptStore.put(pkg, keys);
+        mScriptStore.put(key, "");
 
         mMyScripts.getValue().remove(item);
         mMyScripts.publish();
@@ -165,11 +171,11 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     private void loadMyScripts(String pkg) {
-        Set<String> scriptIds = mScriptStore.get(pkg, Collections.emptySet());
+        Set<String> scriptKeys = mScriptStore.get(pkg, Collections.emptySet());
 
         mMyScripts.setValue(
-            scriptIds.stream()
-                .map(id -> ScriptListView.ScriptItem.from(mScriptStore.get(id, "")))
+            scriptKeys.stream()
+                .map(key -> ScriptListView.ScriptItem.from(mScriptStore.get(key, "")))
                 .collect(Collectors.toList())
         );
     }
