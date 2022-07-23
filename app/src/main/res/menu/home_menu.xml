@@ -6,7 +6,6 @@
         android:id="@+id/xposed_status"
         android:icon="@drawable/ic_info"
         android:title="Status"
-        android:visible="false"
         app:showAsAction="always" />
 
     <item

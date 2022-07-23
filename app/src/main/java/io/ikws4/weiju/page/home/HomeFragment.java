@@ -1,21 +1,30 @@
 package io.ikws4.weiju.page.home;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.editor.EditorFragment;
-import io.ikws4.weiju.widget.searchbar.SearchBar;
-import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 import io.ikws4.weiju.page.home.view.AppListView;
 import io.ikws4.weiju.page.home.view.ScriptListView;
+import io.ikws4.weiju.widget.searchbar.SearchBar;
+import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements MenuProvider {
+    // For xposed to hook this variable to indicate
+    // that xposed works.
+    private static boolean XPOSED_ENABLED = false;
 
     public HomeFragment() {
         super(R.layout.home_fragment);
@@ -23,6 +32,8 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
         HomeViewModel vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
         AppListView vApps = view.findViewById(R.id.rv_item_list);
@@ -47,6 +58,7 @@ public class HomeFragment extends Fragment {
 
                 requireActivity().getSupportFragmentManager()
                     .beginTransaction()
+                    .setReorderingAllowed(true)
                     .setCustomAnimations(
                         R.anim.slide_in_bottom,
                         R.anim.slide_out_top,
@@ -54,8 +66,7 @@ public class HomeFragment extends Fragment {
                         R.anim.slide_out_top
                     )
                     .add(R.id.fragment_container, EditorFragment.class, bundle)
-                    .setReorderingAllowed(true)
-                    .addToBackStack(null)
+                    .addToBackStack("home")
                     .commit();
             }
         });
@@ -91,5 +102,27 @@ public class HomeFragment extends Fragment {
         vm.getMyScripts().observe(getViewLifecycleOwner(), scripts -> {
             vScripts.setData(scripts, vm.getAvaliableScripts().getValue());
         });
+    }
+
+    @Override
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        menu.clear();
+
+        menuInflater.inflate(R.menu.home_menu, menu);
+        if (XPOSED_ENABLED) {
+            menu.findItem(R.id.xposed_status).setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onMenuItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.xposed_status) {
+            Toast.makeText(getContext(), "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
+        } else if (item.getItemId() == R.id.settings) {
+            Toast.makeText(getContext(), "TODO: Settings", Toast.LENGTH_SHORT).show();
+        } else {
+            return false;
+        }
+        return true;
     }
 }

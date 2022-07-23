@@ -1,34 +1,31 @@
 package io.ikws4.weiju.page;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.page.home.HomeFragment;
 
-public class MainActivity extends FragmentActivity {
-    // For xposed to hook this variable to indicate
-    // that xposed works.
-    private static boolean XPOSED_ENABLED = false;
+public class MainActivity extends AppCompatActivity {
+    public MainActivity() {
+        super(R.layout.main_activity);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragment_container, HomeFragment.class, null)
+                .commit();
+        }
 
-        toolbar.getMenu().findItem(R.id.xposed_status).setVisible(!XPOSED_ENABLED);
-        toolbar.setOnMenuItemClickListener((menu) -> {
-            if (menu.getItemId() == R.id.xposed_status) {
-                Toast.makeText(this, "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
-            } else if(menu.getItemId() == R.id.settings) {
-                Toast.makeText(this, "TODO: Settings", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        });
+        Toolbar vToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(vToolbar);
     }
 }
