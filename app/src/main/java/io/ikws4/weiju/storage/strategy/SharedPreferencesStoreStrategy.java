@@ -26,11 +26,19 @@ public class SharedPreferencesStoreStrategy implements StoreStrategy {
 
     @Override
     public void put(String k, String v) {
-        store.edit().putString(k, Base64.encodeToString(v.getBytes(StandardCharsets.UTF_8), 0)).apply();
+        if (v.isEmpty()) {
+            v = null;
+        } else {
+            v = Base64.encodeToString(v.getBytes(StandardCharsets.UTF_8), 0);
+        }
+        store.edit().putString(k, v).apply();
     }
 
     @Override
     public void put(String k, Set<String> v) {
+        if (v.isEmpty()) {
+            v = null;
+        }
         store.edit().putStringSet(k, v).apply();
     }
 }
