@@ -93,7 +93,7 @@ public class SearchBar extends Dialog {
             @Override
             public void send(List<Item> items) {
                 mSourceItems.addAll(items);
-                filter("");
+                filter(vInput.getText());
             }
 
             @Override
