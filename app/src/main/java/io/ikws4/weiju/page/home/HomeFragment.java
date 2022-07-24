@@ -120,13 +120,13 @@ public class HomeFragment extends Fragment implements MenuProvider {
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     vm.removeApp(app);
-                    actionBar.setSubtitle("Drag to the right to delete.");
+                    actionBar.setSubtitle("Drag to the right");
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    actionBar.setSubtitle("Are you sure you want to delete it?");
+                    actionBar.setSubtitle("Release to delete");
                     return true;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    actionBar.setSubtitle("Drag to the right to delete.");
+                    actionBar.setSubtitle("Drag to the right");
                     return true;
                 case DragEvent.ACTION_DROP:
                     return true;

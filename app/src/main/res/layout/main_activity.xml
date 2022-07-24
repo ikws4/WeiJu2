@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/base"
-            app:subtitle="Test"
             app:subtitleTextAppearance="@style/TextAppearance.WeiJu.Toolbar.Subtitle"
             app:subtitleTextColor="@color/muted"
             app:title="@string/app_name"
