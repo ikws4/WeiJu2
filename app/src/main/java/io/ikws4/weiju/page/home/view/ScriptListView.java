@@ -427,6 +427,19 @@ public class ScriptListView extends RecyclerView {
             return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description) && Objects.equals(script, item.script);
         }
 
+        public boolean metadataEquals(ScriptItem item) {
+            if (this == item) return true;
+            if (item == null) return false;
+            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description);
+        }
+
+        // TODO: impl version compare
+        public int versionCompare(ScriptItem item) {
+            if (this == item) return 0;
+            if (item == null) return 1;
+            return version.compareTo(item.version);
+        }
+
         @Override
         public int hashCode() {
             return Objects.hash(id, name, author, version, description, script);

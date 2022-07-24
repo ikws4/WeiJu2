@@ -1,10 +1,12 @@
 package io.ikws4.weiju.page.editor;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +48,10 @@ public class EditorFragment extends Fragment implements MenuProvider {
         layoutParams.leftMargin = (int) vEditor.getCharWidth();
         vEditor.setLayoutParams(layoutParams);
         vEditor.setText(mItem.script);
+        vEditor.setSelection(0, 0);
+        vEditor.moveSelectionEnd();
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(vEditor, 0);
 
         EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);
         vSymbolBar.registerCallbacks(new EditorSymbolBar.Callbacks() {

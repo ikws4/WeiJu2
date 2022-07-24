@@ -15,7 +15,11 @@
         app:layout_constraintBottom_toTopOf="@+id/editor_symbol_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <requestFocus />
+
+    </io.ikws4.weiju.editor.Editor>
 
     <io.ikws4.weiju.page.editor.view.EditorSymbolBar
         android:id="@+id/editor_symbol_bar"

@@ -173,7 +173,7 @@ public class HomeViewModel extends BaseViewModel {
                             observables.stream().forEach(observable ->
                                 observable.blockingSubscribe(contentFile -> {
                                     ScriptListView.ScriptItem item = ScriptListView.ScriptItem.from(contentFile.getContent());
-                                    if (mMyScripts.getValue() == null || !mMyScripts.getValue().contains(item)) {
+                                    if (mMyScripts.getValue() == null || !isMyScriptsMetadataContains(item)) {
                                         scriptItems.add(item);
                                     }
                                 }, Logger::e));
@@ -214,5 +214,15 @@ public class HomeViewModel extends BaseViewModel {
                 selectedData.addAll(infos);
                 mSelectedApps.setValue(selectedData);
             }));
+    }
+
+    private boolean isMyScriptsMetadataContains(ScriptListView.ScriptItem item) {
+        if (mMyScripts.getValue() == null) return false;
+        for (var script : mMyScripts.getValue()) {
+            if (script.metadataEquals(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
