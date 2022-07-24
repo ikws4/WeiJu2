@@ -424,12 +424,12 @@ public class ScriptListView extends RecyclerView {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ScriptItem item = (ScriptItem) o;
-            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description) && Objects.equals(script, item.script);
+            return Objects.equals(id, item.id);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, name, author, version, description, script);
+            return Objects.hash(id);
         }
     }
 
