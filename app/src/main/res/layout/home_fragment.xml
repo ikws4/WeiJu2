@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         app:dividerColor="@color/surface" />
 
-    <ViewFlipper
+    <io.ikws4.weiju.widget.ViewFlipper
         android:id="@+id/vf_scripts"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -39,6 +39,6 @@
             tools:itemCount="3"
             tools:listitem="@layout/script_item" />
 
-    </ViewFlipper>
+    </io.ikws4.weiju.widget.ViewFlipper>
 
 </LinearLayout>

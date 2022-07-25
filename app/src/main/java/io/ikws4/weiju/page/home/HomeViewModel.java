@@ -92,11 +92,11 @@ public class HomeViewModel extends BaseViewModel {
 
     public void updateSelectedAppAfterRemove(int index, AppListView.AppItem app) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
-        if (app.pkg.equals(pkg)) {
-            int n = mSelectedApps.getValue().size();
+        int n = mSelectedApps.getValue().size();
+        if (n > 0 && app.pkg.equals(pkg)) {
             switchApp(mSelectedApps.getValue().get(Math.min(index, n - 1)));
-            mSelectedApps.publish();
         }
+        mSelectedApps.publish();
     }
 
     public void addToMyScript(ScriptListView.ScriptItem item) {

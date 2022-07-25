@@ -33,6 +33,8 @@ public class HomeFragment extends Fragment implements MenuProvider {
     // that xposed works.
     private static boolean XPOSED_ENABLED = false;
 
+    private boolean isDrag = false;
+
     public HomeFragment() {
         super(R.layout.home_fragment);
     }
@@ -119,6 +121,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
             ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
+                    isDrag = true;
                     vm.removeApp(app);
                     actionBar.setSubtitle("Drag to the right");
                     return true;
@@ -131,6 +134,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
                 case DragEvent.ACTION_DROP:
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
+                    isDrag = false;
                     if (event.getResult() == false) {
                         vm.addApp(index, app);
                     } else {
@@ -143,13 +147,14 @@ public class HomeFragment extends Fragment implements MenuProvider {
         });
 
         vm.getSelectedApps().observe(getViewLifecycleOwner(), infos -> {
-            if (infos.isEmpty()) {
+            if (isDrag == false && infos.isEmpty()) {
                 vfScripts.setDisplayedChild(0);
             } else {
-                vApps.setData(infos);
-                vApps.scrollToSelectedPkgPosition();
                 vfScripts.setDisplayedChild(1);
             }
+
+            vApps.scrollToSelectedPkgPosition();
+            vApps.setData(infos);
         });
 
         vm.getAvaliableScripts().observe(getViewLifecycleOwner(), scripts -> {
