@@ -1,4 +1,4 @@
-package io.ikws4.weiju.page.home.view;
+package io.ikws4.weiju.page.home.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

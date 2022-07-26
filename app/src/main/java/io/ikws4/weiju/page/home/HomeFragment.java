@@ -23,8 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.editor.EditorFragment;
-import io.ikws4.weiju.page.home.view.AppListView;
-import io.ikws4.weiju.page.home.view.ScriptListView;
+import io.ikws4.weiju.page.home.widget.AppListView;
+import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
 import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 
@@ -51,18 +51,18 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
         vScripts.registerCallbacks(new ScriptListView.Callbacks() {
             @Override
-            public void onAddToMyScripts(View v, ScriptListView.ScriptItem item) {
+            public void onRequireAddToMyScripts(View v, ScriptListView.ScriptItem item) {
                 vm.removeFromAvaliableScripts(item);
                 vm.addToMyScript(item);
             }
 
             @Override
-            public void onRemoveFromMyScripts(View v, ScriptListView.ScriptItem item) {
+            public void onRequireRemoveFromMyScripts(View v, ScriptListView.ScriptItem item) {
                 vm.removeFromMyScripts(item);
             }
 
             @Override
-            public void onGotoEditorFragment(ScriptListView.ScriptItem item) {
+            public void onRequireGotoEditorFragment(ScriptListView.ScriptItem item) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("item", item);
 

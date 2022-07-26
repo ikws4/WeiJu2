@@ -24,7 +24,7 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.page.editor.view.EditorSymbolBar;
 import io.ikws4.weiju.page.home.HomeViewModel;
-import io.ikws4.weiju.page.home.view.ScriptListView;
+import io.ikws4.weiju.page.home.widget.ScriptListView;
 
 public class EditorFragment extends Fragment implements MenuProvider {
     private Editor vEditor;

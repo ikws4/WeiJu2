@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.ikws4.weiju.page.home.view.AppListView;
+import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;

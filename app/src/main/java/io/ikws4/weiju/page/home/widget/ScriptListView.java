@@ -1,4 +1,4 @@
-package io.ikws4.weiju.page.home.view;
+package io.ikws4.weiju.page.home.widget;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -198,7 +198,7 @@ public class ScriptListView extends RecyclerView {
 
             public void bind(ScriptItem item) {
                 itemView.setOnClickListener(v -> {
-                    mCallbacks.onGotoEditorFragment(item);
+                    mCallbacks.onRequireGotoEditorFragment(item);
                 });
                 vIconLabel.setText(String.valueOf(item.name.charAt(0)));
                 vName.setText(item.name);
@@ -218,7 +218,7 @@ public class ScriptListView extends RecyclerView {
                 popup.setGravity(Gravity.END);
                 popup.setOnMenuItemClickListener(it -> {
                     if (it.getItemId() == R.id.remove_from_my_scripts) {
-                        mCallbacks.onRemoveFromMyScripts(v, item);
+                        mCallbacks.onRequireRemoveFromMyScripts(v, item);
                     }
                     return true;
                 });
@@ -272,7 +272,7 @@ public class ScriptListView extends RecyclerView {
                 popup.setGravity(Gravity.END);
                 popup.setOnMenuItemClickListener(it -> {
                     if (it.getItemId() == R.id.add_to_my_scripts) {
-                        mCallbacks.onAddToMyScripts(v, item);
+                        mCallbacks.onRequireAddToMyScripts(v, item);
                     } else if (it.getItemId() == R.id.more_about_this_script) {
                         Toast.makeText(v.getContext(), "TODO: More about this script", Toast.LENGTH_SHORT).show();
                     }
@@ -447,27 +447,27 @@ public class ScriptListView extends RecyclerView {
     }
 
     public interface Callbacks {
-        void onAddToMyScripts(View v, ScriptItem item);
+        void onRequireAddToMyScripts(View v, ScriptItem item);
 
-        void onRemoveFromMyScripts(View v, ScriptItem item);
+        void onRequireRemoveFromMyScripts(View v, ScriptItem item);
 
-        void onGotoEditorFragment(ScriptItem item);
+        void onRequireGotoEditorFragment(ScriptItem item);
     }
 
     public static class EmptyCallbacks implements Callbacks {
 
         @Override
-        public void onAddToMyScripts(View v, ScriptItem item) {
+        public void onRequireAddToMyScripts(View v, ScriptItem item) {
 
         }
 
         @Override
-        public void onRemoveFromMyScripts(View v, ScriptItem item) {
+        public void onRequireRemoveFromMyScripts(View v, ScriptItem item) {
 
         }
 
         @Override
-        public void onGotoEditorFragment(ScriptItem item) {
+        public void onRequireGotoEditorFragment(ScriptItem item) {
         }
     }
 }
