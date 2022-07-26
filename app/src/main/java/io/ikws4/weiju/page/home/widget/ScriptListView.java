@@ -180,7 +180,7 @@ public class ScriptListView extends RecyclerView {
                 ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
                 vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_add_circle));
                 vHelp.setOnClickListener((v) -> {
-                    Toast.makeText(v.getContext(), "Add", Toast.LENGTH_SHORT).show();
+                    mCallbacks.onRequireCreateNewScripts();
                 });
             }
         }
@@ -452,22 +452,26 @@ public class ScriptListView extends RecyclerView {
         void onRequireRemoveFromMyScripts(View v, ScriptItem item);
 
         void onRequireGotoEditorFragment(ScriptItem item);
+
+        void onRequireCreateNewScripts();
     }
 
     public static class EmptyCallbacks implements Callbacks {
 
         @Override
         public void onRequireAddToMyScripts(View v, ScriptItem item) {
-
         }
 
         @Override
         public void onRequireRemoveFromMyScripts(View v, ScriptItem item) {
-
         }
 
         @Override
         public void onRequireGotoEditorFragment(ScriptItem item) {
+        }
+
+        @Override
+        public void onRequireCreateNewScripts() {
         }
     }
 }

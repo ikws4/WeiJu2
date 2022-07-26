@@ -79,6 +79,10 @@ public class HomeFragment extends Fragment implements MenuProvider {
                     .addToBackStack("home")
                     .commit();
             }
+
+            @Override
+            public void onRequireCreateNewScripts() {
+            }
         });
 
         SearchBar searchBar = new SearchBar(getContext(), new SelectedAppInfoItemLoader());

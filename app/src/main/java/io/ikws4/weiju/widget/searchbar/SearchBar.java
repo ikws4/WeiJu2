@@ -1,15 +1,12 @@
 package io.ikws4.weiju.widget.searchbar;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,6 +30,7 @@ import java.util.stream.Collectors;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.util.Logger;
+import io.ikws4.weiju.widget.Dialog;
 
 public class SearchBar extends Dialog {
     private OnItemClickListener mOnItemClickListener;
@@ -49,18 +47,8 @@ public class SearchBar extends Dialog {
     private ItemLoader.Callback mItemLoaderCallback;
 
     public SearchBar(@NonNull Context context, @NonNull ItemLoader itemLoader) {
-        super(context, R.style.Dialog_WeiJu_SearchBar);
-        setContentView(R.layout.search_bar);
-        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        super(context, R.layout.search_bar);
         getWindow().setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        // bluring
-        getWindow().setDimAmount(0.3f);
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(getWindow().getAttributes());
-        lp.width = (int) (Resources.getSystem().getDisplayMetrics().widthPixels * 0.85);
-        getWindow().setAttributes(lp);
-
 
         RecyclerView rv = findViewById(R.id.rv_item_list);
         mAdapter = new Adapter();

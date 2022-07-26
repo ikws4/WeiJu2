@@ -35,6 +35,7 @@
         <entry key="app/src/main/res/layout/app_add_item.xml" value="0.29074074074074074" />
         <entry key="app/src/main/res/layout/app_item.xml" value="0.648388671875" />
         <entry key="app/src/main/res/layout/available_scripts_header.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/create_new_script.xml" value="0.3842857142857143" />
         <entry key="app/src/main/res/layout/editor_context_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/editor_fragment.xml" value="0.35583190917968754" />
         <entry key="app/src/main/res/layout/editor_symbol_item.xml" value="0.7755757649739583" />
