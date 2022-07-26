@@ -1,0 +1,9 @@
+
+
+-- metadata about this script
+return {
+  name = "${name}",
+  author = "${author}",
+  version = "${version}",
+  description = "${description}",
+}
