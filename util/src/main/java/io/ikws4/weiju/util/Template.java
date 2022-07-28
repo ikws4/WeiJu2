@@ -33,6 +33,7 @@ public class Template {
             Logger.d(e);
         }
         mSource = source;
+        parse();
     }
 
     public Template(String source) {

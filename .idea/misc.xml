@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/dialog_cursor.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_add_circle.xml" value="0.154" />
+        <entry key="app/src/main/res/drawable/ic_close.xml" value="0.259" />
         <entry key="app/src/main/res/drawable/ic_fullscreen.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_fullscreen_exit.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_help.xml" value="0.109" />
@@ -53,6 +54,7 @@
         <entry key="app/src/main/res/layout/search_list_item.xml" value="0.6194905774346715" />
         <entry key="app/src/main/res/layout/text_compose_panel.xml" value="0.49244051332826977" />
         <entry key="app/src/main/res/menu/available_script_item_actions.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/editor_menu.xml" value="0.3463541666666667" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.24493560791015623" />
         <entry key="editor/src/main/res/layout/completion_item.xml" value="0.29259259259259257" />
         <entry key="editor/src/main/res/layout/editor.xml" value="0.1059322033898305" />

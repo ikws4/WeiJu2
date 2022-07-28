@@ -349,7 +349,7 @@ public class ScriptListView extends RecyclerView {
 
     public static class ScriptItem implements Parcelable {
         private static final Globals sGlobals = JsePlatform.standardGlobals();
-        private static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
+        public static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
 
         public final String id;
         public final String name;
@@ -430,7 +430,7 @@ public class ScriptListView extends RecyclerView {
         public boolean metadataEquals(ScriptItem item) {
             if (this == item) return true;
             if (item == null) return false;
-            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description);
+            return Objects.equals(id, item.id);
         }
 
         // TODO: impl version compare

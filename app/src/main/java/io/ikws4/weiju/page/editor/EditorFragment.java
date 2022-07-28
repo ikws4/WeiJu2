@@ -84,8 +84,13 @@ public class EditorFragment extends Fragment implements MenuProvider {
 
     @Override
     public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.help) {
+        int id = menuItem.getItemId();
+        if (id == R.id.help) {
             Toast.makeText(getContext(), "TODO: Help", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.close) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(vEditor.getWindowToken(), 0);
+            requireActivity().getSupportFragmentManager().popBackStack();
         } else {
             return false;
         }
@@ -95,8 +100,28 @@ public class EditorFragment extends Fragment implements MenuProvider {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         var item = ScriptListView.ScriptItem.from(vEditor.getText().toString());
-        vm.removeFromMyScripts(mItem); // remove old
-        vm.addToMyScript(item);        // add new
+        if (hasSameMetadataInMyScripts(item)) {
+            Toast.makeText(getContext(), "ABORT: Same metadata already exist.", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (hasSyntaxError(item)) {
+            Toast.makeText(getContext(), "ABORT: Has syntax error.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        vm.replaceInMyScripts(mItem, item);
+    }
+
+    private boolean hasSyntaxError(ScriptListView.ScriptItem item) {
+        return item == ScriptListView.ScriptItem.EMPTY_ITEM;
+    }
+
+    private boolean hasSameMetadataInMyScripts(ScriptListView.ScriptItem item) {
+        for (var it : vm.getMyScripts().getValue()) {
+            if (it.metadataEquals(mItem)) continue;
+            if (it.metadataEquals(item)) return true;
+        }
+        return false;
     }
 }

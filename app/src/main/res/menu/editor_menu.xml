@@ -4,7 +4,14 @@
 
     <item
         android:id="@+id/help"
+        android:icon="@drawable/ic_help"
         android:title="Help"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/close"
+        android:icon="@drawable/ic_close"
+        android:title="Close"
+        app:showAsAction="always" />
 
 </menu>

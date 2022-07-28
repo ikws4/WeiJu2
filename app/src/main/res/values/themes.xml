@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.WeiJu" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/base</item>
         <item name="android:statusBarColor">@color/base</item>
         <item name="android:navigationBarColor">@color/base</item>
         <item name="dividerColor">@color/surface</item>

@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
             @Override
             public void onRequireAddToMyScripts(View v, ScriptListView.ScriptItem item) {
                 vm.removeFromAvaliableScripts(item);
-                vm.addToMyScript(item);
+                vm.addToMyScripts(item);
             }
 
             @Override
@@ -82,6 +82,8 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
             @Override
             public void onRequireCreateNewScripts() {
+                ScriptListView.ScriptItem item = vm.createNewScriptAndAddToMyScripts();
+                onRequireGotoEditorFragment(item);
             }
         });
 

@@ -11,6 +11,8 @@ import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,7 +29,9 @@ import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.util.Logger;
+import io.ikws4.weiju.util.RandomUtil;
 import io.ikws4.weiju.util.Strings;
+import io.ikws4.weiju.util.Template;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -55,6 +59,22 @@ public class HomeViewModel extends BaseViewModel {
 
     public LiveData<List<AppListView.AppItem>> getSelectedApps() {
         return mSelectedApps;
+    }
+
+    public ScriptListView.ScriptItem createNewScriptAndAddToMyScripts() {
+        ScriptListView.ScriptItem item = null;
+        try {
+            InputStream in = getApplication().getAssets().open("script_template");
+            Template template = new Template(in);
+            template.set("name", RandomUtil.nextName(3));
+            template.set("author", RandomUtil.nextName(1));
+            template.set("version", "0.0.1");
+            template.set("description", RandomUtil.nextName(10));
+            addToMyScripts(item = ScriptListView.ScriptItem.from(template.toString()));
+        } catch (IOException e) {
+            Logger.d(e);
+        }
+        return item;
     }
 
     public void addApp(AppListView.AppItem app) {
@@ -99,7 +119,7 @@ public class HomeViewModel extends BaseViewModel {
         mSelectedApps.publish();
     }
 
-    public void addToMyScript(ScriptListView.ScriptItem item) {
+    public void addToMyScripts(ScriptListView.ScriptItem item) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
         String key = Strings.join("&", pkg, item.id);
 
@@ -113,6 +133,31 @@ public class HomeViewModel extends BaseViewModel {
         mMyScripts.publish();
     }
 
+    public void replaceInMyScripts(ScriptListView.ScriptItem oldItem, ScriptListView.ScriptItem newItem) {
+        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        String oldKey = getKey(oldItem);
+        String newkey = getKey(newItem);
+
+        Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
+        keys.remove(oldKey);
+        keys.add(newkey);
+
+        mScriptStore.put(pkg, keys);
+        mScriptStore.put(oldKey, "");
+        mScriptStore.put(newkey, newItem.script);
+
+
+        int index = mMyScripts.getValue().indexOf(oldItem);
+        mMyScripts.getValue().remove(index);
+        mMyScripts.getValue().add(index, newItem);
+        mMyScripts.publish();
+
+        // reload avaliable script from server
+        if (!oldItem.metadataEquals(newItem)) {
+            loadAvaliableScripts(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+        }
+    }
+
     public void removeFromMyScripts(ScriptListView.ScriptItem item) {
         String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
         String key = Strings.join("&", pkg, item.id);
@@ -122,6 +167,7 @@ public class HomeViewModel extends BaseViewModel {
 
         mScriptStore.put(pkg, keys);
         mScriptStore.put(key, "");
+
 
         mMyScripts.getValue().remove(item);
         mMyScripts.publish();
@@ -224,5 +270,10 @@ public class HomeViewModel extends BaseViewModel {
             }
         }
         return false;
+    }
+
+    private String getKey(ScriptListView.ScriptItem item) {
+        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        return Strings.join("&", pkg, item.id);
     }
 }

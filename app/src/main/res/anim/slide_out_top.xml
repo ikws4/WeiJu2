@@ -3,13 +3,12 @@
     <translate
         android:duration="@integer/material_motion_duration_long_2"
         android:fromYDelta="0%"
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:interpolator="@android:anim/decelerate_interpolator"
         android:toYDelta="100%" />
 
     <alpha
         android:duration="@integer/material_motion_duration_long_2"
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:interpolator="@android:anim/accelerate_interpolator"
         android:fromAlpha="1"
         android:toAlpha="0"/>
-
 </set>
