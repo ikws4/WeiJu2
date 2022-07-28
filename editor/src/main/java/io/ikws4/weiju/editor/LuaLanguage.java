@@ -107,6 +107,7 @@ class LuaLanguage extends EmptyLanguage {
     }
 
     class EndwiseNewlineHandler implements NewlineHandler {
+        private static final String ENDWISE_PATTERN = "^((?!(--)).)*(\\b(else|function|then|do|repeat)\\b((?!\\b(end|until)\\b).)*)$";
 
         @Override
         public boolean matchesRequirement(String beforeText, String afterText) {
@@ -142,9 +143,15 @@ class LuaLanguage extends EmptyLanguage {
             mStringBuilder.append("\n");
             mStringBuilder.append(Strings.repeat(" ", indent + leadingSpaces.length()));
             int leftShift = 0;
-            if (shouldAddEnd) {
-                mStringBuilder.append("\n").append(leadingSpaces).append("end");
-                leftShift = leadingSpaces.length() + 4;
+            if (shouldAddEnd ) {
+                mStringBuilder.append("\n");
+
+                if (beforeText.matches(ENDWISE_PATTERN)) {
+                    mStringBuilder.append(leadingSpaces).append("end");
+                    leftShift = leadingSpaces.length() + 4;
+                } else {
+                    leftShift = leadingSpaces.length() + 1;
+                }
             }
 
             return new NewlineHandleResult(mStringBuilder.toString(), leftShift);
