@@ -1,6 +1,7 @@
 package io.ikws4.weiju.editor;
 
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,16 +9,29 @@ import androidx.annotation.NonNull;
 import org.eclipse.tm4e.core.theme.IRawTheme;
 import org.eclipse.tm4e.languageconfiguration.internal.LanguageConfiguration;
 import org.eclipse.tm4e.languageconfiguration.internal.supports.IndentationRule;
+import org.luaj.vm2.ast.Chunk;
+import org.luaj.vm2.ast.FuncBody;
+import org.luaj.vm2.ast.Stat;
+import org.luaj.vm2.ast.Visitor;
+import org.luaj.vm2.parser.LuaParser;
+import org.luaj.vm2.parser.ParseException;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 
 import io.github.rosemoe.sora.lang.EmptyLanguage;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
 import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentLine;
 import io.github.rosemoe.sora.text.ContentReference;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
@@ -46,6 +60,7 @@ class LuaLanguage extends EmptyLanguage {
                 "repeat", "return", "then", "true", "until", "while"
             };
             mTextMateLanguage.setKeywords(keywords, true);
+            DiagnosticTask.launch(editor);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,7 +158,7 @@ class LuaLanguage extends EmptyLanguage {
             mStringBuilder.append("\n");
             mStringBuilder.append(Strings.repeat(" ", indent + leadingSpaces.length()));
             int leftShift = 0;
-            if (shouldAddEnd ) {
+            if (shouldAddEnd) {
                 mStringBuilder.append("\n");
 
                 if (beforeText.matches(ENDWISE_PATTERN)) {
@@ -155,6 +170,58 @@ class LuaLanguage extends EmptyLanguage {
             }
 
             return new NewlineHandleResult(mStringBuilder.toString(), leftShift);
+        }
+    }
+
+    static class DiagnosticTask extends AsyncTask<Content, Void, DiagnosticsContainer> {
+        private final WeakReference<Editor> mEditor;
+
+        private DiagnosticTask(Editor editor) {
+            mEditor = new WeakReference<>(editor);
+        }
+
+        public static void launch(Editor editor) {
+            new DiagnosticTask(editor).execute(editor.getText());
+        }
+
+        @Override
+        protected DiagnosticsContainer doInBackground(Content... references) {
+            InputStream in = new ByteArrayInputStream(references[0].toString().getBytes());
+            LuaParser parser = new LuaParser(new BufferedInputStream(in));
+            DiagnosticsContainer diagnosticsContainer = new DiagnosticsContainer();
+            try {
+                Chunk chunk = parser.Chunk();
+                chunk.accept(new Visitor() {
+                });
+            } catch (ParseException e) {
+                var token = e.currentToken;
+                if (token != null) {
+                    var content = mEditor.get().getText();
+                    int startIndex = content.getCharIndex(token.beginLine - 1, token.beginColumn - 1);
+                    int endIndex = content.getCharIndex(token.endLine - 1, token.endColumn - 1);
+                    diagnosticsContainer.addDiagnostic(new DiagnosticRegion(startIndex, endIndex, DiagnosticRegion.SEVERITY_ERROR));
+                }
+            }
+            return diagnosticsContainer;
+        }
+
+        @Override
+        protected void onPostExecute(DiagnosticsContainer diagnostics) {
+            super.onPostExecute(diagnostics);
+            Editor editor = mEditor.get();
+            editor.setDiagnostics(diagnostics);
+            editor.postDelayed(() -> DiagnosticTask.launch(editor), 1000);
+        }
+
+        private DiagnosticRegion newErrorDiagnosticResion(Stat stat) {
+            return newDiagnosticResion(stat, DiagnosticRegion.SEVERITY_ERROR);
+        }
+
+        private DiagnosticRegion newDiagnosticResion(Stat stat, short severity) {
+            var content = mEditor.get().getText();
+            int startIndex = content.getCharIndex(stat.beginLine - 1, stat.beginColumn - 1);
+            int endIndex = content.getCharIndex(stat.endLine - 1, stat.endColumn - 1);
+            return new DiagnosticRegion(startIndex, endIndex, severity);
         }
     }
 }
