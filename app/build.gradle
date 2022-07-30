@@ -39,7 +39,7 @@ dependencies {
     def fragment_version = "1.5.0"
 
     implementation project(path: ':util')
-
+    implementation project(path: ':lua')
     implementation project(path: ':editor')
     implementation project(path: ':glide')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'

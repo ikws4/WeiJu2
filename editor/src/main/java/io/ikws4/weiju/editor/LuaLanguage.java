@@ -3,23 +3,15 @@ package io.ikws4.weiju.editor;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import org.eclipse.tm4e.core.theme.IRawTheme;
 import org.eclipse.tm4e.languageconfiguration.internal.LanguageConfiguration;
 import org.eclipse.tm4e.languageconfiguration.internal.supports.IndentationRule;
-import org.luaj.vm2.ast.Chunk;
-import org.luaj.vm2.ast.FuncBody;
-import org.luaj.vm2.ast.Stat;
-import org.luaj.vm2.ast.Visitor;
-import org.luaj.vm2.parser.LuaParser;
-import org.luaj.vm2.parser.ParseException;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
@@ -35,6 +27,8 @@ import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentLine;
 import io.github.rosemoe.sora.text.ContentReference;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
+import io.ikws4.weiju.lua.DiagnosticInfo;
+import io.ikws4.weiju.lua.LuaDiagnostic;
 import io.ikws4.weiju.util.Strings;
 
 class LuaLanguage extends EmptyLanguage {
@@ -181,27 +175,27 @@ class LuaLanguage extends EmptyLanguage {
         }
 
         public static void launch(Editor editor) {
-            new DiagnosticTask(editor).execute(editor.getText());
+            DiagnosticTask task = new DiagnosticTask(editor);
+            task.execute(editor.getText());
+
+            editor.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    task.cancel(true);
+                }
+            });
         }
 
         @Override
         protected DiagnosticsContainer doInBackground(Content... references) {
-            InputStream in = new ByteArrayInputStream(references[0].toString().getBytes());
-            LuaParser parser = new LuaParser(new BufferedInputStream(in));
             DiagnosticsContainer diagnosticsContainer = new DiagnosticsContainer();
-            try {
-                Chunk chunk = parser.Chunk();
-                chunk.accept(new Visitor() {
-                });
-            } catch (ParseException e) {
-                var token = e.currentToken;
-                if (token != null) {
-                    var content = mEditor.get().getText();
-                    int startIndex = content.getCharIndex(token.beginLine - 1, token.beginColumn - 1);
-                    int endIndex = content.getCharIndex(token.endLine - 1, token.endColumn - 1);
-                    diagnosticsContainer.addDiagnostic(new DiagnosticRegion(startIndex, endIndex, DiagnosticRegion.SEVERITY_ERROR));
-                }
-            }
+            LuaDiagnostic.diagnose(references[0].toString(), info -> {
+                diagnosticsContainer.addDiagnostic(newDiagnosticResion(info, DiagnosticRegion.SEVERITY_ERROR));
+            });
             return diagnosticsContainer;
         }
 
@@ -213,14 +207,11 @@ class LuaLanguage extends EmptyLanguage {
             editor.postDelayed(() -> DiagnosticTask.launch(editor), 1000);
         }
 
-        private DiagnosticRegion newErrorDiagnosticResion(Stat stat) {
-            return newDiagnosticResion(stat, DiagnosticRegion.SEVERITY_ERROR);
-        }
-
-        private DiagnosticRegion newDiagnosticResion(Stat stat, short severity) {
-            var content = mEditor.get().getText();
-            int startIndex = content.getCharIndex(stat.beginLine - 1, stat.beginColumn - 1);
-            int endIndex = content.getCharIndex(stat.endLine - 1, stat.endColumn - 1);
+        private DiagnosticRegion newDiagnosticResion(DiagnosticInfo info, short severity) {
+            Content content = mEditor.get().getText();
+            int startIndex = content.getCharIndex(info.startLine, info.startColumn);
+            int endIndex = content.getCharIndex(info.endLine, info.endColumn) + 1;
+            info.recycle();
             return new DiagnosticRegion(startIndex, endIndex, severity);
         }
     }

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="Weiju.app" target="11" />
+      <module name="Weiju.editor" target="11" />
+      <module name="Weiju.glide" target="11" />
+      <module name="Weiju.util" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
