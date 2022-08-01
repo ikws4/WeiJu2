@@ -35,6 +35,8 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.util.Logger;
@@ -348,9 +350,9 @@ public class ScriptListView extends RecyclerView {
     }
 
     public static class ScriptItem implements Parcelable {
-        private static final Globals sGlobals = JsePlatform.standardGlobals();
+        private static final Globals GLOBALS = JsePlatform.standardGlobals();
+        private static final Pattern META_DATA_PATTERN = Pattern.compile("^@metadata([\\s\\S]*)@end$", Pattern.MULTILINE);
         public static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
-
         public final String id;
         public final String name;
         public final String author;
@@ -360,7 +362,7 @@ public class ScriptListView extends RecyclerView {
 
         private ScriptItem(@NonNull String name, @NonNull String author, @NonNull String version, @NonNull String description, @NonNull String script) {
             this.id = Strings.join("-", name, author, version);
-            this.name = name;
+            this.name = name.isEmpty() ? " " : name;
             this.author = author;
             this.version = version;
             this.description = description;
@@ -369,14 +371,17 @@ public class ScriptListView extends RecyclerView {
 
         public static ScriptItem from(String script) {
             try {
-                LuaTable metadata = sGlobals.load(script).call().checktable();
-                String name = metadata.get("name").checkjstring();
-                String author = metadata.get("author").checkjstring();
-                String version = metadata.get("version").checkjstring();
-                String description = metadata.get("description").checkjstring();
+                Matcher metadataMatcher = META_DATA_PATTERN.matcher(script);
+                if (metadataMatcher.find()) {
+                    LuaTable metadata = GLOBALS.load(metadataMatcher.group(1)).call().checktable();
+                    String name = metadata.get("name").checkjstring();
+                    String author = metadata.get("author").checkjstring();
+                    String version = metadata.get("version").checkjstring();
+                    String description = metadata.get("description").checkjstring();
 
-                // Using the metadate to create ScriptItem
-                return new ScriptItem(name, author, version, description, script);
+                    // Using the metadate to create ScriptItem
+                    return new ScriptItem(name, author, version, description, script);
+                }
             } catch (LuaError e) {
                 Logger.d(e);
             }

@@ -1,9 +1,10 @@
-
-
--- metadata about this script
-return {
-  name = "${name}",
-  author = "${author}",
-  version = "${version}",
-  description = "${description}",
-}
+--[[
+@metadata
+  return {
+    name = "${name}",
+    author = "${author}",
+    version = "${version}",
+    description = "${description}"
+  }
+@end
+--]]

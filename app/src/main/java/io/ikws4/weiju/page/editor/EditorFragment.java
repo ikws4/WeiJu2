@@ -105,15 +105,15 @@ public class EditorFragment extends Fragment implements MenuProvider {
         if (hasSameMetadataInMyScripts(item)) {
             Toast.makeText(getContext(), "ABORT: Same metadata already exist.", Toast.LENGTH_SHORT).show();
             return;
-        } else if (hasSyntaxError(item)) {
-            Toast.makeText(getContext(), "ABORT: Has syntax error.", Toast.LENGTH_SHORT).show();
+        } else if (hasMetadataError(item)) {
+            Toast.makeText(getContext(), "ABORT: Metadata parse error.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         vm.replaceInMyScripts(mItem, item);
     }
 
-    private boolean hasSyntaxError(ScriptListView.ScriptItem item) {
+    private boolean hasMetadataError(ScriptListView.ScriptItem item) {
         return item == ScriptListView.ScriptItem.EMPTY_ITEM;
     }
 

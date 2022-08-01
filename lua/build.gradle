@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'antlr'
 }
 
 java {
@@ -10,4 +11,9 @@ java {
 
 dependencies {
     api 'org.luaj:luaj-jse:3.0.1'
+    antlr "org.antlr:antlr4:4.10.1"  // antlr compiler and runtime
+}
+
+generateGrammarSource {
+    arguments += ["-visitor", "-no-listener", "-package", "io.ikws4.weiju.lua"]
 }
