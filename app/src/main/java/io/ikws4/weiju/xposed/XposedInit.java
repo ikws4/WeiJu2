@@ -6,7 +6,6 @@ import android.os.Build;
 
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
-import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import java.util.Collections;
 import java.util.Set;
@@ -50,15 +49,14 @@ public class XposedInit implements IXposedHookLoadPackage {
 
         if (pkg.equals(BuildConfig.APPLICATION_ID)) {
             updateHostXposedStatus();
-            // return;
+            return;
         }
 
-        Globals globals = XposedPlatform.create();
+        Globals globals = XposedPlatform.create(lpparam);
         XScriptStore store = XScriptStore.getInstance(context);
         Set<String> keys = store.get(pkg, Collections.emptySet());
         for (String key : keys) {
             String script = store.get(key, "");
-            globals.set("lpparam", CoerceJavaToLua.coerce(lpparam));
             Logger.d("Script:", script);
             try {
                 globals.load(script).call();

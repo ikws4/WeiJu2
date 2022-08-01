@@ -8,15 +8,17 @@ import org.luaj.vm2.lib.CoroutineLib;
 import org.luaj.vm2.lib.PackageLib;
 import org.luaj.vm2.lib.StringLib;
 import org.luaj.vm2.lib.TableLib;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JseBaseLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
-import org.luaj.vm2.lib.jse.JsePlatform;
-import org.luaj.vm2.lib.jse.LuajavaLib;
+
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class XposedPlatform {
 
-    public static Globals create() {
-        Globals globals = JsePlatform.standardGlobals();
+    public static Globals create(XC_LoadPackage.LoadPackageParam lpparam) {
+        Globals globals = new Globals();
+        globals.set("lpparam", CoerceJavaToLua.coerce(lpparam));
         globals.load(new JseBaseLib());
         globals.load(new PackageLib());
         globals.load(new Bit32Lib());
@@ -24,7 +26,7 @@ public class XposedPlatform {
         globals.load(new StringLib());
         globals.load(new CoroutineLib());
         globals.load(new JseMathLib());
-        globals.load(new LuajavaLib());
+        globals.load(new XposedLuajavaLib());
         globals.load(new XposedLib());
         LoadState.install(globals);
         LuaC.install(globals);
