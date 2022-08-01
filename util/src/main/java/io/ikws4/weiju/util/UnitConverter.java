@@ -6,4 +6,9 @@ public class UnitConverter {
   public static int dp(int px) {
     return (int) (px * Resources.getSystem().getDisplayMetrics().density);
   }
+
+  public static int sp(int px) {
+    return (int) (px * Resources.getSystem().getDisplayMetrics().scaledDensity);
+  }
+
 }
