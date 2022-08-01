@@ -59,6 +59,8 @@ public class Editor extends CodeEditor {
         setDividerMargin(mCharWidth);
         setLineNumberAlign(Paint.Align.RIGHT);
         setTabWidth(2);
+        setLineSpacing(0, 1.15f);
+        setTextSize(14);
 
         getComponent(Magnifier.class).setEnabled(false);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
