@@ -1,6 +1,8 @@
 package io.ikws4.weiju.page.home;
 
 import android.content.ClipData;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Pair;
@@ -21,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
+import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.page.home.widget.AppListView;
@@ -34,6 +37,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
     private static boolean XPOSED_ENABLED = false;
 
     private boolean isDrag = false;
+    private HomeViewModel vm;
 
     public HomeFragment() {
         super(R.layout.home_fragment);
@@ -43,7 +47,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
-        HomeViewModel vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
         AppListView vApps = view.findViewById(R.id.rv_item_list);
         ScriptListView vScripts = view.findViewById(R.id.rv_scripts);
@@ -184,10 +188,22 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
     @Override
     public boolean onMenuItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.xposed_status) {
+        int id = item.getItemId();
+        if (id == R.id.xposed_status) {
             Toast.makeText(getContext(), "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
-        } else if (item.getItemId() == R.id.settings) {
+        } else if (id == R.id.settings) {
             Toast.makeText(getContext(), "TODO: Settings", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.launch_app) {
+            PackageManager pm = getContext().getPackageManager();
+
+            Intent launchAppIntent = pm.getLaunchIntentForPackage(vm.getCurrentSelectedAppPkg().getValue());
+
+            // FOR TEST: RESTART THE APP
+            if (BuildConfig.DEBUG) {
+                launchAppIntent = Intent.makeRestartActivityTask(launchAppIntent.getComponent());
+            }
+
+            startActivity(launchAppIntent);
         } else {
             return false;
         }

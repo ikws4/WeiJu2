@@ -38,6 +38,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeViewModel extends BaseViewModel {
     private final MutableLiveDataExt<List<AppListView.AppItem>> mSelectedApps = new MutableLiveDataExt<>(new ArrayList<>());
+    private final MutableLiveDataExt<String> mCurrentSelectedAppPkg = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mMyScripts = new MutableLiveDataExt<>();
     private final Globals mLuaGlobals;
@@ -45,8 +46,9 @@ public class HomeViewModel extends BaseViewModel {
     public HomeViewModel(@NonNull Application application) {
         super(application);
         mLuaGlobals = JsePlatform.standardGlobals();
+        mCurrentSelectedAppPkg.setValue(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
         loadApplicationInfos();
-        switchApp(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+        switchApp(mCurrentSelectedAppPkg.getValue());
     }
 
     public LiveData<List<ScriptListView.ScriptItem>> getAvaliableScripts() {
@@ -59,6 +61,10 @@ public class HomeViewModel extends BaseViewModel {
 
     public LiveData<List<AppListView.AppItem>> getSelectedApps() {
         return mSelectedApps;
+    }
+
+    public LiveData<String> getCurrentSelectedAppPkg() {
+        return mCurrentSelectedAppPkg;
     }
 
     public ScriptListView.ScriptItem createNewScriptAndAddToMyScripts() {
@@ -97,6 +103,7 @@ public class HomeViewModel extends BaseViewModel {
 
     private void switchApp(String pkg) {
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
+        mCurrentSelectedAppPkg.setValue(pkg);
         loadAvaliableScripts(pkg);
         loadMyScripts(pkg);
     }
@@ -111,16 +118,15 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void updateSelectedAppAfterRemove(int index, AppListView.AppItem app) {
-        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
         int n = mSelectedApps.getValue().size();
-        if (n > 0 && app.pkg.equals(pkg)) {
+        if (n > 0 && app.pkg.equals(mCurrentSelectedAppPkg.getValue())) {
             switchApp(mSelectedApps.getValue().get(Math.min(index, n - 1)));
         }
         mSelectedApps.publish();
     }
 
     public void addToMyScripts(ScriptListView.ScriptItem item) {
-        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        String pkg = mCurrentSelectedAppPkg.getValue();
         String key = Strings.join("&", pkg, item.id);
 
         Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
@@ -134,7 +140,7 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void replaceInMyScripts(ScriptListView.ScriptItem oldItem, ScriptListView.ScriptItem newItem) {
-        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        String pkg = mCurrentSelectedAppPkg.getValue();
         String oldKey = getKey(oldItem);
         String newkey = getKey(newItem);
 
@@ -154,12 +160,12 @@ public class HomeViewModel extends BaseViewModel {
 
         // reload avaliable script from server
         if (!oldItem.metadataEquals(newItem)) {
-            loadAvaliableScripts(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+            loadAvaliableScripts(mCurrentSelectedAppPkg.getValue());
         }
     }
 
     public void removeFromMyScripts(ScriptListView.ScriptItem item) {
-        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
+        String pkg = mCurrentSelectedAppPkg.getValue();
         String key = Strings.join("&", pkg, item.id);
 
         Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
@@ -173,7 +179,7 @@ public class HomeViewModel extends BaseViewModel {
         mMyScripts.publish();
 
         // reload avaliable script from server
-        loadAvaliableScripts(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+        loadAvaliableScripts(mCurrentSelectedAppPkg.getValue());
     }
 
     public void removeFromAvaliableScripts(ScriptListView.ScriptItem item) {
@@ -273,7 +279,6 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     private String getKey(ScriptListView.ScriptItem item) {
-        String pkg = mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "");
-        return Strings.join("&", pkg, item.id);
+        return Strings.join("&", mCurrentSelectedAppPkg.getValue(), item.id);
     }
 }

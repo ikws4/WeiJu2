@@ -9,6 +9,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/launch_app"
+        android:icon="@drawable/ic_run"
+        android:title="Launch app"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/settings"
         android:title="Settings" />
 </menu>
