@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 
 import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaError;
 
 import java.util.Collections;
 import java.util.Set;
@@ -57,7 +56,7 @@ public class XposedInit implements IXposedHookLoadPackage {
             String script = store.get(key, "");
             try {
                 globals.load(script).call();
-            } catch (LuaError e) {
+            } catch (Throwable e) {
                 Console.printErr(e);
             }
         }
