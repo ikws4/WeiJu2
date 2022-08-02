@@ -129,10 +129,11 @@ public class LogcatFragment extends BaseFragment {
         }
 
         public static LogLine from(String raw) {
-            String level = String.valueOf(raw.charAt(0));
             int startIndex = 0;
             while (raw.charAt(startIndex) != ':') startIndex++;
-            return new LogLine(level, raw.substring(startIndex + 1));
+            String level = String.valueOf(raw.charAt(0));
+            String msg = raw.substring(startIndex + 1).replaceAll("\t", "    ");
+            return new LogLine(level, msg);
         }
     }
 }
