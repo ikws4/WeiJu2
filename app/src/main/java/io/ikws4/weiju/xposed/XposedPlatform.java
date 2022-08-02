@@ -28,6 +28,7 @@ public class XposedPlatform {
         globals.load(new JseMathLib());
         globals.load(new XposedLuajavaLib());
         globals.load(new XposedLib());
+        globals.load(new JavaSyntaxLib());
         LoadState.install(globals);
         LuaC.install(globals);
         return globals;

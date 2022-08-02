@@ -2,13 +2,18 @@ package io.ikws4.weiju.xposed;
 
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import org.luaj.vm2.lib.jse.CoerceLuaToJava;
+
+import java.util.Arrays;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import io.ikws4.weiju.util.Logger;
 
 class XposedLib extends TwoArgFunction {
     @Override
@@ -53,14 +58,33 @@ class XposedLib extends TwoArgFunction {
             _params[_params.length - 1] = new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) {
-                    if (before.isnil()) return;
-                    before.call(CoerceJavaToLua.coerce(param));
+                    call(before, param);
                 }
 
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) {
-                    if (after.isnil()) return;
-                    after.call(CoerceJavaToLua.coerce(param));
+                    call(after, param);
+                }
+
+                private void call(LuaValue func, MethodHookParam param) {
+                    if (func.isnil()) return;
+
+                    LuaValue[] vargs = new LuaValue[1 + param.args.length];
+                    vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
+                    for (int i = 0; i < param.args.length; i++) {
+                        vargs[i + 1] = CoerceJavaToLua.coerce(param.args[i]);
+                    }
+                    Logger.d(Arrays.toString(vargs));
+
+                    Varargs ret = func.invoke(vargs);
+                    if (ret.narg() == 0) return;
+
+                    if (ret.arg1().isnil()) {
+                        param.setResult(null);
+                    } else {
+                        param.setResult(CoerceLuaToJava.coerce(ret.arg1(), param.getResult().getClass()));
+                    }
+
                 }
             };
 

@@ -71,3 +71,16 @@ public class XposedInit implements IXposedHookLoadPackage {
         XposedHelpers.setStaticBooleanField(clazz, "XPOSED_ENABLED", true);
     }
 }
+/*
+
+local Toast = luajava.bindClass("android.widget.Toast");
+
+
+xp.hook {
+
+}
+
+
+
+
+ */
