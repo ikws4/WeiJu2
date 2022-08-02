@@ -383,7 +383,7 @@ public class ScriptListView extends RecyclerView {
                     return new ScriptItem(name, author, version, description, script);
                 }
             } catch (LuaError e) {
-                Logger.d(e);
+                Logger.d("WeiJu", e);
             }
             return EMPTY_ITEM;
         }

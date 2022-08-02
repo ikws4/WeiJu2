@@ -3,7 +3,7 @@ package io.ikws4.weiju.util;
 import android.util.Log;
 
 public class Logger {
-    private static final String TAG = "WeiJu";
+    public static final String TAG = "WeiJu";
     private static final StringBuilder sb = new StringBuilder();
 
     public static void d(Object... msgs) {

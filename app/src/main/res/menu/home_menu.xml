@@ -12,9 +12,17 @@
         android:id="@+id/launch_app"
         android:icon="@drawable/ic_run"
         android:title="Launch app"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/logcat"
+        android:title="Logcat"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/settings"
-        android:title="Settings" />
+        android:title="Settings"
+        app:showAsAction="never" />
+
 </menu>

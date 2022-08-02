@@ -12,9 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.github.rosemoe.sora.text.Content;
@@ -22,11 +19,12 @@ import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.editor.Editor;
+import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.page.editor.view.EditorSymbolBar;
 import io.ikws4.weiju.page.home.HomeViewModel;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 
-public class EditorFragment extends Fragment implements MenuProvider {
+public class EditorFragment extends BaseFragment {
     private Editor vEditor;
     private HomeViewModel vm;
     private ScriptListView.ScriptItem mItem;
@@ -37,7 +35,7 @@ public class EditorFragment extends Fragment implements MenuProvider {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        super.onViewCreated(view, savedInstanceState);
 
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
@@ -77,7 +75,7 @@ public class EditorFragment extends Fragment implements MenuProvider {
 
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-        menu.clear();
+        super.onCreateMenu(menu, menuInflater);
 
         menuInflater.inflate(R.menu.editor_menu, menu);
     }

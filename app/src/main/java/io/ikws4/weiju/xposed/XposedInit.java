@@ -21,6 +21,7 @@ import io.ikws4.weiju.util.Logger;
 public class XposedInit implements IXposedHookLoadPackage {
     /* package */ static ClassLoader classLoader;
 
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         classLoader = lpparam.classLoader;
@@ -30,14 +31,11 @@ public class XposedInit implements IXposedHookLoadPackage {
             protected void afterHookedMethod(MethodHookParam param) {
                 Context context = (Context) param.thisObject;
 
-                Logger.d("");
-                Logger.d("===================", "WeiJu Debug Infos", "===================");
-                Logger.d("AppName:", lpparam.appInfo.loadLabel(context.getPackageManager()));
-                Logger.d("PackageName:", lpparam.packageName);
-                Logger.d("Device:", Build.DEVICE);
-                Logger.d("Android:", Build.VERSION.RELEASE);
-                Logger.d("========================== END ==========================");
-                Logger.d("");
+                Logger.d("DEBUG INFOS");
+                Logger.d("  AppName:", lpparam.appInfo.loadLabel(context.getPackageManager()));
+                Logger.d("  PackageName:", lpparam.packageName);
+                Logger.d("  DeviceInfo:", Build.DEVICE);
+                Logger.d("  AndroidVersion:", Build.VERSION.RELEASE);
 
                 onApplicationCreated(lpparam, context);
             }
@@ -57,11 +55,10 @@ public class XposedInit implements IXposedHookLoadPackage {
         Set<String> keys = store.get(pkg, Collections.emptySet());
         for (String key : keys) {
             String script = store.get(key, "");
-            Logger.d("Script:", script);
             try {
                 globals.load(script).call();
             } catch (LuaError e) {
-                Logger.e(e);
+                Console.printErr(e);
             }
         }
     }
@@ -71,16 +68,3 @@ public class XposedInit implements IXposedHookLoadPackage {
         XposedHelpers.setStaticBooleanField(clazz, "XPOSED_ENABLED", true);
     }
 }
-/*
-
-local Toast = luajava.bindClass("android.widget.Toast");
-
-
-xp.hook {
-
-}
-
-
-
-
- */

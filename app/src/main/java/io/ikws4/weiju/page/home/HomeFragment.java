@@ -18,20 +18,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
+import io.ikws4.weiju.page.logcat.LogcatFragment;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
 import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 
-public class HomeFragment extends Fragment implements MenuProvider {
+public class HomeFragment extends BaseFragment {
     // For xposed to hook this variable to indicate
     // that xposed works.
     private static boolean XPOSED_ENABLED = false;
@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        super.onViewCreated(view, savedInstanceState);
 
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment implements MenuProvider {
 
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-        menu.clear();
+        super.onCreateMenu(menu, menuInflater);
 
         menuInflater.inflate(R.menu.home_menu, menu);
         if (XPOSED_ENABLED) {
@@ -204,6 +204,15 @@ public class HomeFragment extends Fragment implements MenuProvider {
             }
 
             startActivity(launchAppIntent);
+        } else if (id == R.id.logcat) {
+            requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.fragment_container, LogcatFragment.class, null)
+                .addToBackStack("logcat")
+                .commit();
+
         } else {
             return false;
         }

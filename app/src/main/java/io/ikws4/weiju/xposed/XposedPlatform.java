@@ -12,9 +12,25 @@ import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JseBaseLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class XposedPlatform {
+    private static final PrintStream STDOUT = new PrintStream(new ByteArrayOutputStream() {
+        @Override
+        public void flush() {
+            Console.printMsg(new String(toByteArray()));
+        }
+    }, true);
+
+    private static final PrintStream STDERR = new PrintStream(new ByteArrayOutputStream() {
+        @Override
+        public void flush() {
+            Console.printErr(new String(toByteArray()));
+        }
+    }, true);
 
     public static Globals create(XC_LoadPackage.LoadPackageParam lpparam) {
         Globals globals = new Globals();
@@ -29,6 +45,8 @@ public class XposedPlatform {
         globals.load(new XposedLuajavaLib());
         globals.load(new XposedLib());
         globals.load(new JavaSyntaxLib());
+        globals.STDOUT = STDOUT;
+        globals.STDERR = STDERR;
         LoadState.install(globals);
         LuaC.install(globals);
         return globals;

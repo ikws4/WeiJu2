@@ -28,6 +28,7 @@ import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
+import io.ikws4.weiju.storage.ScriptStore;
 import io.ikws4.weiju.util.Logger;
 import io.ikws4.weiju.util.RandomUtil;
 import io.ikws4.weiju.util.Strings;
@@ -41,10 +42,12 @@ public class HomeViewModel extends BaseViewModel {
     private final MutableLiveDataExt<String> mCurrentSelectedAppPkg = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mAvaliableScripts = new MutableLiveDataExt<>();
     private final MutableLiveDataExt<List<ScriptListView.ScriptItem>> mMyScripts = new MutableLiveDataExt<>();
+    private final ScriptStore mScriptStore;
     private final Globals mLuaGlobals;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
+        mScriptStore = ScriptStore.getInstance(application);
         mLuaGlobals = JsePlatform.standardGlobals();
         mCurrentSelectedAppPkg.setValue(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
         loadApplicationInfos();
@@ -78,7 +81,7 @@ public class HomeViewModel extends BaseViewModel {
             template.set("description", RandomUtil.nextName(10));
             addToMyScripts(item = ScriptListView.ScriptItem.from(template.toString()));
         } catch (IOException e) {
-            Logger.d(e);
+            Logger.e(e);
         }
         return item;
     }
