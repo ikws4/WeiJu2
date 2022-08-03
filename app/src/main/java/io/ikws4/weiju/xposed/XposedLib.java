@@ -58,14 +58,14 @@ class XposedLib extends TwoArgFunction {
                 _params[_params.length - 1] = new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) {
-                        LuaValue[] vargs = new LuaValue[1 + param.args.length];
+                        LuaValue[] vargs = new LuaValue[2];
                         vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
-                        for (int i = 0; i < param.args.length; i++) {
-                            vargs[i + 1] = CoerceJavaToLua.coerce(param.args[i]);
-                        }
+                        vargs[1] = CoerceJavaToLua.coerce(param.args);
 
                         Varargs ret = replace.invoke(vargs);
+                        // handle return value
                         if (ret.narg() == 0 || ret.arg1().isnil()) return null;
+                        if (param.getResult() == null) return null;
                         return CoerceLuaToJava.coerce(ret.arg1(), param.getResult().getClass());
                     }
                 };
@@ -84,18 +84,17 @@ class XposedLib extends TwoArgFunction {
                     private void call(LuaValue func, MethodHookParam param) {
                         if (func.isnil()) return;
 
-                        LuaValue[] vargs = new LuaValue[1 + param.args.length];
+                        LuaValue[] vargs = new LuaValue[2];
                         vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
-                        for (int i = 0; i < param.args.length; i++) {
-                            vargs[i + 1] = CoerceJavaToLua.coerce(param.args[i]);
-                        }
+                        vargs[1] = CoerceJavaToLua.coerce(param.args);
 
                         Varargs ret = func.invoke(vargs);
+                        // handle return value
                         if (ret.narg() == 0) return;
-
                         if (ret.arg1().isnil()) {
                             param.setResult(null);
                         } else {
+                            if (param.getResult() == null) return;
                             param.setResult(CoerceLuaToJava.coerce(ret.arg1(), param.getResult().getClass()));
                         }
                     }
