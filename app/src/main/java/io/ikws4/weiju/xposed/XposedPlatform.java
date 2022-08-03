@@ -8,7 +8,6 @@ import org.luaj.vm2.lib.CoroutineLib;
 import org.luaj.vm2.lib.PackageLib;
 import org.luaj.vm2.lib.StringLib;
 import org.luaj.vm2.lib.TableLib;
-import org.luaj.vm2.lib.jse.JseBaseLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +30,7 @@ public class XposedPlatform {
 
     public static Globals create() {
         Globals globals = new Globals();
-        globals.load(new JseBaseLib());
+        globals.load(new XposedBaselib());
         globals.load(new PackageLib());
         globals.load(new Bit32Lib());
         globals.load(new TableLib());
@@ -39,8 +38,6 @@ public class XposedPlatform {
         globals.load(new CoroutineLib());
         globals.load(new JseMathLib());
         globals.load(new XposedLuajavaLib());
-        globals.load(new XposedLib());
-        globals.load(new JavaSyntaxSugarLib());
         globals.STDOUT = STDOUT;
         globals.STDERR = STDERR;
         LoadState.install(globals);

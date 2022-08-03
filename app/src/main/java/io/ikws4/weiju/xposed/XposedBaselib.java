@@ -1,25 +1,26 @@
 package io.ikws4.weiju.xposed;
 
+import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.CoerceLuaToJava;
+import org.luaj.vm2.lib.jse.JseBaseLib;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 
-class XposedLib extends TwoArgFunction {
+class XposedBaselib extends JseBaseLib {
 
     @Override
     public LuaValue call(LuaValue modname, LuaValue env) {
-        LuaTable xp = new LuaTable();
-        xp.set("hook", new hook());
-        env.set("xp", xp);
-        env.get("package").get("loaded").set("xp", xp);
+        super.call(modname, env);
+        env.set("hook", new hook());
+        env.set("import", new _import(env));
+        env.set("new", new _new(env));
         return env;
     }
 
@@ -28,12 +29,20 @@ class XposedLib extends TwoArgFunction {
         public LuaValue call(LuaValue arg) {
             LuaTable table = arg.checktable();
             var clazz = (Class<?>) table.get("class").checkuserdata();
-            var returns = (Class<?>) table.get("returns").checkuserdata();
+            var returns = table.get("returns");
             var method = table.get("method");
             var params = table.get("params");
             var replace = table.get("replace");
             var before = table.get("before");
             var after = table.get("after");
+
+            boolean isConstructor = returns.isnil() && method.isnil();
+
+            if (!isConstructor) {
+                if (returns.isnil() || method.isnil()) {
+                    throw new LuaError("Method signature not complete: expect `returns` and `method` not nil");
+                }
+            }
 
             Object[] _params = new Object[1];
             if (!params.isnil()) {
@@ -54,8 +63,8 @@ class XposedLib extends TwoArgFunction {
 
                         Varargs ret = replace.invoke(vargs);
                         // handle return value
-                        if (ret.narg() == 0 || ret.arg1().isnil()) return null;
-                        return CoerceLuaToJava.coerce(ret.arg1(), returns);
+                        if (isConstructor || ret.narg() == 0 || ret.arg1().isnil()) return null;
+                        return CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata());
                     }
                 };
             } else {
@@ -79,24 +88,52 @@ class XposedLib extends TwoArgFunction {
 
                         Varargs ret = func.invoke(vargs);
                         // handle return value
-                        if (ret.narg() == 0) return;
+                        if (isConstructor || ret.narg() == 0) return;
                         if (ret.arg1().isnil()) {
                             param.setResult(null);
                         } else {
-                            param.setResult(CoerceLuaToJava.coerce(ret.arg1(), returns));
+                            param.setResult(CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata()));
                         }
                     }
                 };
             }
 
             XC_MethodHook.Unhook unhook;
-            if (method.isnil()) {
+            if (isConstructor) {
                 unhook = XposedHelpers.findAndHookConstructor(clazz, _params);
             } else {
                 unhook = XposedHelpers.findAndHookMethod(clazz, method.checkjstring(), _params);
             }
 
             return CoerceJavaToLua.coerce(unhook);
+        }
+    }
+
+    static final class _import extends OneArgFunction {
+        private final LuaValue _G;
+
+        _import(LuaValue g) {
+            _G = g;
+        }
+
+        @Override
+        public LuaValue call(LuaValue arg) {
+            String pkg = arg.checkjstring();
+            return  _G.get("luajava").get("bindClass").call(pkg);
+        }
+    }
+
+    static final class _new extends OneArgFunction {
+        private final LuaValue _G;
+
+        _new(LuaValue g) {
+            _G = g;
+        }
+
+        @Override
+        public LuaValue call(LuaValue arg) {
+            String pkg = arg.checkjstring();
+            return  _G.get("luajava").get("new").call(pkg);
         }
     }
 }

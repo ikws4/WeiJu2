@@ -10,7 +10,7 @@ public class XposedLuajavaLib extends LuajavaLib {
     @Override
     protected Class classForName(String name) {
         try {
-            return XposedHelpers.findClass(name, XposedInit.classLoader);
+            return XposedHelpers.findClass(name, XposedInit.classloader);
         } catch (XposedHelpers.ClassNotFoundError e) {
             throw new LuaError(e);
         }

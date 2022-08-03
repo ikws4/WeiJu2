@@ -18,12 +18,12 @@ import io.ikws4.weiju.storage.XScriptStore;
 import io.ikws4.weiju.util.Logger;
 
 public class XposedInit implements IXposedHookLoadPackage {
-    /* package */ static ClassLoader classLoader;
+    /* package */ static ClassLoader classloader;
 
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        classLoader = lpparam.classLoader;
+        classloader = lpparam.classLoader;
 
         XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
             @Override
@@ -63,7 +63,7 @@ public class XposedInit implements IXposedHookLoadPackage {
     }
 
     private void updateHostXposedStatus() {
-        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.page.home.HomeFragment", classLoader);
+        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.page.home.HomeFragment", classloader);
         XposedHelpers.setStaticBooleanField(clazz, "XPOSED_ENABLED", true);
     }
 }
