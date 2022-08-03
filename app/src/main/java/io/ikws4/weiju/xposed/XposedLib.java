@@ -26,6 +26,7 @@ class XposedLib extends TwoArgFunction {
         LuaTable xp = new LuaTable();
         xp.set("hook", new hook());
         xp.set("set_field", new set_field());
+        xp.set("get_field", new get_field());
         xp.set("lpparam", CoerceJavaToLua.coerce(lpparam));
 
         env.set("xp", xp);
@@ -116,8 +117,8 @@ class XposedLib extends TwoArgFunction {
             LuaTable table = arg.checktable();
             var clazz = table.get("class");
             var obj = table.get("obj");
-            var field = table.get("field").checkjstring();
             var type = table.get("type").checkjstring();
+            var field = table.get("field").checkjstring();
             var value = table.get("value");
 
             if (!obj.isnil()) {
@@ -199,6 +200,65 @@ class XposedLib extends TwoArgFunction {
             }
 
             return NIL;
+        }
+    }
+
+    static final class get_field extends OneArgFunction {
+        @Override
+        public LuaValue call(LuaValue arg) {
+            LuaTable table = arg.checktable();
+            var clazz = table.get("class");
+            var obj = table.get("obj");
+            var type = table.get("type").checkjstring();
+            var field = table.get("field").checkjstring();
+
+            if (!obj.isnil()) {
+                Object o = obj.checkuserdata();
+                switch (type) {
+                    case "boolean":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getBooleanField(o, field));
+                    case "char":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getCharField(o, field));
+                    case "byte":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getByteField(o, field));
+                    case "short":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getShortField(o, field));
+                    case "int":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getIntField(o, field));
+                    case "long":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getLongField(o, field));
+                    case "float":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getFloatField(o, field));
+                    case "double":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getDoubleField(o, field));
+                    default:
+                        return CoerceJavaToLua.coerce(XposedHelpers.getObjectField(o, field));
+                }
+            } else if (!clazz.isnil()) {
+                var klass = XposedHelpers.findClass(clazz.checkjstring(), XposedInit.classLoader);
+                switch (type) {
+                    case "boolean":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticBooleanField(klass, field));
+                    case "char":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticCharField(klass, field));
+                    case "byte":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticByteField(klass, field));
+                    case "short":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticShortField(klass, field));
+                    case "int":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticIntField(klass, field));
+                    case "long":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticLongField(klass, field));
+                    case "float":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticFloatField(klass, field));
+                    case "double":
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticDoubleField(klass, field));
+                    default:
+                        return CoerceJavaToLua.coerce(XposedHelpers.getStaticObjectField(klass, field));
+                }
+            } else {
+                throw new LuaError("Expecte: 'class' or 'obj'");
+            }
         }
     }
 }
