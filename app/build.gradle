@@ -40,10 +40,10 @@ dependencies {
 
     implementation project(path: ':util')
     implementation project(path: ':lua')
+    implementation project(path: ':lua_library')
     implementation project(path: ':editor')
     implementation project(path: ':glide')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
-
 
     compileOnly 'de.robv.android.xposed:api:82'
     implementation 'com.crossbowffs.remotepreferences:remotepreferences:0.8'
