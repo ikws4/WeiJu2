@@ -9,6 +9,8 @@ import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.CoerceLuaToJava;
 
+import java.util.Arrays;
+
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
@@ -27,6 +29,8 @@ class XposedLib extends TwoArgFunction {
         xp.set("hook", new hook());
         xp.set("set_field", new set_field());
         xp.set("get_field", new get_field());
+        xp.set("new", new _new());
+        xp.set("call", new _call());
         xp.set("lpparam", CoerceJavaToLua.coerce(lpparam));
 
         env.set("xp", xp);
@@ -116,13 +120,13 @@ class XposedLib extends TwoArgFunction {
         public LuaValue call(LuaValue arg) {
             LuaTable table = arg.checktable();
             var clazz = table.get("class");
-            var obj = table.get("obj");
+            var object = table.get("object");
             var type = table.get("type").checkjstring();
             var field = table.get("field").checkjstring();
             var value = table.get("value");
 
-            if (!obj.isnil()) {
-                Object o = obj.checkuserdata();
+            if (!object.isnil()) {
+                Object o = object.checkuserdata();
                 switch (type) {
                     case "boolean":
                         XposedHelpers.setBooleanField(o, field, value.checkboolean());
@@ -196,7 +200,7 @@ class XposedLib extends TwoArgFunction {
                         }
                 }
             } else {
-                throw new LuaError("Expecte: 'class' or 'obj'");
+                throw new LuaError("Expecte: 'class' or 'object'");
             }
 
             return NIL;
@@ -208,12 +212,12 @@ class XposedLib extends TwoArgFunction {
         public LuaValue call(LuaValue arg) {
             LuaTable table = arg.checktable();
             var clazz = table.get("class");
-            var obj = table.get("obj");
+            var object = table.get("object");
             var type = table.get("type").checkjstring();
             var field = table.get("field").checkjstring();
 
-            if (!obj.isnil()) {
-                Object o = obj.checkuserdata();
+            if (!object.isnil()) {
+                Object o = object.checkuserdata();
                 switch (type) {
                     case "boolean":
                         return CoerceJavaToLua.coerce(XposedHelpers.getBooleanField(o, field));
@@ -257,7 +261,83 @@ class XposedLib extends TwoArgFunction {
                         return CoerceJavaToLua.coerce(XposedHelpers.getStaticObjectField(klass, field));
                 }
             } else {
-                throw new LuaError("Expecte: 'class' or 'obj'");
+                throw new LuaError("Expecte: 'class' or 'object'");
+            }
+        }
+    }
+
+    static final class _new extends OneArgFunction {
+
+        @Override
+        public LuaValue call(LuaValue arg) {
+            LuaTable table = arg.checktable();
+            var clazz = table.get("class").checkjstring();
+            var params = table.get("params");
+
+            var klass = XposedHelpers.findClass(clazz, XposedInit.classLoader);
+            if (params.isnil()) {
+                return CoerceJavaToLua.coerce(XposedHelpers.newInstance(klass));
+            } else {
+                var _params = params.checktable();
+                var values = new Object[255];
+                var kv = _params.next(NIL);
+                int i = 0;
+                while (kv != NIL) {
+                    var type = XposedHelpers.findClass(kv.arg(1).checkjstring(), XposedInit.classLoader);
+                    values[i++] = CoerceLuaToJava.coerce(kv.arg(2), type);
+                    kv = _params.next(kv.arg1());
+                }
+                return CoerceJavaToLua.coerce(XposedHelpers.newInstance(klass, Arrays.copyOf(values, i)));
+            }
+        }
+    }
+
+    static final class _call extends OneArgFunction {
+
+        @Override
+        public LuaValue call(LuaValue arg) {
+            LuaTable table = arg.checktable();
+            var clazz = table.get("class");
+            var object = table.get("object");
+            var method = table.get("method").checkjstring();
+            var params = table.get("params");
+
+            if (!object.isnil()) {
+                Object o = object.checkuserdata();
+                if (params.isnil()) {
+                    return CoerceJavaToLua.coerce(XposedHelpers.callMethod(o, method));
+                } else {
+                    var _params = params.checktable();
+                    var values = new Object[255];
+                    var kv = _params.next(NIL);
+                    int i = 0;
+                    while (kv != NIL) {
+                        var type = XposedHelpers.findClass(kv.arg(1).checkjstring(), XposedInit.classLoader);
+                        values[i++] = CoerceLuaToJava.coerce(kv.arg(2), type);
+                        kv = _params.next(kv.arg1());
+                    }
+                    return CoerceJavaToLua.coerce(XposedHelpers.callMethod(o, method, Arrays.copyOf(values, i)));
+                }
+
+            } else if (!clazz.isnil()) {
+                var klass = XposedHelpers.findClass(clazz.checkjstring(), XposedInit.classLoader);
+                if (params.isnil()) {
+                    return CoerceJavaToLua.coerce(XposedHelpers.callStaticMethod(klass, method));
+                } else {
+                    var _params = params.checktable();
+                    var values = new Object[255];
+                    var kv = _params.next(NIL);
+                    int i = 0;
+                    while (kv != NIL) {
+                        var type = XposedHelpers.findClass(kv.arg(1).checkjstring(), XposedInit.classLoader);
+                        values[i++] = CoerceLuaToJava.coerce(kv.arg(2), type);
+                        kv = _params.next(kv.arg1());
+                    }
+                    return CoerceJavaToLua.coerce(XposedHelpers.callStaticMethod(klass, method, Arrays.copyOf(values, i)));
+                }
+
+            } else {
+                throw new LuaError("Expecte: 'class' or 'object'");
             }
         }
     }
