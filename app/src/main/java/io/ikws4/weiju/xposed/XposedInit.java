@@ -49,7 +49,7 @@ public class XposedInit implements IXposedHookLoadPackage {
             return;
         }
 
-        Globals globals = XposedPlatform.create(lpparam);
+        Globals globals = XposedPlatform.create();
         XScriptStore store = XScriptStore.getInstance(context);
         Set<String> keys = store.get(pkg, Collections.emptySet());
         for (String key : keys) {

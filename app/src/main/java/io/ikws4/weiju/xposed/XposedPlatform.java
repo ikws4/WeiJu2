@@ -14,8 +14,6 @@ import org.luaj.vm2.lib.jse.JseMathLib;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
 public class XposedPlatform {
     private static final PrintStream STDOUT = new PrintStream(new ByteArrayOutputStream() {
         @Override
@@ -31,7 +29,7 @@ public class XposedPlatform {
         }
     }, true);
 
-    public static Globals create(XC_LoadPackage.LoadPackageParam lpparam) {
+    public static Globals create() {
         Globals globals = new Globals();
         globals.load(new JseBaseLib());
         globals.load(new PackageLib());
