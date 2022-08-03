@@ -9,5 +9,5 @@ java {
 
 
 dependencies {
-    api 'org.luaj:luaj-jse:3.0.1'
+    implementation 'org.apache.bcel:bcel:5.2'
 }
