@@ -34,7 +34,6 @@ public class XposedPlatform {
 
     public static Globals create(XC_LoadPackage.LoadPackageParam lpparam) {
         Globals globals = new Globals();
-        globals.set("lpparam", CoerceJavaToLua.coerce(lpparam));
         globals.load(new JseBaseLib());
         globals.load(new PackageLib());
         globals.load(new Bit32Lib());
@@ -43,7 +42,7 @@ public class XposedPlatform {
         globals.load(new CoroutineLib());
         globals.load(new JseMathLib());
         globals.load(new XposedLuajavaLib());
-        globals.load(new XposedLib());
+        globals.load(new XposedLib(lpparam));
         globals.load(new JavaSyntaxLib());
         globals.STDOUT = STDOUT;
         globals.STDERR = STDERR;

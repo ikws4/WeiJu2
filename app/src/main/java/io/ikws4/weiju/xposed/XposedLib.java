@@ -12,16 +12,24 @@ import org.luaj.vm2.lib.jse.CoerceLuaToJava;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 class XposedLib extends TwoArgFunction {
+    private final XC_LoadPackage.LoadPackageParam lpparam;
+
+    XposedLib(XC_LoadPackage.LoadPackageParam lpparam) {
+        this.lpparam = lpparam;
+    }
+
     @Override
     public LuaValue call(LuaValue modname, LuaValue env) {
-        LuaTable xposed = new LuaTable();
-        xposed.set("hook", new hook());
-        xposed.set("set_field", new set_field());
+        LuaTable xp = new LuaTable();
+        xp.set("hook", new hook());
+        xp.set("set_field", new set_field());
+        xp.set("lpparam", CoerceJavaToLua.coerce(lpparam));
 
-        env.set("xp", xposed);
-        env.get("package").get("loaded").set("xp", xposed);
+        env.set("xp", xp);
+        env.get("package").get("loaded").set("xp", xp);
         return env;
     }
 
