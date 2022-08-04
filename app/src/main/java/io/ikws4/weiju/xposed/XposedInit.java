@@ -20,7 +20,6 @@ import io.ikws4.weiju.util.Logger;
 public class XposedInit implements IXposedHookLoadPackage {
     /* package */ static ClassLoader classloader;
 
-
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         classloader = lpparam.classLoader;
