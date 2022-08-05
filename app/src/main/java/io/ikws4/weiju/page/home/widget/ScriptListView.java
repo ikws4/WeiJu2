@@ -361,7 +361,7 @@ public class ScriptListView extends RecyclerView {
         public final String script;
 
         private ScriptItem(@NonNull String name, @NonNull String author, @NonNull String version, @NonNull String description, @NonNull String script) {
-            this.id = Strings.join("-", name, author, version);
+            this.id = Strings.join(".", author, name);
             this.name = name.isEmpty() ? " " : name;
             this.author = author;
             this.version = version;

@@ -19,8 +19,6 @@ class XposedBaselib extends JseBaseLib {
     public LuaValue call(LuaValue modname, LuaValue env) {
         super.call(modname, env);
         env.set("hook", new hook());
-        env.set("import", new _import(env));
-        env.set("new", new _new(env));
         return env;
     }
 
@@ -106,34 +104,6 @@ class XposedBaselib extends JseBaseLib {
             }
 
             return CoerceJavaToLua.coerce(unhook);
-        }
-    }
-
-    static final class _import extends OneArgFunction {
-        private final LuaValue _G;
-
-        _import(LuaValue g) {
-            _G = g;
-        }
-
-        @Override
-        public LuaValue call(LuaValue arg) {
-            String pkg = arg.checkjstring();
-            return  _G.get("luajava").get("bindClass").call(pkg);
-        }
-    }
-
-    static final class _new extends OneArgFunction {
-        private final LuaValue _G;
-
-        _new(LuaValue g) {
-            _G = g;
-        }
-
-        @Override
-        public LuaValue call(LuaValue arg) {
-            String pkg = arg.checkjstring();
-            return  _G.get("luajava").get("new").call(pkg);
         }
     }
 }

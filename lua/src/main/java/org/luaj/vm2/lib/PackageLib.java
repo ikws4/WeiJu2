@@ -21,14 +21,14 @@
 ******************************************************************************/
 package org.luaj.vm2.lib;
 
-import java.io.InputStream;
-
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
+
+import java.io.InputStream;
 
 /**
  * Subclass of {@link LibFunction} which implements the lua standard package and module
@@ -103,10 +103,10 @@ public class PackageLib extends TwoArgFunction {
 	static final LuaString _SEARCHERS   = valueOf("searchers");
 	
 	/** The globals that were used to load this library. */
-	Globals globals;
+	protected Globals globals;
 
 	/** The table for this package. */
-	LuaTable package_;
+	protected LuaTable package_;
 	
 	/** Loader that loads from {@code preload} table if found there */
 	public preload_searcher preload_searcher;

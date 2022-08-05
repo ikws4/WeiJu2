@@ -14,7 +14,6 @@
             <option value="$PROJECT_DIR$/editor" />
             <option value="$PROJECT_DIR$/glide" />
             <option value="$PROJECT_DIR$/lua" />
-            <option value="$PROJECT_DIR$/lua_library" />
             <option value="$PROJECT_DIR$/util" />
           </set>
         </option>

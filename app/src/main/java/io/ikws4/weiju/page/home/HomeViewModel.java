@@ -130,7 +130,7 @@ public class HomeViewModel extends BaseViewModel {
 
     public void addToMyScripts(ScriptListView.ScriptItem item) {
         String pkg = mCurrentSelectedAppPkg.getValue();
-        String key = Strings.join("&", pkg, item.id);
+        String key = getKey(item);
 
         Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
         keys.add(key);
@@ -169,7 +169,7 @@ public class HomeViewModel extends BaseViewModel {
 
     public void removeFromMyScripts(ScriptListView.ScriptItem item) {
         String pkg = mCurrentSelectedAppPkg.getValue();
-        String key = Strings.join("&", pkg, item.id);
+        String key = getKey(item);
 
         Set<String> keys = new HashSet<>(mScriptStore.get(pkg, Collections.emptySet()));
         keys.remove(key);
@@ -282,6 +282,6 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     private String getKey(ScriptListView.ScriptItem item) {
-        return Strings.join("&", mCurrentSelectedAppPkg.getValue(), item.id);
+        return Strings.join("_", mCurrentSelectedAppPkg.getValue(), item.id);
     }
 }
