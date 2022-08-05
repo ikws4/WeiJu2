@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -17,12 +18,20 @@ import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.storage.XScriptStore;
 import io.ikws4.weiju.util.Logger;
 
-public class XposedInit implements IXposedHookLoadPackage {
+public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit {
     /* package */ static ClassLoader classloader;
+    /* package */ static XScriptStore store;
+    /* package */ static String currnetPackageName;
+
+    @Override
+    public void initZygote(StartupParam startupParam) {
+        XScriptStore.fixPermission();
+    }
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         classloader = lpparam.classLoader;
+        currnetPackageName = lpparam.packageName;
 
         XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
             @Override
@@ -35,22 +44,20 @@ public class XposedInit implements IXposedHookLoadPackage {
                 Logger.d("  DeviceInfo:", Build.DEVICE);
                 Logger.d("  AndroidVersion:", Build.VERSION.RELEASE);
 
-                onApplicationCreated(lpparam, context);
+                onApplicationCreated(context);
             }
         });
     }
 
-    public void onApplicationCreated(XC_LoadPackage.LoadPackageParam lpparam, Context context) {
-        String pkg = lpparam.packageName;
-
-        if (pkg.equals(BuildConfig.APPLICATION_ID)) {
+    public void onApplicationCreated(Context context) {
+        if (currnetPackageName.equals(BuildConfig.APPLICATION_ID)) {
             updateHostXposedStatus();
             return;
         }
 
         Globals globals = XposedPlatform.create();
-        XScriptStore store = XScriptStore.getInstance(context);
-        Set<String> keys = store.get(pkg, Collections.emptySet());
+        store = XScriptStore.getInstance(context);
+        Set<String> keys = store.get(currnetPackageName, Collections.emptySet());
         for (String key : keys) {
             String script = store.get(key, "");
             try {

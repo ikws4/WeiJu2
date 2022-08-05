@@ -8,18 +8,28 @@ import java.util.Set;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import io.ikws4.weiju.BuildConfig;
+import io.ikws4.weiju.util.Logger;
 
 public class XSharedPreferenceStoreStrategy implements StoreStrategy {
-    private final XSharedPreferences store;
+    private static XSharedPreferences store;
 
     public XSharedPreferenceStoreStrategy() {
         if (XposedBridge.getXposedVersion() < 93) {
             store = new XSharedPreferences(new File("/data/user_de/0/" + BuildConfig.APPLICATION_ID + "/shared_prefs/" + STORE_NAME + ".xml"));
         } else {
-            store = new XSharedPreferences(BuildConfig.APPLICATION_ID, STORE_NAME);
-            store.makeWorldReadable();
-            store.reload();
+            if (store == null) {
+                /* store = new XSharedPreferences(BuildConfig.APPLICATION_ID, STORE_NAME); */
+                Logger.e("Should call `XStore.fixPermission` in XposedInit.initZygote");
+            } else {
+                store.reload();
+            }
         }
+    }
+
+    public static void fixPermission() {
+        store = new XSharedPreferences(BuildConfig.APPLICATION_ID, STORE_NAME);
+        store.makeWorldReadable();
+        store.reload();
     }
 
     public boolean canRead() {

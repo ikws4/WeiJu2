@@ -28,6 +28,10 @@ public class XScriptStore {
         }
     }
 
+    public static void fixPermission() {
+        XSharedPreferenceStoreStrategy.fixPermission();
+    }
+
     public String get(String k, String defValue) {
         return strategy.get(k, defValue);
     }
