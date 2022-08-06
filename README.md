@@ -1,7 +1,10 @@
-# WeiJu2
+# WeiJu2 (Working In Progress)
+
 Scriptable Xposed Module
 
+
 # Features
+
 - Lua Scripting
 - Provide a scripts/package [repository](https://github.com/ikws4/WeiJu2-Scripts)
 
