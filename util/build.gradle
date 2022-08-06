@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
 }
 
 android {
@@ -24,12 +23,4 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

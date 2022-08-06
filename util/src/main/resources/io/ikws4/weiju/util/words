@@ -1,7 +1,3 @@
-package io.ikws4.weiju.util
-
-// taking from https://gist.github.com/deekayen/4148741
-internal val words = """
 the
 of
 to
@@ -1002,4 +998,3 @@ quotient
 teeth
 shell
 neck
-""".split("\n").map { it.capitalize() }

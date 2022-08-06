@@ -1,16 +1,29 @@
 package io.ikws4.weiju.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 
 public class RandomUtil {
     private static final Random mRandom = new Random();
+    private static String[] words;
+
+    static {
+        InputStream in = RandomUtil.class.getResourceAsStream("words");
+        try {
+            byte[] bytes = new byte[in.available()];
+            in.read(bytes);
+            words = new String(bytes).split("\n");
+        } catch (IOException e) {
+            Logger.e(e);
+        }
+    }
 
     public static String nextWords(String delimeter, int n) {
         StringBuilder sb = new StringBuilder();
-        int wordsSize = WordsKt.getWords().size();
         for (int i = 0; i < n; i++) {
-            sb.append(WordsKt.getWords().get(nextInt(wordsSize)));
-            if (i < n -1 ) sb.append(delimeter);
+            sb.append(words[nextInt(words.length)]);
+            if (i < n - 1) sb.append(delimeter);
         }
         return sb.toString();
     }
