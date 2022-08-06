@@ -7,6 +7,6 @@
         android:title="Add To My Scripts" />
 
     <item
-        android:id="@+id/more_about_this_script"
-        android:title="More About This Script" />
+        android:id="@+id/about_this_script"
+        android:title="About This Script" />
 </menu>

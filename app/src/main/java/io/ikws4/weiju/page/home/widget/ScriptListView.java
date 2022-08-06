@@ -201,15 +201,15 @@ public class ScriptListView extends RecyclerView {
             }
 
             public void bind(ScriptItem item) {
-                itemView.setOnClickListener(v -> {
-                    mCallbacks.onRequireGotoEditorFragment(item);
-                });
                 vIconLabel.setText(String.valueOf(item.name.charAt(0)));
                 vName.setText(item.name);
                 vAuthor.setText(item.author);
                 vDescription.setText(item.description);
                 vChipBar.setScriptStatus(item);
 
+                itemView.setOnClickListener(v -> {
+                    mCallbacks.onRequireGotoEditorFragment(item);
+                });
                 itemView.setOnLongClickListener((v) -> {
                     showActionMenu(v, item);
                     v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
@@ -268,9 +268,6 @@ public class ScriptListView extends RecyclerView {
             }
 
             public void bind(ScriptItem item) {
-                itemView.setOnClickListener(v -> {
-                    Toast.makeText(v.getContext(), item.script, Toast.LENGTH_SHORT).show();
-                });
                 vIconLabel.setText(String.valueOf(item.name.charAt(0)));
                 vName.setText(item.name);
                 vAuthor.setText(item.author);
@@ -279,6 +276,11 @@ public class ScriptListView extends RecyclerView {
 
                 itemView.setOnClickListener((v) -> {
                     showActionMenu(v, item);
+                });
+                itemView.setOnLongClickListener((v) -> {
+                    showActionMenu(v, item);
+                    v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    return true;
                 });
             }
 
@@ -289,8 +291,8 @@ public class ScriptListView extends RecyclerView {
                 popup.setOnMenuItemClickListener(it -> {
                     if (it.getItemId() == R.id.add_to_my_scripts) {
                         mCallbacks.onRequireAddToMyScripts(v, item);
-                    } else if (it.getItemId() == R.id.more_about_this_script) {
-                        Toast.makeText(v.getContext(), "TODO: More about this script", Toast.LENGTH_SHORT).show();
+                    } else if (it.getItemId() == R.id.about_this_script) {
+                        Toast.makeText(v.getContext(), "TODO: About this script", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 });
