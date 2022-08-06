@@ -40,12 +40,19 @@
                 android:textColor="@color/muted"
                 android:textSize="14sp" />
 
-            <io.ikws4.weiju.page.home.widget.ScriptListView
-                android:id="@+id/rv_scripts"
+            <io.ikws4.weiju.widget.Refresher
+                android:id="@+id/refresher"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:itemCount="3"
-                tools:listitem="@layout/script_item" />
+                android:layout_height="match_parent">
+
+                <io.ikws4.weiju.page.home.widget.ScriptListView
+                    android:id="@+id/rv_scripts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/script_item" />
+
+            </io.ikws4.weiju.widget.Refresher>
 
         </io.ikws4.weiju.widget.ViewFlipper>
 

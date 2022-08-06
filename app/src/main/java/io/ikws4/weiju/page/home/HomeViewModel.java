@@ -201,6 +201,10 @@ public class HomeViewModel extends BaseViewModel {
             }));
     }
 
+    public void refreshScripts() {
+        loadAvaliableScripts(getCurrentSelectedAppPkg().getValue());
+    }
+
     private void loadMyScripts(String pkg) {
         Set<String> scriptKeys = mScriptStore.get(pkg, Collections.emptySet());
 

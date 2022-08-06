@@ -20,6 +20,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.IOException;
 
@@ -55,6 +56,7 @@ public class HomeFragment extends BaseFragment {
         AppListView vApps = view.findViewById(R.id.rv_item_list);
         ScriptListView vScripts = view.findViewById(R.id.rv_scripts);
         ViewFlipper vfScripts = view.findViewById(R.id.vf_scripts);
+        SwipeRefreshLayout vRefresher = view.findViewById(R.id.refresher);
 
         vScripts.registerCallbacks(new ScriptListView.Callbacks() {
             @Override
@@ -77,7 +79,7 @@ public class HomeFragment extends BaseFragment {
                     .beginTransaction()
                     .setReorderingAllowed(true)
                     .setCustomAnimations(
-                        R.anim.slide_in_bottom,
+                        R.anim.slide_in_bottom  ,
                         R.anim.slide_out_top,
                         R.anim.slide_in_bottom,
                         R.anim.slide_out_top
@@ -165,6 +167,10 @@ public class HomeFragment extends BaseFragment {
             return false;
         });
 
+        vRefresher.setOnRefreshListener(() -> {
+            vm.refreshScripts();
+        });
+
         vm.getSelectedApps().observe(getViewLifecycleOwner(), infos -> {
             if (isDrag == false && infos.isEmpty()) {
                 vfScripts.setDisplayedChild(0);
@@ -178,6 +184,7 @@ public class HomeFragment extends BaseFragment {
 
         vm.getAvaliableScripts().observe(getViewLifecycleOwner(), scripts -> {
             vScripts.setData(vm.getMyScripts().getValue(), scripts);
+            vRefresher.setRefreshing(false);
         });
 
         vm.getMyScripts().observe(getViewLifecycleOwner(), scripts -> {

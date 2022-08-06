@@ -35,15 +35,15 @@ public class LogcatFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView vLog = view.findViewById(R.id.tv_log);
-        SwipeRefreshLayout vRefresh = view.findViewById(R.id.refresh_layout);
-        vRefresh.setOnRefreshListener(() -> {
+        SwipeRefreshLayout vRefresher = view.findViewById(R.id.refresher);
+        vRefresher.setOnRefreshListener(() -> {
             vm.refresh();
         });
 
         vm = new ViewModelProvider(requireActivity()).get(LogcatViewModel.class);
         vm.getLogcatTag().observe(getViewLifecycleOwner(), tag -> {
             vLog.setText(readlog(tag));
-            vRefresh.setRefreshing(false);
+            vRefresher.setRefreshing(false);
         });
     }
 
