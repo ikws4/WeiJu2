@@ -5,12 +5,12 @@ import java.util.Random;
 public class RandomUtil {
     private static final Random mRandom = new Random();
 
-    public static String nextName(int n) {
+    public static String nextWords(String delimeter, int n) {
         StringBuilder sb = new StringBuilder();
         int wordsSize = WordsKt.getWords().size();
         for (int i = 0; i < n; i++) {
             sb.append(WordsKt.getWords().get(nextInt(wordsSize)));
-            if (i < n -1 ) sb.append(" ");
+            if (i < n -1 ) sb.append(delimeter);
         }
         return sb.toString();
     }

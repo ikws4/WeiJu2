@@ -75,10 +75,10 @@ public class HomeViewModel extends BaseViewModel {
         try {
             InputStream in = getApplication().getAssets().open("script_template");
             Template template = new Template(in);
-            template.set("name", RandomUtil.nextName(3));
-            template.set("author", RandomUtil.nextName(1));
+            template.set("name", RandomUtil.nextWords("_", 3).toLowerCase());
+            template.set("author", RandomUtil.nextWords("", 1));
             template.set("version", "0.0.1");
-            template.set("description", RandomUtil.nextName(10));
+            template.set("description", RandomUtil.nextWords(" ", 10));
             addToMyScripts(item = ScriptListView.ScriptItem.from(template.toString()));
         } catch (IOException e) {
             Logger.e(e);
