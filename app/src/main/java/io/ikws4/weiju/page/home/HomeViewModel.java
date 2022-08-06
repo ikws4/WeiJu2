@@ -190,7 +190,7 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void updateScript(ScriptListView.ScriptItem item) {
-        mDisposables.add(API.getInstance().getScript(item.name)
+        mDisposables.add(API.getInstance().getScript(item.id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe((contentFile) -> {
@@ -249,7 +249,7 @@ public class HomeViewModel extends BaseViewModel {
                             avaliableScripts.add(key.checkjstring());
                         }
                     } else if (scope.istable()) {
-                        LuaTable _scope = (LuaTable) scope;
+                        LuaTable _scope = scope.checktable();
                         for (int i = 0; i < _scope.keyCount(); i++) {
                             String v = _scope.get(i).checkjstring();
                             if (pkg.matches(v)) {
