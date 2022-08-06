@@ -26,6 +26,7 @@ import io.ikws4.weiju.page.MainViewModel;
 import io.ikws4.weiju.page.editor.view.EditorSymbolBar;
 import io.ikws4.weiju.page.home.HomeViewModel;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -89,6 +90,7 @@ public class EditorFragment extends BaseFragment {
         if (!mItem.isPackage) {
             mCompositeDisposable.add(Observable.timer(15, TimeUnit.SECONDS)
                 .repeat()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((it) -> {
                     mainVM.showProgressBar();
                     trySave(false);
