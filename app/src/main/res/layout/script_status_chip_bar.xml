@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chip_bar"
     android:layout_width="match_parent"
-    android:layout_height="14dp">
+    android:layout_height="15.5dp">
 
     <TextView
         android:id="@+id/chip_new_version"
@@ -15,8 +15,8 @@
         android:backgroundTintMode="multiply"
         android:paddingHorizontal="4dp"
         android:text="new version"
-        android:textColor="@color/highlight_low"
-        android:textSize="9sp"
+        android:textColor="@color/highlight_med"
+        android:textSize="10sp"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -30,7 +30,7 @@
         android:paddingHorizontal="4dp"
         android:text="package"
         android:textColor="@color/highlight_med"
-        android:textSize="9sp"
+        android:textSize="10sp"
         android:visibility="gone"
         tools:visibility="visible" />
 

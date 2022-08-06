@@ -8,6 +8,7 @@
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/round_select_all_20.xml" value="0.1105" />
         <entry key="../../Library/Android/sdk/platforms/android-32/data/res/drawable/list_selector_background.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/bg_chip.xml" value="0.1745" />
+        <entry key="app/src/main/res/drawable/chip_shape_iris_background.xml" value="0.26" />
         <entry key="app/src/main/res/drawable/chip_shape_rose_background.xml" value="0.1745" />
         <entry key="app/src/main/res/drawable/cursor.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/dialog.xml" value="0.181" />
