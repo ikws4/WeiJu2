@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Cancel previous workflow
+      uses: styfle/cancel-workflow-action@0.10.0
+      with:
+        access_token: ${{ github.token }}
+        
     - name: Clone repo
       uses: actions/checkout@v3
 
@@ -32,13 +37,13 @@ jobs:
       id: signApk
       with:
         releaseDirectory: app/release
-        signingKeyBase64: ${{secrets.STORE_FILE_BASE64}}
-        alias: ${{secrets.KEY_ALIAS}}
-        keyStorePassword: ${{secrets.STORE_PASSWORD}}
-        keyPassword: ${{secrets.KEY_PASSWORD}}
+        signingKeyBase64: ${{ secrets.STORE_FILE_BASE64 }}
+        alias: ${{ secrets.KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
       
-    - name: Upload a Build Artifact
+    - name: Upload apk
       uses: actions/upload-artifact@v3.1.0
       with:
         name: "WeiJu2.apk"
-        path: ${{steps.signApk.outputs.signedReleaseFile}}
+        path: ${{ steps.signApk.outputs.signedReleaseFile }}
