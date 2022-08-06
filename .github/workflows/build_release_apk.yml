@@ -1,10 +1,8 @@
 name: Android CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  schedule:
+    - cron: '* 23 * * *'
 
 jobs:
   build:
