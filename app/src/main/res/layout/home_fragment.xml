@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.ikws4.weiju.page.home.widget.AppListView
-        android:id="@+id/rv_item_list"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:itemCount="5"
-        tools:listitem="@layout/app_item" />
-
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        app:dividerColor="@color/surface" />
-
-    <io.ikws4.weiju.widget.ViewFlipper
-        android:id="@+id/vf_scripts"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
 
-        <TextView
-            android:layout_width="match_parent"
+        <io.ikws4.weiju.page.home.widget.AppListView
+            android:id="@+id/rv_item_list"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="48dp"
-            android:fontFamily="@font/jetbrains_mono_regular"
-            android:gravity="center"
-            android:text="You don't have any hook target..."
-            android:textColor="@color/muted"
-            android:textSize="14sp" />
+            tools:itemCount="5"
+            tools:listitem="@layout/app_item" />
 
-        <io.ikws4.weiju.page.home.widget.ScriptListView
-            android:id="@+id/rv_scripts"
-            android:layout_width="match_parent"
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            tools:itemCount="3"
-            tools:listitem="@layout/script_item" />
+            app:dividerColor="@color/surface" />
 
-    </io.ikws4.weiju.widget.ViewFlipper>
+        <io.ikws4.weiju.widget.ViewFlipper
+            android:id="@+id/vf_scripts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="48dp"
+                android:fontFamily="@font/jetbrains_mono_regular"
+                android:gravity="center"
+                android:text="You don't have any hook target..."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <io.ikws4.weiju.page.home.widget.ScriptListView
+                android:id="@+id/rv_scripts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:itemCount="3"
+                tools:listitem="@layout/script_item" />
+
+        </io.ikws4.weiju.widget.ViewFlipper>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

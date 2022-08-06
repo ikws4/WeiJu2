@@ -14,20 +14,27 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.concurrent.TimeUnit;
+
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.page.BaseFragment;
+import io.ikws4.weiju.page.MainViewModel;
 import io.ikws4.weiju.page.editor.view.EditorSymbolBar;
 import io.ikws4.weiju.page.home.HomeViewModel;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class EditorFragment extends BaseFragment {
     private Editor vEditor;
     private HomeViewModel vm;
     private ScriptListView.ScriptItem mItem;
+    private CompositeDisposable mCompositeDisposable;
 
     public EditorFragment() {
         super(R.layout.editor_fragment);
@@ -38,20 +45,25 @@ public class EditorFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        mCompositeDisposable = new CompositeDisposable();
 
         mItem = requireArguments().getParcelable("item");
 
         vEditor = view.findViewById(R.id.editor);
+        EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);
+
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) vEditor.getLayoutParams();
         layoutParams.leftMargin = (int) vEditor.getCharWidth();
         vEditor.setLayoutParams(layoutParams);
         vEditor.setText(mItem.script);
-        vEditor.setSelection(0, 0);
-        vEditor.moveSelectionEnd();
-        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.showSoftInput(vEditor, 0);
+        if (mItem.isPackage) {
+            vEditor.setEditable(false);
+            vSymbolBar.setVisibility(View.GONE);
+        } else {
+            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(vEditor, 0);
+        }
 
-        EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);
         vSymbolBar.registerCallbacks(new EditorSymbolBar.Callbacks() {
             @Override
             public void onClickSymbol(String s) {
@@ -71,6 +83,19 @@ public class EditorFragment extends BaseFragment {
                 }
             }
         });
+
+        // Auto Save
+        MainViewModel mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        if (!mItem.isPackage) {
+            mCompositeDisposable.add(Observable.timer(15, TimeUnit.SECONDS)
+                .repeat()
+                .subscribe((it) -> {
+                    mainVM.showProgressBar();
+                    trySave(false);
+                    mCompositeDisposable.add(Completable.timer(2, TimeUnit.SECONDS)
+                        .subscribe(mainVM::hideProgressBar));
+                }));
+        }
     }
 
     @Override
@@ -88,7 +113,10 @@ public class EditorFragment extends BaseFragment {
         } else if (id == R.id.close) {
             InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(vEditor.getWindowToken(), 0);
-            requireActivity().getSupportFragmentManager().popBackStack();
+
+            if (trySave(true)) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
         } else {
             return false;
         }
@@ -98,17 +126,33 @@ public class EditorFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mCompositeDisposable.clear();
+        trySave(true);
+    }
+
+    private boolean trySave(boolean toast) {
+        // Don't need perform save becuase it can not be change
+        if (mItem.isPackage) return true;
 
         var item = ScriptListView.ScriptItem.from(vEditor.getText().toString());
-        if (hasSameMetadataInMyScripts(item)) {
-            Toast.makeText(getContext(), "ABORT: Same metadata already exist.", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (hasMetadataError(item)) {
-            Toast.makeText(getContext(), "ABORT: Metadata parse error.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (item.equals(mItem)) return true;
 
+        if (hasSameMetadataInMyScripts(item)) {
+            if (toast) Toast.makeText(getContext(), "ABORT: Same metadata already exist.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (hasMetadataError(item)) {
+            if (toast) Toast.makeText(getContext(), "ABORT: Metadata parse error.", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            String msg = item.verify();
+            if (!msg.isEmpty()) {
+                if (toast) Toast.makeText(getContext(), "ABORT: " + msg, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
         vm.replaceInMyScripts(mItem, item);
+        mItem = item;
+        return true;
     }
 
     private boolean hasMetadataError(ScriptListView.ScriptItem item) {

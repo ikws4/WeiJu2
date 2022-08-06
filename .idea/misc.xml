@@ -7,6 +7,8 @@
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/magnifier_background.xml" value="0.1105" />
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/round_select_all_20.xml" value="0.1105" />
         <entry key="../../Library/Android/sdk/platforms/android-32/data/res/drawable/list_selector_background.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/bg_chip.xml" value="0.1745" />
+        <entry key="app/src/main/res/drawable/chip_shape_rose_background.xml" value="0.1745" />
         <entry key="app/src/main/res/drawable/cursor.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/dialog.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/dialog_cursor.xml" value="0.1" />
@@ -19,6 +21,7 @@
         <entry key="app/src/main/res/drawable/ic_info.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_more_vert.xml" value="0.2685" />
+        <entry key="app/src/main/res/drawable/ic_package.xml" value="0.1745" />
         <entry key="app/src/main/res/drawable/ic_run.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_terminal.xml" value="0.194" />
@@ -34,29 +37,32 @@
         <entry key="app/src/main/res/drawable/selection_background_rounded.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/shape_circle.xml" value="0.2685" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.49274444580078125" />
+        <entry key="app/src/main/res/layout/add_app_item.xml" value="0.7849573554722129" />
         <entry key="app/src/main/res/layout/app_add_item.xml" value="0.29074074074074074" />
         <entry key="app/src/main/res/layout/app_item.xml" value="0.648388671875" />
         <entry key="app/src/main/res/layout/available_scripts_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/create_new_script.xml" value="0.3842857142857143" />
         <entry key="app/src/main/res/layout/editor_context_menu.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/editor_fragment.xml" value="0.35583190917968754" />
+        <entry key="app/src/main/res/layout/editor_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/editor_symbol_item.xml" value="0.7755757649739583" />
-        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.2811904907226563" />
+        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.2810048913840232" />
         <entry key="app/src/main/res/layout/item_add_app.xml" value="0.863793436686198" />
         <entry key="app/src/main/res/layout/item_app.xml" value="0.4987847900390625" />
         <entry key="app/src/main/res/layout/list_view.xml" value="0.15092592592592594" />
         <entry key="app/src/main/res/layout/logcat_fragment.xml" value="0.16843971631205673" />
-        <entry key="app/src/main/res/layout/main_activity.xml" value="0.20192307692307693" />
+        <entry key="app/src/main/res/layout/main_activity.xml" value="0.3408665583683894" />
         <entry key="app/src/main/res/layout/script_empty_item.xml" value="0.3194444444444444" />
         <entry key="app/src/main/res/layout/script_empty_placeholder.xml" value="0.17341613769531256" />
         <entry key="app/src/main/res/layout/script_header.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/script_item.xml" value="0.6239430745442709" />
+        <entry key="app/src/main/res/layout/script_item.xml" value="0.40422885572139305" />
+        <entry key="app/src/main/res/layout/script_status_chip_bar.xml" value="0.9845102729526818" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.1" />
         <entry key="app/src/main/res/layout/search_list_dialog.xml" value="0.23670212765957446" />
         <entry key="app/src/main/res/layout/search_list_item.xml" value="0.6194905774346715" />
         <entry key="app/src/main/res/layout/text_compose_panel.xml" value="0.49244051332826977" />
         <entry key="app/src/main/res/menu/available_script_item_actions.xml" value="0.1" />
         <entry key="app/src/main/res/menu/editor_menu.xml" value="0.3463541666666667" />
+        <entry key="app/src/main/res/menu/home_menu.xml" value="0.30092592592592593" />
         <entry key="app/src/main/res/menu/logcat_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.24493560791015623" />
         <entry key="editor/src/main/res/layout/completion_item.xml" value="0.29259259259259257" />

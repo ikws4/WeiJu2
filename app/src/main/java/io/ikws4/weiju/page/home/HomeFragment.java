@@ -92,6 +92,12 @@ public class HomeFragment extends BaseFragment {
                 ScriptListView.ScriptItem item = vm.createNewScriptAndAddToMyScripts();
                 onRequireGotoEditorFragment(item);
             }
+
+            @Override
+            public void onRequireUpdateScript(ScriptListView.ScriptItem item) {
+                Toast.makeText(getContext(), "Updating...", Toast.LENGTH_SHORT).show();
+                vm.updateScript(item);
+            }
         });
 
         SearchBar searchBar = new SearchBar(getContext(), new SelectedAppInfoItemLoader());

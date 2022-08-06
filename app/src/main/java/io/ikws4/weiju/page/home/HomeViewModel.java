@@ -107,8 +107,8 @@ public class HomeViewModel extends BaseViewModel {
     private void switchApp(String pkg) {
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
         mCurrentSelectedAppPkg.setValue(pkg);
-        loadAvaliableScripts(pkg);
         loadMyScripts(pkg);
+        loadAvaliableScripts(pkg);
     }
 
     public void removeApp(AppListView.AppItem app) {
@@ -177,7 +177,6 @@ public class HomeViewModel extends BaseViewModel {
         mScriptStore.put(pkg, keys);
         mScriptStore.put(key, "");
 
-
         mMyScripts.getValue().remove(item);
         mMyScripts.publish();
 
@@ -188,6 +187,49 @@ public class HomeViewModel extends BaseViewModel {
     public void removeFromAvaliableScripts(ScriptListView.ScriptItem item) {
         mAvaliableScripts.getValue().remove(item);
         mAvaliableScripts.publish();
+    }
+
+    public void updateScript(ScriptListView.ScriptItem item) {
+        mDisposables.add(API.getInstance().getScript(item.name)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe((contentFile) -> {
+                var newItem = ScriptListView.ScriptItem.from(contentFile.getContent());
+                newItem.isPackage = true;
+
+                replaceInMyScripts(item, newItem);
+            }));
+    }
+
+    private void loadMyScripts(String pkg) {
+        Set<String> scriptKeys = mScriptStore.get(pkg, Collections.emptySet());
+
+        List<ScriptListView.ScriptItem> oldMyScripts = mMyScripts.getValue();
+        Set<String> packages = mPreferences.get(mCurrentSelectedAppPkg.getValue() + Preferences.PACKAGE_LIST_SUFFIX, Collections.emptySet());
+
+        mMyScripts.setValue(
+            scriptKeys.stream()
+                .map(key -> {
+                    var item = ScriptListView.ScriptItem.from(mScriptStore.get(key, ""));
+
+                    if (oldMyScripts != null) {
+                        oldMyScripts.stream()
+                            .filter(it -> it.metadataEquals(item))
+                            .findFirst()
+                            .ifPresent((it) -> {
+                                item.hasNewVersion = it.hasNewVersion;
+                                item.isPackage = it.isPackage;
+                            });
+                    } else {
+                        if (packages.contains(item.id)) {
+                            item.isPackage = true;
+                        }
+                    }
+
+                    return item;
+                })
+                .collect(Collectors.toList())
+        );
     }
 
     private void loadAvaliableScripts(String pkg) {
@@ -221,34 +263,32 @@ public class HomeViewModel extends BaseViewModel {
                 List<ScriptListView.ScriptItem> scriptItems = new ArrayList<>();
 
                 mDisposables.add(Observable.fromIterable(avaliableScripts)
-                    .map(script -> API.getInstance().getScript(script))
+                    .map(name -> API.getInstance().getScript(name))
                     .observeOn(Schedulers.io())
                     .buffer(5, 5)
                     .subscribe(observables -> {
                             observables.stream().forEach(observable ->
                                 observable.blockingSubscribe(contentFile -> {
                                     ScriptListView.ScriptItem item = ScriptListView.ScriptItem.from(contentFile.getContent());
-                                    if (mMyScripts.getValue() == null || !isMyScriptsMetadataContains(item)) {
-                                        scriptItems.add(item);
-                                    }
+                                    item.isPackage = true;
+                                    scriptItems.add(item);
                                 }, Logger::e));
                         },
                         Logger::e,
                         () -> {
-                            mAvaliableScripts.postValue(scriptItems);
+                            List<ScriptListView.ScriptItem> avaliableScriptItems = scriptItems.stream()
+                                .filter(scriptItem -> !isMyScriptsMetadataContains(scriptItem))
+                                .collect(Collectors.toList());
+
+                            mAvaliableScripts.postValue(avaliableScriptItems);
+
+                            // cache the package list
+                            mPreferences.put(mCurrentSelectedAppPkg.getValue() + Preferences.PACKAGE_LIST_SUFFIX, scriptItems.stream()
+                                .map(item -> item.id)
+                                .collect(Collectors.toSet()));
                         }
                     ));
             }, Logger::e));
-    }
-
-    private void loadMyScripts(String pkg) {
-        Set<String> scriptKeys = mScriptStore.get(pkg, Collections.emptySet());
-
-        mMyScripts.setValue(
-            scriptKeys.stream()
-                .map(key -> ScriptListView.ScriptItem.from(mScriptStore.get(key, "")))
-                .collect(Collectors.toList())
-        );
     }
 
     private void loadApplicationInfos() {
@@ -275,6 +315,11 @@ public class HomeViewModel extends BaseViewModel {
         if (mMyScripts.getValue() == null) return false;
         for (var script : mMyScripts.getValue()) {
             if (script.metadataEquals(item)) {
+
+                // set script status
+                script.isPackage = true;
+                script.hasNewVersion = item.versionCompare(script) > 0;
+
                 return true;
             }
         }

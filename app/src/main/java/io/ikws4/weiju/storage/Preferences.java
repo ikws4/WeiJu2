@@ -15,6 +15,7 @@ public class Preferences {
   public static final String APP_LIST_SELECTED_PACKAGE = "app_list_selected_package";
   public static final String APP_LIST = "app_list";
   public static final String LOGCAT_TAG = "logcat_tag";
+  public static final String PACKAGE_LIST_SUFFIX = "_package_list";
 
   private Preferences(Context context) {
     storage = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);

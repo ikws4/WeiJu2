@@ -75,7 +75,7 @@ public class ScriptListView extends RecyclerView {
             items.add(new Item(Item.MY_SCRIPTS_EMPTY_PLACEHOLDER));
         } else {
             for (ScriptItem item : myScripts) {
-                items.add(new Item(Item.MY_SCRIPT_ITEM, item));
+                items.add(new Item(Item.MY_SCRIPT_ITEM, item.clone()));
             }
         }
 
@@ -86,7 +86,7 @@ public class ScriptListView extends RecyclerView {
             items.add(new Item(Item.AVAILABLE_SCRIPTS_EMPTY_PLACEHOLDER));
         } else {
             for (ScriptItem item : availableScripts) {
-                items.add(new Item(Item.AVAILABLE_SCRIPT_ITEM, item));
+                items.add(new Item(Item.AVAILABLE_SCRIPT_ITEM, item.clone()));
             }
         }
 
@@ -189,6 +189,7 @@ public class ScriptListView extends RecyclerView {
 
         class MyScriptItemViewHolder extends RecyclerView.ViewHolder {
             private final TextView vIconLabel, vName, vAuthor, vDescription;
+            private final ScriptStatusChipBar vChipBar;
 
             public MyScriptItemViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -196,6 +197,7 @@ public class ScriptListView extends RecyclerView {
                 vName = itemView.findViewById(R.id.tv_name);
                 vAuthor = itemView.findViewById(R.id.tv_author);
                 vDescription = itemView.findViewById(R.id.tv_description);
+                vChipBar = itemView.findViewById(R.id.chip_bar);
             }
 
             public void bind(ScriptItem item) {
@@ -206,6 +208,7 @@ public class ScriptListView extends RecyclerView {
                 vName.setText(item.name);
                 vAuthor.setText(item.author);
                 vDescription.setText(item.description);
+                vChipBar.setScriptStatus(item);
 
                 itemView.setOnLongClickListener((v) -> {
                     showActionMenu(v, item);
@@ -217,10 +220,18 @@ public class ScriptListView extends RecyclerView {
             private void showActionMenu(View v, ScriptItem item) {
                 PopupMenu popup = new PopupMenu(getContext(), v);
                 popup.inflate(R.menu.my_script_item_actions);
+
+                if (item.hasNewVersion) {
+                    popup.getMenu().findItem(R.id.update_script).setVisible(true);
+                }
+
                 popup.setGravity(Gravity.END);
                 popup.setOnMenuItemClickListener(it -> {
-                    if (it.getItemId() == R.id.remove_from_my_scripts) {
+                    int id = it.getItemId();
+                    if (id == R.id.remove_from_my_scripts) {
                         mCallbacks.onRequireRemoveFromMyScripts(v, item);
+                    } else if (id == R.id.update_script) {
+                        mCallbacks.onRequireUpdateScript(item);
                     }
                     return true;
                 });
@@ -245,6 +256,7 @@ public class ScriptListView extends RecyclerView {
 
         class AvaiableScriptItemViewHolder extends RecyclerView.ViewHolder {
             private final TextView vIconLabel, vName, vAuthor, vDescription;
+            private final ScriptStatusChipBar vChipBar;
 
             public AvaiableScriptItemViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -252,6 +264,7 @@ public class ScriptListView extends RecyclerView {
                 vName = itemView.findViewById(R.id.tv_name);
                 vAuthor = itemView.findViewById(R.id.tv_author);
                 vDescription = itemView.findViewById(R.id.tv_description);
+                vChipBar = itemView.findViewById(R.id.chip_bar);
             }
 
             public void bind(ScriptItem item) {
@@ -262,6 +275,7 @@ public class ScriptListView extends RecyclerView {
                 vName.setText(item.name);
                 vAuthor.setText(item.author);
                 vDescription.setText(item.description);
+                vChipBar.setScriptStatus(item);
 
                 itemView.setOnClickListener((v) -> {
                     showActionMenu(v, item);
@@ -349,7 +363,7 @@ public class ScriptListView extends RecyclerView {
         }
     }
 
-    public static class ScriptItem implements Parcelable {
+    public static class ScriptItem implements Parcelable, Cloneable {
         private static final Globals GLOBALS = JsePlatform.standardGlobals();
         private static final Pattern META_DATA_PATTERN = Pattern.compile("^@metadata([\\s\\S]*)@end$", Pattern.MULTILINE);
         public static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
@@ -359,6 +373,8 @@ public class ScriptListView extends RecyclerView {
         public final String version;
         public final String description;
         public final String script;
+        public boolean hasNewVersion;
+        public boolean isPackage;
 
         private ScriptItem(@NonNull String name, @NonNull String author, @NonNull String version, @NonNull String description, @NonNull String script) {
             this.id = Strings.join(".", author, name);
@@ -368,6 +384,46 @@ public class ScriptListView extends RecyclerView {
             this.description = description;
             this.script = script;
         }
+
+        protected ScriptItem(Parcel in) {
+            id = in.readString();
+            name = in.readString();
+            author = in.readString();
+            version = in.readString();
+            description = in.readString();
+            script = in.readString();
+            hasNewVersion = in.readByte() != 0;
+            isPackage = in.readByte() != 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(id);
+            dest.writeString(name);
+            dest.writeString(author);
+            dest.writeString(version);
+            dest.writeString(description);
+            dest.writeString(script);
+            dest.writeByte((byte) (hasNewVersion ? 1 : 0));
+            dest.writeByte((byte) (isPackage ? 1 : 0));
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ScriptItem> CREATOR = new Creator<ScriptItem>() {
+            @Override
+            public ScriptItem createFromParcel(Parcel in) {
+                return new ScriptItem(in);
+            }
+
+            @Override
+            public ScriptItem[] newArray(int size) {
+                return new ScriptItem[size];
+            }
+        };
 
         public static ScriptItem from(String script) {
             try {
@@ -388,48 +444,30 @@ public class ScriptListView extends RecyclerView {
             return EMPTY_ITEM;
         }
 
-        protected ScriptItem(Parcel in) {
-            id = in.readString();
-            name = in.readString();
-            author = in.readString();
-            version = in.readString();
-            description = in.readString();
-            script = in.readString();
-        }
+        private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]\\w*$");
+        private static final Pattern VERINO_PATTERN = Pattern.compile("^(0|([1-9]\\d*))\\.(0|([1-9]\\d*))\\.(0|([1-9]\\d*))$");
 
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(id);
-            dest.writeString(name);
-            dest.writeString(author);
-            dest.writeString(version);
-            dest.writeString(description);
-            dest.writeString(script);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        public static final Creator<ScriptItem> CREATOR = new Creator<ScriptItem>() {
-            @Override
-            public ScriptItem createFromParcel(Parcel in) {
-                return new ScriptItem(in);
+        public String verify() {
+            if (!NAME_PATTERN.matcher(name).matches()) {
+                return "metadata.name is not valid";
             }
-
-            @Override
-            public ScriptItem[] newArray(int size) {
-                return new ScriptItem[size];
+            if (!VERINO_PATTERN.matcher(version).matches()) {
+                return "metadata.version is not valid";
             }
-        };
+            if (author.isEmpty()) {
+                return "meta.author is not valid";
+            }
+            return "";
+        }
+
+
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ScriptItem item = (ScriptItem) o;
-            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description) && Objects.equals(script, item.script);
+            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description) && Objects.equals(script, item.script) && Objects.equals(hasNewVersion, item.hasNewVersion) && Objects.equals(isPackage, item.isPackage);
         }
 
         public boolean metadataEquals(ScriptItem item) {
@@ -438,16 +476,37 @@ public class ScriptListView extends RecyclerView {
             return Objects.equals(id, item.id);
         }
 
-        // TODO: impl version compare
         public int versionCompare(ScriptItem item) {
             if (this == item) return 0;
             if (item == null) return 1;
-            return version.compareTo(item.version);
+
+
+            String[] A = this.version.split("\\.");
+            String[] B = item.version.split("\\.");
+
+            // A and B's length should be 3
+            for (int i = 0; i < A.length; i++) {
+                int a = Integer.parseInt(A[i]);
+                int b = Integer.parseInt(B[i]);
+                if (a > b) return 1;
+                if (a < b) return -1;
+            }
+
+            return 0;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, name, author, version, description, script);
+            return Objects.hash(id, name, author, version, description, script, hasNewVersion, isPackage);
+        }
+
+        @NonNull
+        @Override
+        protected ScriptItem clone() {
+            ScriptItem item = new ScriptItem(name, author, version, description, script);
+            item.hasNewVersion = hasNewVersion;
+            item.isPackage = isPackage;
+            return item;
         }
     }
 
@@ -459,6 +518,8 @@ public class ScriptListView extends RecyclerView {
         void onRequireGotoEditorFragment(ScriptItem item);
 
         void onRequireCreateNewScripts();
+
+        void onRequireUpdateScript(ScriptItem item);
     }
 
     public static class EmptyCallbacks implements Callbacks {
@@ -477,6 +538,10 @@ public class ScriptListView extends RecyclerView {
 
         @Override
         public void onRequireCreateNewScripts() {
+        }
+
+        @Override
+        public void onRequireUpdateScript(ScriptItem item) {
         }
     }
 }
