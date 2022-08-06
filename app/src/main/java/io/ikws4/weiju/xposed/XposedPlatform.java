@@ -50,6 +50,7 @@ public class XposedPlatform {
 
         // lua libs
         globals.load(BuiltinPackage.require("java_common_syntax")).call();
+        globals.load(BuiltinPackage.require("table_util")).call();
 
         return globals;
     }
