@@ -13,7 +13,8 @@ Scriptable Xposed Module
 ### How to write a hook?
 
 ```lua
--- You can import any java class
+-- You can import any java class as long as
+-- it available in that app's classloader
 local Toast = import("android.widget.Toast")
 local Activity = import("android.app.Activity")
 local Bundle = import("android.os.Bundle")
