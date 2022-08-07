@@ -8,6 +8,28 @@ Scriptable Xposed Module
 - Lua Scripting
 - Provide a scripts/package [repository](https://github.com/ikws4/WeiJu2-Scripts)
 
+# How to write a hook?
+
+```lua
+-- You can import any java class
+local Toast = import("android.widget.Toast")
+local Activity = import("android.app.Activity")
+local Bundle = import("android.os.Bundle")
+
+hook {
+  class = Activity,
+  returns = void,
+  method = "onCreate",
+  params = {
+    Bundle
+  },
+  after = function(this, params)
+    Toast:makeText(this, config.toast_msg, Toast.LENGTH_SHORT):show()
+    --              ^
+    -- Note: `this` is the Activity instance
+  end,
+}
+```
 
 # Screenshots
 
