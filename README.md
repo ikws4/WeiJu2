@@ -47,7 +47,7 @@ hook {
 
 ```lua
 -- With the `import` function you can bind any java class, and access all the fields and methods that defined
--- in that class. No more `XposedHelper.setStaticField(Build.class, "DEVICE", "coral")` much cleaner!
+-- in that class. No more `XposedHelper.setStaticObjectField(Build.class, "DEVICE", "coral")` much cleaner!
 local Build = import("android.os.Build")
 
 Build.DEVICE = "coral"
