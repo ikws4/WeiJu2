@@ -21,7 +21,10 @@
  ******************************************************************************/
 package org.luaj.vm2.lib.jse;
 
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.VarArgFunction;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -65,6 +68,15 @@ class JavaClass extends JavaInstance implements CoerceJavaToLua.Coercion {
     JavaClass(Class c) {
         super(c);
         this.jclass = this;
+
+        LuaTable metadata = tableOf();
+        metadata.set("__call", new VarArgFunction() {
+            @Override
+            public Varargs invoke(Varargs args) {
+                return getConstructor().invoke(args.subargs(2));
+            }
+        });
+        setmetatable(metadata);
     }
 
     public LuaValue coerce(Object javaValue) {
