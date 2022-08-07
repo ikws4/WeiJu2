@@ -8,7 +8,9 @@ Scriptable Xposed Module
 - Lua Scripting
 - Provide a scripts/package [repository](https://github.com/ikws4/WeiJu2-Scripts)
 
-# How to write a hook?
+# Examples
+
+### How to write a hook?
 
 ```lua
 -- You can import any java class
@@ -30,6 +32,23 @@ hook {
   end,
 }
 ```
+
+### How to modify class fields?
+
+```lua
+-- With this `import` function you can bind any java class, and access all the fields that defined
+-- in that class. No more `XposedHelper.setStaticField(Build.class, "DEVICE", "coral")` much cleaner!
+local Build = import("android.os.Build")
+
+Build.DEVICE = "coral"
+Build.PRODUCT = "coral"
+Build.MODEL = "Google Pixel 4XL"
+Build.BRAND = "google"
+Build.MANUFACTURER = "google"
+Build.VERSION.RELEASE = "13"
+```
+
+
 
 # Screenshots
 
