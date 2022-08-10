@@ -194,7 +194,10 @@ class LuaLanguage extends EmptyLanguage {
         protected DiagnosticsContainer doInBackground(Content... references) {
             DiagnosticsContainer diagnosticsContainer = new DiagnosticsContainer();
             LuaDiagnostic.diagnose(references[0].toString(), info -> {
-                diagnosticsContainer.addDiagnostic(newDiagnosticResion(info, DiagnosticRegion.SEVERITY_ERROR));
+                try {
+                    diagnosticsContainer.addDiagnostic(newDiagnosticResion(info, DiagnosticRegion.SEVERITY_ERROR));
+                } catch (StringIndexOutOfBoundsException ignored) {
+                }
             });
             return diagnosticsContainer;
         }
