@@ -41,6 +41,7 @@ import io.ikws4.weiju.util.UnitConverter;
 
 public class Editor extends CodeEditor {
     private float mCharWidth = 0;
+    private boolean mEditable = true;
 
     public Editor(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -52,9 +53,8 @@ public class Editor extends CodeEditor {
         setEdgeEffectColor(RosepineColorScheme.BASE);
         setCursorAnimationEnabled(false);
         setHighlightCurrentLine(false);
-        setInputType(EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE |
-                     EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE);
         setLigatureEnabled(true);
+        setInputType(EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         setScrollBarEnabled(false);
         setCursorWidth(2 * getDpUnit());
         setDividerWidth(0);
@@ -110,6 +110,17 @@ public class Editor extends CodeEditor {
 
     public float getCharWidth() {
         return mCharWidth;
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        super.setEditable(editable);
+        mEditable = editable;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return mEditable;
     }
 
     private static class AutoCompletion extends EditorAutoCompletion {
