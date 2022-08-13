@@ -27,6 +27,7 @@ import java.io.IOException;
 import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.BaseFragment;
+import io.ikws4.weiju.page.about.AboutFragment;
 import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
@@ -50,6 +51,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        requireAppCompatActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
@@ -79,7 +81,7 @@ public class HomeFragment extends BaseFragment {
                     .beginTransaction()
                     .setReorderingAllowed(true)
                     .setCustomAnimations(
-                        R.anim.slide_in_bottom  ,
+                        R.anim.slide_in_bottom,
                         R.anim.slide_out_top,
                         R.anim.slide_in_bottom,
                         R.anim.slide_out_top
@@ -207,8 +209,14 @@ public class HomeFragment extends BaseFragment {
         int id = item.getItemId();
         if (id == R.id.xposed_status) {
             Toast.makeText(getContext(), "WeiJu was not enabled in xposed.", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.settings) {
-            Toast.makeText(getContext(), "TODO: Settings", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.about) {
+            requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.fragment_container, AboutFragment.class, null)
+                .addToBackStack("about")
+                .commit();
         } else if (id == R.id.launch_app) {
             PackageManager pm = getContext().getPackageManager();
 

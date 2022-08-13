@@ -57,4 +57,9 @@
         <item name="android:indeterminate">true</item>
     </style>
 
+    <style name="Widget.CardView.Outlined" parent="">
+        <item name="android:padding">2dp</item>
+        <item name="android:background">@drawable/cardview_outline_background</item>
+    </style>
+
 </resources>

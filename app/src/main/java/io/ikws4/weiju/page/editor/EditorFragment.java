@@ -39,11 +39,11 @@ public class EditorFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         mCompositeDisposable = new CompositeDisposable();
 
         mItem = requireArguments().getParcelable("item");
+        getSupportActionBar().setSubtitle(mItem.id);
 
         vEditor = view.findViewById(R.id.editor);
         EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);

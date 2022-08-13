@@ -34,6 +34,9 @@ public class LogcatFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Logcat");
+
         TextView vLog = view.findViewById(R.id.tv_log);
         SwipeRefreshLayout vRefresher = view.findViewById(R.id.refresher);
         vRefresher.setOnRefreshListener(() -> {

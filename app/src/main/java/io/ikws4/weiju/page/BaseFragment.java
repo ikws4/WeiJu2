@@ -9,6 +9,8 @@ import android.view.View;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
@@ -22,7 +24,15 @@ public class BaseFragment extends Fragment implements MenuProvider {
     @Override
     @CallSuper
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        requireAppCompatActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.STARTED);
+    }
+
+    public AppCompatActivity requireAppCompatActivity() {
+        return (AppCompatActivity) requireActivity();
+    }
+
+    public ActionBar getSupportActionBar() {
+        return requireAppCompatActivity().getSupportActionBar();
     }
 
     @Override
