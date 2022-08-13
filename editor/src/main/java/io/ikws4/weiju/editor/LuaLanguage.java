@@ -130,6 +130,8 @@ class LuaLanguage extends EmptyLanguage {
             String leadingSpaces = Strings.repeat(" ", Strings.leadingSpaceCount(beforeText));
             String indent = Strings.repeat(" ", getIndentAdvance(beforeText));
 
+            if (beforeText.endsWith("{") && !afterText.startsWith("}")) return new NewlineHandleResult("\n" + leadingSpaces + indent, 0);
+
             boolean shouldAddEnd = false;
             int nextLine = mEditor.getCursor().getLeftLine() + 1;
 
