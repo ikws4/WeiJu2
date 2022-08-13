@@ -1,12 +1,10 @@
 package io.ikws4.weiju.page.editor;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,9 +58,6 @@ public class EditorFragment extends BaseFragment {
         if (mItem.isPackage) {
             vEditor.setEditable(false);
             vSymbolBar.setVisibility(View.GONE);
-        } else {
-            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.showSoftInput(vEditor, 0);
         }
 
         vSymbolBar.registerCallbacks(new EditorSymbolBar.Callbacks() {
@@ -113,11 +108,8 @@ public class EditorFragment extends BaseFragment {
         if (id == R.id.help) {
             Toast.makeText(getContext(), "TODO: Help", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.close) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(vEditor.getWindowToken(), 0);
-
             if (trySave(true)) {
-                requireActivity().getSupportFragmentManager().popBackStack();
+                requireActivity().onBackPressed();
             }
         } else {
             return false;
