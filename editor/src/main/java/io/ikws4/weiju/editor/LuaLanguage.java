@@ -128,7 +128,7 @@ class LuaLanguage extends EmptyLanguage {
         @Override
         public NewlineHandleResult handleNewline(String beforeText, String afterText, int tabSize) {
             String leadingSpaces = Strings.repeat(" ", Strings.leadingSpaceCount(beforeText));
-            int indent = getIndentAdvance(beforeText);
+            String indent = Strings.repeat(" ", getIndentAdvance(beforeText));
 
             boolean shouldAddEnd = false;
             int nextLine = mEditor.getCursor().getLeftLine() + 1;
@@ -150,16 +150,16 @@ class LuaLanguage extends EmptyLanguage {
             }
             mStringBuilder.setLength(0);
             mStringBuilder.append("\n");
-            mStringBuilder.append(Strings.repeat(" ", indent + leadingSpaces.length()));
+            mStringBuilder.append(leadingSpaces).append(indent);
             int leftShift = 0;
             if (shouldAddEnd) {
                 mStringBuilder.append("\n");
 
+                mStringBuilder.append(leadingSpaces);
+                leftShift += leadingSpaces.length() + 1;
                 if (beforeText.matches(ENDWISE_PATTERN)) {
-                    mStringBuilder.append(leadingSpaces).append("end");
-                    leftShift = leadingSpaces.length() + 4;
-                } else {
-                    leftShift = leadingSpaces.length() + 1;
+                    mStringBuilder.append("end");
+                    leftShift += 3;
                 }
             }
 
