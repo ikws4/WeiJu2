@@ -14,9 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import io.github.rosemoe.sora.text.Content;
-import io.github.rosemoe.sora.text.Cursor;
-import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.page.BaseFragment;
@@ -59,26 +56,7 @@ public class EditorFragment extends BaseFragment {
             vEditor.setEditable(false);
             vSymbolBar.setVisibility(View.GONE);
         }
-
-        vSymbolBar.registerCallbacks(new EditorSymbolBar.Callbacks() {
-            @Override
-            public void onClickSymbol(String s) {
-                SymbolPairMatch pair = vEditor.getEditorLanguage().getSymbolPairs();
-                SymbolPairMatch.Replacement replacement = pair.getCompletion(s.charAt(0));
-                Content content = vEditor.getText();
-                Cursor cursor = vEditor.getCursor();
-                char afterChar = content.charAt(cursor.getRight());
-                if (afterChar == s.charAt(0)) {
-                    vEditor.moveSelectionRight();
-                } else {
-                    if (replacement != null) {
-                        vEditor.insertText(replacement.text, replacement.selection);
-                    } else {
-                        vEditor.insertText(s, 1);
-                    }
-                }
-            }
-        });
+        vSymbolBar.attach(vEditor);
 
         // Auto Save
         MainViewModel mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);

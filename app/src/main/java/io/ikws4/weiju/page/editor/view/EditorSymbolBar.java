@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Arrays;
 import java.util.List;
 
+import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.text.Cursor;
+import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.editor.Editor;
 
 public class EditorSymbolBar extends RecyclerView {
     private Callbacks mCallbacks = new EmptyCallbask();
@@ -35,7 +39,29 @@ public class EditorSymbolBar extends RecyclerView {
         setAdapter(new Adapter(Arrays.asList(symbols)));
     }
 
-    public void registerCallbacks(Callbacks callbacks) {
+    public void attach(Editor editor) {
+        registerCallbacks(new EditorSymbolBar.Callbacks() {
+            @Override
+            public void onClickSymbol(String s) {
+                SymbolPairMatch pair = editor.getEditorLanguage().getSymbolPairs();
+                SymbolPairMatch.Replacement replacement = pair.getCompletion(s.charAt(0));
+                Content content = editor.getText();
+                Cursor cursor = editor.getCursor();
+                char afterChar = content.charAt(cursor.getRight());
+                if (afterChar == s.charAt(0)) {
+                    editor.moveSelectionRight();
+                } else {
+                    if (replacement != null) {
+                        editor.insertText(replacement.text, replacement.selection);
+                    } else {
+                        editor.insertText(s, 1);
+                    }
+                }
+            }
+        });
+    }
+
+    private void registerCallbacks(Callbacks callbacks) {
         mCallbacks = callbacks;
     }
 
