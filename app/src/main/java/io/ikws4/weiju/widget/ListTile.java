@@ -18,6 +18,8 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.util.UnitConverter;
 
 public class ListTile extends CustomView {
+    private TextView vTitle;
+    private TextView vSubtitle;
 
     public ListTile(@NonNull Context context) {
         super(context);
@@ -34,10 +36,10 @@ public class ListTile extends CustomView {
             vIcon.setImageResource(iconResourceId);
         }
 
-        TextView vTitle = findViewById(R.id.v_title);
+        vTitle = findViewById(R.id.v_title);
         vTitle.setText(arr.getText(R.styleable.ListTile_title));
 
-        TextView vSubtitle = findViewById(R.id.v_subtitle);
+        vSubtitle = findViewById(R.id.v_subtitle);
         vSubtitle.setText(arr.getText(R.styleable.ListTile_subtitle));
 
         if (TextUtils.isEmpty(vTitle.getText())) {
@@ -72,5 +74,13 @@ public class ListTile extends CustomView {
     @Override
     public int inflateId() {
         return R.layout.list_tile;
+    }
+
+    public void setTitle(String text) {
+        vTitle.setText(text);
+    }
+
+    public void setSubtitle(String text) {
+        vSubtitle.setText(text);
     }
 }

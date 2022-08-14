@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.widget.ListTile;
@@ -23,6 +24,9 @@ public class AboutFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("About");
+
+        ListTile vVersion = view.findViewById(R.id.v_version);
+        vVersion.setSubtitle(BuildConfig.VERSION_NAME);
 
         ListTile vGithub = view.findViewById(R.id.v_github);
         vGithub.setOnClickListener((v) -> {

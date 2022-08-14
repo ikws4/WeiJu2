@@ -68,6 +68,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <io.ikws4.weiju.widget.ListTile
+                android:id="@+id/v_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_info"
