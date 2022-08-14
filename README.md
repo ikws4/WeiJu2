@@ -1,17 +1,17 @@
 # WeiJu2 (Working In Progress)
 
-Scriptable Xposed Module
+The first scriptable xposed module, provides a new way to change the application behavior.
+Powered by Lua and made with ♥
 
 
 # Features
 
 - Lua Scripting
-- Easy to prototyping your ideas
-- An Easy-to-used hook api
-- Provide a scripts/package [repository](https://github.com/ikws4/WeiJu2-Scripts)
+- An easy-to-used hook api
+- With a package [repository](https://github.com/ikws4/WeiJu2-Scripts)
 
 
-# Examples
+# QA
 
 ### How to write a hook?
 
@@ -57,6 +57,46 @@ Build.BRAND = "google"
 Build.MANUFACTURER = "google"
 Build.VERSION.RELEASE = "13"
 ```
+
+
+### How to import a package?
+
+```lua
+require("ikws4.system_variable").setup {
+  -- configs goes here
+}
+```
+
+
+### How to create a package?
+
+A basic package template:
+
+```lua
+--[[ 
+@metadata
+  return {
+    name = "my_package",
+    author = "you",
+    version = "1.0.0",
+    description = "Describle your package"
+  }
+@end
+--]]
+
+local config = {
+}
+
+local M = {}
+
+M.setup = function(opts)
+  config = table.extend(config, opts or {})
+end
+
+return M
+```
+
+If you want to share your work with others, you can create a PR in [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts), after it merged everyone can use your package!
 
 
 # Screenshots
