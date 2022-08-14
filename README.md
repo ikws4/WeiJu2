@@ -1,3 +1,8 @@
+<h1 align="center">
+  <img src="https://user-images.githubusercontent.com/47056144/184537284-b7328b15-3836-4d28-b110-321731609b73.png" width="40%" alt="WeiJu2" />
+</h1>
+
+
 # WeiJu2 (Working In Progress)
 
 The first scriptable xposed module, provides a new way to change the application behavior.
@@ -7,10 +12,9 @@ Powered by Lua and made with ♥
 
 # Features
 
-- Lua Scripting
-- An easy-to-used hook api
-- With a package [repository](https://github.com/ikws4/WeiJu2-Scripts)
-
+- Lua scripting
+- Simple and intuitive hook API
+- Share your package with others by publish it at [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts)
 
 # Q&A
 
@@ -97,7 +101,7 @@ end
 return M
 ```
 
-If you want to share your work with others, you can create a PR in [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts), after it merged everyone can use your package!
+Want to share your work with others? Create a PR at [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts).
 
 
 # Screenshots
