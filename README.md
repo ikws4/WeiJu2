@@ -1,6 +1,7 @@
 # WeiJu2 (Working In Progress)
 
 The first scriptable xposed module, provides a new way to change the application behavior.
+
 Powered by Lua and made with ♥
 
 
