@@ -12,7 +12,7 @@ Powered by Lua and made with ♥
 - With a package [repository](https://github.com/ikws4/WeiJu2-Scripts)
 
 
-# QA
+# Q&A
 
 ### How to write a hook?
 
