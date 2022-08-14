@@ -7,6 +7,7 @@
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/magnifier_background.xml" value="0.1105" />
         <entry key="../../.gradle/caches/transforms-3/d58138ca64425061dbaec60716f68c1b/transformed/editor-0.14.0/res/drawable/round_select_all_20.xml" value="0.1105" />
         <entry key="../../Library/Android/sdk/platforms/android-32/data/res/drawable/list_selector_background.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2825" />
         <entry key="app/src/main/res/drawable/bg_chip.xml" value="0.1745" />
         <entry key="app/src/main/res/drawable/card_outline_background.xml" value="0.1875" />
         <entry key="app/src/main/res/drawable/chip_shape_iris_background.xml" value="0.26" />
@@ -64,6 +65,7 @@
         <entry key="app/src/main/res/layout/script_item.xml" value="0.40422885572139305" />
         <entry key="app/src/main/res/layout/script_status_chip_bar.xml" value="0.9845102729526818" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.1935073852539063" />
+        <entry key="app/src/main/res/layout/search_bar_item.xml" value="1.5148982835852585" />
         <entry key="app/src/main/res/layout/search_list_dialog.xml" value="0.23670212765957446" />
         <entry key="app/src/main/res/layout/search_list_item.xml" value="0.6194905774346715" />
         <entry key="app/src/main/res/layout/text_compose_panel.xml" value="0.49244051332826977" />
@@ -73,6 +75,7 @@
         <entry key="app/src/main/res/menu/home_menu.xml" value="0.30092592592592593" />
         <entry key="app/src/main/res/menu/logcat_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.24493560791015623" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20233612060546877" />
         <entry key="editor/src/main/res/layout/completion_item.xml" value="0.29259259259259257" />
         <entry key="editor/src/main/res/layout/editor.xml" value="0.1059322033898305" />
         <entry key="editor/src/main/res/layout/toolbar.xml" value="0.1" />
