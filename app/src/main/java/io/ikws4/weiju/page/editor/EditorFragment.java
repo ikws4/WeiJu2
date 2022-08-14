@@ -29,6 +29,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class EditorFragment extends BaseFragment {
     private Editor vEditor;
     private HomeViewModel vm;
+    private MainViewModel mainVM;
     private ScriptListView.ScriptItem mItem;
     private CompositeDisposable mCompositeDisposable;
 
@@ -59,7 +60,7 @@ public class EditorFragment extends BaseFragment {
         vSymbolBar.attach(vEditor);
 
         // Auto Save
-        MainViewModel mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         if (!mItem.isPackage) {
             mCompositeDisposable.add(Observable.timer(15, TimeUnit.SECONDS)
                 .repeat()
@@ -99,6 +100,7 @@ public class EditorFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();
+        mainVM.hideProgressBar();
         trySave(true);
     }
 
