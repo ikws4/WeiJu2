@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
@@ -31,6 +32,7 @@ import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.widget.CodeEditor;
+import io.github.rosemoe.sora.widget.EditorRenderer;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.github.rosemoe.sora.widget.component.DefaultCompletionLayout;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
@@ -63,6 +65,9 @@ public class Editor extends CodeEditor {
         setTabWidth(2);
         setLineSpacing(0, 1.15f);
         setTextSize(14);
+
+        getProps().deleteMultiSpaces = 1;
+        getProps().deleteEmptyLineFast = false;
 
         getComponent(Magnifier.class).setEnabled(false);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
@@ -121,6 +126,12 @@ public class Editor extends CodeEditor {
     @Override
     public boolean isEditable() {
         return mEditable;
+    }
+
+    @NonNull
+    @Override
+    protected EditorRenderer onCreateRenderer() {
+        return new io.ikws4.weiju.editor.EditorRenderer(this);
     }
 
     private static class AutoCompletion extends EditorAutoCompletion {

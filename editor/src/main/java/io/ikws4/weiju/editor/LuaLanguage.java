@@ -115,7 +115,7 @@ class LuaLanguage extends EmptyLanguage {
         mTextMateLanguage.requireAutoComplete(content, position, publisher, extraArguments);
     }
 
-    class EndwiseNewlineHandler implements NewlineHandler {
+    public class EndwiseNewlineHandler implements NewlineHandler {
         private static final String ENDWISE_PATTERN = "^((?!(--)).)*(\\b(else|function|then|do|repeat)\\b((?!\\b(end|until)\\b).)*)$";
 
         @Override
