@@ -52,6 +52,7 @@ public class XposedPlatform {
         globals.load(BuiltinPackage.require("java_common_syntax")).call();
         globals.load(BuiltinPackage.require("java_primitives")).call();
         globals.load(BuiltinPackage.require("table_util")).call();
+        globals.load(BuiltinPackage.require("string_util")).call();
 
         return globals;
     }
