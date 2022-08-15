@@ -60,7 +60,7 @@
                     android:layout_marginTop="2dp"
                     android:text="@string/app_description"
                     android:textColor="@color/subtle"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/v_title"
                     app:layout_constraintTop_toBottomOf="@+id/v_title" />
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:icon="@drawable/ic_github"
-                app:subtitle="Give it a star on Github if you like this app"
+                app:subtitle="If you like this app please hit the star button on github to support my work"
                 app:title="Source code" />
 
         </LinearLayout>
