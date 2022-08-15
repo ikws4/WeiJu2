@@ -2,9 +2,6 @@
   <img src="https://user-images.githubusercontent.com/47056144/184565081-fab04563-4590-4f3c-8f86-12d2dd429f8a.png" width="40%" alt="WeiJu2" />
 </h1>
 
-
-# WeiJu2 (Working In Progress)
-
 The first scriptable xposed module, provides a new way to change the application behavior.
 
 Powered by Lua and made with ♥
