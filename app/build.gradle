@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id 'com.android.application'
 }
@@ -9,7 +11,7 @@ android {
         applicationId "io.ikws4.weiju"
         minSdk 24
         targetSdk 32
-        versionCode 1
+        versionCode Integer.parseInt(new SimpleDateFormat("yyyymmddhh").format(new Date()))
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
