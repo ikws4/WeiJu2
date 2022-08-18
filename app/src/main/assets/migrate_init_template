@@ -258,7 +258,7 @@ local function setup_screen()
   end
 
   local ContextWrapper = import("android.content.ContextWrapper")
-  local ration = import("android.content.res.ration")
+  local Configuration = import("android.content.res.configuration")
   local Context = import("android.content.Context")
   local String = import("java.lang.String")
   local Locale = import("java.util.Locale")
@@ -296,7 +296,7 @@ local function setup_screen()
         local context = params[1]
 
         -- Make a copy of the ration, and then modify the dpi
-        local new_ration = ration(context:getResources():getration())
+        local new_configuration = Configuration(context:getResources():getConfiguration())
 
         if screen.custom_dpi then
           new_ration.densityDpi = screen.custom_dpi
@@ -309,7 +309,7 @@ local function setup_screen()
           new_ration:setLocale(locale)
         end
 
-        params[1] = context:createrationContext(new_ration)
+        params[1] = context:createConfigurationContext(new_configuration)
       end,
     }
   end
