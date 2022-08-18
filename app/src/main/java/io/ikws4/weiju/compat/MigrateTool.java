@@ -2,12 +2,19 @@ package io.ikws4.weiju.compat;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Environment;
 
+import org.lsposed.hiddenapibypass.HiddenApiBypass;
+
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
@@ -25,7 +32,12 @@ public class MigrateTool {
     }
 
     private static void migrateHookList(Context context) {
-        SharedPreferences hookList = context.getSharedPreferences("hook_list", Context.MODE_PRIVATE);
+        SharedPreferences hookList = getSharedPreferences(context, "hook_list");
+
+        if (hookList == null) {
+            Logger.e("[MigrateTool] Cannot load hook_list");
+            return;
+        }
 
         if (hookList.getAll().isEmpty()) {
             // Don't need migrate
@@ -42,7 +54,7 @@ public class MigrateTool {
 
             appList.add(pkg + "," + System.currentTimeMillis());
 
-            SharedPreferences sp = context.getSharedPreferences(pkg, Context.MODE_PRIVATE);
+            SharedPreferences sp = getSharedPreferences(context, pkg);
             try {
                 Template t = new Template(context.getAssets().open("migrate_init_template"));
                 migrateStatusBar(sp, t);
@@ -144,5 +156,23 @@ public class MigrateTool {
             return "nil";
         }
         return value;
+    }
+
+    private static SharedPreferences getSharedPreferences(Context context, String name) {
+        SharedPreferences sharedPreferences = null;
+
+        File f = new File(Environment.getDataDirectory(), "data/" + BuildConfig.APPLICATION_ID + "/shared_prefs/" + name + ".xml");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            sharedPreferences = (SharedPreferences) HiddenApiBypass.invoke(Context.class, context, "getSharedPreferences", f, Context.MODE_PRIVATE);
+        } else {
+            try {
+                Method method = Context.class.getMethod("getSharedPreferences", File.class, int.class);
+                sharedPreferences = (SharedPreferences) method.invoke(context, f, Context.MODE_PRIVATE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return sharedPreferences;
     }
 }
