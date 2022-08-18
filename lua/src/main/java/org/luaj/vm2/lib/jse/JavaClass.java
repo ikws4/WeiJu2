@@ -164,7 +164,10 @@ class JavaClass extends JavaInstance implements CoerceJavaToLua.Coercion {
 
     private Field[] getFields(Class clazz) {
         Field[] f1 = clazz.getDeclaredFields();
-        Field[] f2 = clazz.getSuperclass().getFields();
+        Field[] f2 = new Field[0];
+        if (clazz.getSuperclass() != null) {
+            f2 = clazz.getSuperclass().getFields();
+        }
         Field[] f = new Field[f1.length + f2.length];
         System.arraycopy(f1, 0, f, 0, f1.length);
         System.arraycopy(f2, 0, f, f1.length, f2.length);
@@ -173,7 +176,10 @@ class JavaClass extends JavaInstance implements CoerceJavaToLua.Coercion {
 
     private Method[] getMethods(Class clazz) {
         Method[] m1 = clazz.getDeclaredMethods();
-        Method[] m2 = clazz.getSuperclass().getMethods();
+        Method[] m2 = new Method[0];
+        if (clazz.getSuperclass() != null) {
+            m2 = clazz.getSuperclass().getMethods();
+        }
         Method[] m = new Method[m1.length + m2.length];
         System.arraycopy(m1, 0, m, 0, m1.length);
         System.arraycopy(m2, 0, m, m1.length, m2.length);
