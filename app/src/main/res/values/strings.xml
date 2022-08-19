@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">WeiJu</string>
+    <string name="app_name">WeiJu2</string>
     <string name="app_description">The first scriptable xposed module, provides a new way to change the application behavior.\nPowered by Lua and made with ♥</string>
 </resources>
