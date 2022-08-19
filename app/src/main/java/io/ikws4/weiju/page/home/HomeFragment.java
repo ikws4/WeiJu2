@@ -24,7 +24,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.IOException;
 
-import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.page.about.AboutFragment;
@@ -32,7 +31,6 @@ import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.page.logcat.LogcatFragment;
-import io.ikws4.weiju.util.Logger;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
 import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 
@@ -223,14 +221,11 @@ public class HomeFragment extends BaseFragment {
             String pkg = vm.getCurrentSelectedAppPkg().getValue();
             Intent launchAppIntent = pm.getLaunchIntentForPackage(pkg);
 
-            // FOR TEST: RESTART THE APP
-            if (BuildConfig.DEBUG) {
-                try {
-                    Process process = Runtime.getRuntime().exec("su -c am force-stop " + pkg);
-                    process.waitFor();
-                } catch (IOException | InterruptedException e) {
-                    Logger.e(e);
-                }
+            try {
+                Process process = Runtime.getRuntime().exec("su -c am force-stop " + pkg);
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
+                // ignore
             }
 
             startActivity(launchAppIntent);
