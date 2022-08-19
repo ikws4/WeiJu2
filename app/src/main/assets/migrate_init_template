@@ -258,7 +258,7 @@ local function setup_screen()
   end
 
   local ContextWrapper = import("android.content.ContextWrapper")
-  local Configuration = import("android.content.res.configuration")
+  local Configuration = import("android.content.res.Configuration")
   local Context = import("android.content.Context")
   local String = import("java.lang.String")
   local Locale = import("java.util.Locale")
@@ -279,7 +279,7 @@ local function setup_screen()
       returns = String,
       method = "getCountry",
       replace = function(this)
-        return country_city[2]
+        return language_country[2]
       end,
     }
   end
@@ -299,14 +299,14 @@ local function setup_screen()
         local new_configuration = Configuration(context:getResources():getConfiguration())
 
         if screen.custom_dpi then
-          new_ration.densityDpi = screen.custom_dpi
+          new_configuration.densityDpi = screen.custom_dpi
         end
 
         -- Change the language
         if screen.language then
           local locale = Locale(language_country[1], language_country[2])
           Locale:setDefault(locale)
-          new_ration:setLocale(locale)
+          new_configuration:setLocale(locale)
         end
 
         params[1] = context:createConfigurationContext(new_configuration)
