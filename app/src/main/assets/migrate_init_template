@@ -1,0 +1,395 @@
+--[=[
+@metadata
+  return {
+    name = "migrate_init",
+    author = "ikws4",
+    version = "1.0.0",
+    description = "Help users migrate from older version of WeiJu (0.3.7)"
+  }
+@end
+--]=]
+
+local config = {
+  status_bar = {
+    is_enable_status_bar = ${is_enable_status_bar},
+    is_hide_status_bar = ${is_hide_status_bar},
+    immersive_status_bar = ${immersive_status_bar},
+    custom_status_bar_color = ${custom_status_bar_color},
+    status_bar_icon_color = ${status_bar_icon_color},
+  },
+  nav_bar = {
+    is_enable_nav_bar = ${is_enable_nav_bar},
+    is_hide_nav_bar = ${is_hide_nav_bar},
+    immersive_nav_bar = ${immersive_nav_bar},
+    custom_nav_bar_color = ${custom_nav_bar_color},
+    nav_bar_icon_color = ${nav_bar_icon_color},
+  },
+  screen = {
+    is_enable_screen = ${is_enable_screen},
+    screen_orientation = ${screen_orientation},
+    is_enable_force_screenshot = ${is_enable_force_screenshot},
+    is_cancel_dialog = ${is_cancel_dialog},
+    language = ${language},
+    custom_dpi = ${custom_dpi},
+  },
+  variable = {
+    is_enable_variable = ${is_enable_variable},
+    device = ${variable_device},
+    product_name = ${variable_product_name},
+    model = ${variable_model},
+    brand = ${variable_brand},
+    release = ${variable_release},
+    longitude = ${variable_longitude},
+    latitude = ${variable_latitude},
+    imei = ${variable_imei},
+    imsi = ${variable_imsi},
+  },
+}
+
+local function setup_status_bar()
+  local status_bar = config.status_bar
+  if not status_bar.is_enable_status_bar then
+    return
+  end
+
+  local R = import("android.R")
+  local Activity = import("android.app.Activity")
+  local Color = import("android.graphics.Color")
+  local Build = import("android.os.Build")
+  local Bundle = import("android.os.Bundle")
+  local TypedValue = import("android.util.TypedValue")
+  local View = import("android.view.View")
+  local LayoutParams = import("android.view.WindowManager.LayoutParams")
+  local Toast = import("android.widget.Toast")
+
+  hook {
+    class = Activity,
+    returns = void,
+    method = "onCreate",
+    params = {
+      Bundle,
+    },
+    after = function(this, params)
+      local window = this:getWindow()
+
+      if status_bar.immersive_status_bar then
+        local color = 0
+        local immersive = status_bar.immersive_status_bar
+        local theme = this:getTheme()
+        local typedValue = TypedValue()
+        if immersive == "ColorPrimary" then
+          color = theme:resolveAttribute(R.attr.colorPrimary, typedValue, true)
+        elseif immersive == "ColorPrimaryDark" then
+          color = theme:resolveAttribute(R.attr.colorPrimaryDark, typedValue, true)
+        elseif immersive == "ColorAccent" then
+          color = theme:resolveAttribute(R.attr.colorAccent, typedValue, true)
+        end
+        color = typedValue.data
+
+        if immersive == "Custom" then
+          if status_bar.custom_status_bar_color then
+            local ok, _color = pcall(Color.parseColor, Color, status_bar.custom_status_bar_color)
+            if ok then
+              color = _color
+            else
+              Toast:makeText(this, "Invalid custom status bar color", Toast.LENGTH_SHORT):show()
+            end
+          end
+        end
+
+        window:setStatusBarColor(color)
+      elseif status_bar.custom_status_bar_color then
+        window:setStatusBarColor(Color:parseColor(status_bar.custom_status_bar_color))
+      end
+
+      local decorView = window:getDecorView()
+      local flags = decorView:getSystemUiVisibility()
+      if status_bar.is_hide_status_bar then
+        window:addFlags(LayoutParams.FLAG_FULLSCREEN)
+      else
+        window:clearFlags(LayoutParams.FLAG_FULLSCREEN)
+      end
+
+      if Build.VERSION.SDK_INT >= Build.VERSION_CODES.M then
+        if status_bar.status_bar_icon_color == "Grey" then
+          decorView:setSystemUiVisibility(bit32.bor(flags, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR))
+        elseif status_bar.status_bar_icon_color == "White" then
+          decorView:setSystemUiVisibility(bit32.bxor(flags, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR))
+        end
+      end
+    end,
+  }
+end
+
+local function setup_nav_bar()
+  local nav_bar = config.nav_bar
+  if not nav_bar.is_enable_nav_bar then
+    return
+  end
+
+  local R = import("android.R")
+  local Activity = import("android.app.Activity")
+  local Color = import("android.graphics.Color")
+  local Build = import("android.os.Build")
+  local Bundle = import("android.os.Bundle")
+  local TypedValue = import("android.util.TypedValue")
+  local View = import("android.view.View")
+  local Toast = import("android.widget.Toast")
+
+  hook {
+    class = Activity,
+    returns = void,
+    method = "onCreate",
+    params = {
+      Bundle,
+    },
+    after = function(this, params)
+      local window = this:getWindow()
+
+      if nav_bar.immersive_nav_bar then
+        local color = 0
+        local immersive = nav_bar.immersive_nav_bar
+        local theme = this:getTheme()
+        local typedValue = TypedValue()
+        if immersive == "ColorPrimary" then
+          color = theme:resolveAttribute(R.attr.colorPrimary, typedValue, true)
+        elseif immersive == "ColorPrimaryDark" then
+          color = theme:resolveAttribute(R.attr.colorPrimaryDark, typedValue, true)
+        elseif immersive == "ColorAccent" then
+          color = theme:resolveAttribute(R.attr.colorAccent, typedValue, true)
+        end
+        color = typedValue.data
+
+        if immersive == "Custom" then
+          if nav_bar.custom_nav_bar_color then
+            local ok, _color = pcall(Color.parseColor, Color, nav_bar.custom_nav_bar_color)
+            if ok then
+              color = _color
+            else
+              Toast:makeText(this, "Invalid custom nav bar color", Toast.LENGTH_SHORT):show()
+            end
+          end
+        end
+
+        window:setNavigationBarColor(color)
+      elseif nav_bar.custom_nav_bar_color then
+        window:setNavigationBarColor(Color:parseColor(nav_bar.custom_nav_bar_color))
+      end
+
+      local decorView = window:getDecorView()
+      local flags = decorView:getSystemUiVisibility()
+      if nav_bar.is_hide_nav_bar then
+        decorView:setSystemUiVisibility(
+          bit32.bor(flags, View.SYSTEM_UI_FLAG_HIDE_NAVIGATION, View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        )
+      end
+
+      if Build.VERSION.SDK_INT >= Build.VERSION_CODES.O then
+        if nav_bar.nav_bar_icon_color == "Grey" then
+          decorView:setSystemUiVisibility(bit32.bor(flags, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR))
+        elseif nav_bar.nav_bar_icon_color == "White" then
+          decorView:setSystemUiVisibility(bit32.bxor(flags, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR))
+        end
+      end
+    end,
+  }
+end
+
+local function setup_screen()
+  local screen = config.screen
+  if not screen.is_enable_screen then
+    return
+  end
+
+  local Activity = import("android.app.Activity")
+  local Bundle = import("android.os.Bundle")
+  if screen.screen_orientation then
+    hook {
+      class = Activity,
+      returns = void,
+      method = "onCreate",
+      params = {
+        Bundle,
+      },
+      after = function(this, params)
+        this:setRequestedOrientation(screen.screen_orientation)
+      end,
+    }
+  end
+
+  local Window = import("android.view.Window")
+  local WindowManager = import("android.view.WindowManager")
+  if screen.is_enable_force_screenshot then
+    hook {
+      class = Window,
+      returns = void,
+      method = "setFlags",
+      params = {
+        int,
+        int,
+      },
+      before = function(this, params)
+        local flags = params[1]
+        local mask = params[2]
+        if flags == WindowManager.LayoutParams.FLAG_SECURE and mask == WindowManager.LayoutParams.FLAG_SECURE then
+          return
+        end
+      end,
+    }
+  end
+
+  local Dialog = import("android.app.Dialog")
+  if screen.is_cancel_dialog then
+    local methods = { "setCancelable", "setCanceledOnTouchOutside" }
+
+    for _, method in ipairs(methods) do
+      hook {
+        class = Dialog,
+        returns = void,
+        method = method,
+        params = {
+          boolean,
+        },
+        before = function(this, params)
+          params[1] = true
+        end,
+      }
+    end
+  end
+
+  local ContextWrapper = import("android.content.ContextWrapper")
+  local Configuration = import("android.content.res.configuration")
+  local Context = import("android.content.Context")
+  local String = import("java.lang.String")
+  local Locale = import("java.util.Locale")
+
+  local language_country = screen.language:split("_")
+  if screen.language then
+    hook {
+      class = Locale,
+      returns = String,
+      method = "getLanguage",
+      replace = function(this)
+        return language_country[1]
+      end,
+    }
+
+    hook {
+      class = Locale,
+      returns = String,
+      method = "getCountry",
+      replace = function(this)
+        return country_city[2]
+      end,
+    }
+  end
+
+  if screen.custom_dpi or screen.language then
+    hook {
+      class = ContextWrapper,
+      returns = void,
+      method = "attachBaseContext",
+      params = {
+        Context,
+      },
+      before = function(this, params)
+        local context = params[1]
+
+        -- Make a copy of the ration, and then modify the dpi
+        local new_configuration = Configuration(context:getResources():getConfiguration())
+
+        if screen.custom_dpi then
+          new_ration.densityDpi = screen.custom_dpi
+        end
+
+        -- Change the language
+        if screen.language then
+          local locale = Locale(language_country[1], language_country[2])
+          Locale:setDefault(locale)
+          new_ration:setLocale(locale)
+        end
+
+        params[1] = context:createConfigurationContext(new_configuration)
+      end,
+    }
+  end
+end
+
+local function setup_variable()
+  local variable = config.variable
+  if not variable.is_enable_variable then
+    return
+  end
+
+  local Build = import("android.os.Build")
+  Build.DEVICE = variable.device or Build.DEVICE
+  Build.PRODUCT = variable.product_name or Build.PRODUCT
+  Build.MODEL = variable.model or Build.MODEL
+  Build.BRAND = variable.brand or Build.BRAND
+  Build.MANUFACTURER = variable.brand or Build.MANUFACTURER
+  Build.VERSION.RELEASE = variable.release or Build.VERSION.RELEASE
+
+  local location_classes = {
+    "android.location.Location", -- Android
+    "com.baidu.location.BDLocation", -- Baidu
+  }
+  for _, class in ipairs(location_classes) do
+    local ok, class = pcall(import, class)
+
+    if ok then
+      if variable.longitude then
+        hook {
+          class = class,
+          returns = double,
+          method = "getLongitude",
+          replace = function(this, params)
+            return variable.longitude
+          end,
+        }
+      end
+
+      if variable.latitude then
+        hook {
+          class = class,
+          returns = double,
+          method = "getLatitude",
+          replace = function(this, params)
+            return variable.latitude
+          end,
+        }
+      end
+    end
+  end
+
+  local TelephonyManager = import("android.telephony.TelephonyManager")
+  if variable.imei then
+    hook {
+      class = TelephonyManager,
+      returns = string,
+      method = "getDeviceId",
+      replace = function(this, params)
+        if Build.VERSION.SDK_INT >= Build.VERSION_CODES.O then
+          return variable.imei
+        else
+          return variable.imei
+        end
+      end,
+    }
+  end
+
+  if variable.imsi then
+    hook {
+      class = TelephonyManager,
+      returns = string,
+      method = "getSubscriberId",
+      replace = function(this, params)
+        return variable.imsi
+      end,
+    }
+  end
+end
+
+setup_status_bar()
+setup_nav_bar()
+setup_screen()
+setup_variable()
