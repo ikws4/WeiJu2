@@ -107,8 +107,8 @@ public class HomeViewModel extends BaseViewModel {
     private void switchApp(String pkg) {
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
         mCurrentSelectedAppPkg.setValue(pkg);
-        loadMyScripts(pkg);
-        loadAvaliableScripts(pkg);
+        refreshMyScripts();
+        refreshScripts();
     }
 
     public void removeApp(AppListView.AppItem app) {
@@ -163,7 +163,7 @@ public class HomeViewModel extends BaseViewModel {
 
         // reload avaliable script from server
         if (!oldItem.metadataEquals(newItem)) {
-            loadAvaliableScripts(mCurrentSelectedAppPkg.getValue());
+            refreshScripts();
         }
     }
 
@@ -181,7 +181,7 @@ public class HomeViewModel extends BaseViewModel {
         mMyScripts.publish();
 
         // reload avaliable script from server
-        loadAvaliableScripts(mCurrentSelectedAppPkg.getValue());
+        refreshScripts();
     }
 
     public void removeFromAvaliableScripts(ScriptListView.ScriptItem item) {
@@ -202,43 +202,7 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void refreshScripts() {
-        loadAvaliableScripts(getCurrentSelectedAppPkg().getValue());
-    }
-
-    private void loadMyScripts(String pkg) {
-        Set<String> scriptKeys = mScriptStore.get(pkg, Collections.emptySet());
-
-        List<ScriptListView.ScriptItem> oldMyScripts = mMyScripts.getValue();
-        Set<String> packages = mPreferences.get(mCurrentSelectedAppPkg.getValue() + Preferences.PACKAGE_LIST_SUFFIX, Collections.emptySet());
-
-        mMyScripts.setValue(
-            scriptKeys.stream()
-                .map(key -> {
-                    var item = ScriptListView.ScriptItem.from(mScriptStore.get(key, ""));
-
-                    if (oldMyScripts != null) {
-                        oldMyScripts.stream()
-                            .filter(it -> it.metadataEquals(item))
-                            .findFirst()
-                            .ifPresent((it) -> {
-                                item.hasNewVersion = it.hasNewVersion;
-                                item.isPackage = it.isPackage;
-                            });
-                    } else {
-                        if (packages.contains(item.id)) {
-                            item.isPackage = true;
-                        }
-                    }
-
-                    return item;
-                })
-                .collect(Collectors.toList())
-        );
-    }
-
-    private void loadAvaliableScripts(String pkg) {
-        mAvaliableScripts.setValue(null);
-
+        String pkg = mCurrentSelectedAppPkg.getValue();
         mDisposables.add(API.getInstance().getScopeConfig()
             .subscribeOn(Schedulers.io())
             .subscribe(it -> {
@@ -293,6 +257,38 @@ public class HomeViewModel extends BaseViewModel {
                         }
                     ));
             }, Logger::e));
+    }
+
+    private void refreshMyScripts() {
+        String pkg = mCurrentSelectedAppPkg.getValue();
+        Set<String> scriptKeys = mScriptStore.get(pkg, Collections.emptySet());
+
+        List<ScriptListView.ScriptItem> oldMyScripts = mMyScripts.getValue();
+        Set<String> packages = mPreferences.get(mCurrentSelectedAppPkg.getValue() + Preferences.PACKAGE_LIST_SUFFIX, Collections.emptySet());
+
+        mMyScripts.setValue(
+            scriptKeys.stream()
+                .map(key -> {
+                    var item = ScriptListView.ScriptItem.from(mScriptStore.get(key, ""));
+
+                    if (oldMyScripts != null) {
+                        oldMyScripts.stream()
+                            .filter(it -> it.metadataEquals(item))
+                            .findFirst()
+                            .ifPresent((it) -> {
+                                item.hasNewVersion = it.hasNewVersion;
+                                item.isPackage = it.isPackage;
+                            });
+                    } else {
+                        if (packages.contains(item.id)) {
+                            item.isPackage = true;
+                        }
+                    }
+
+                    return item;
+                })
+                .collect(Collectors.toList())
+        );
     }
 
     private void loadApplicationInfos() {
