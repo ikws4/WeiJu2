@@ -1,4 +1,4 @@
-name: Build Release Apk
+name: Build Nightly
 
 on:
   schedule:
