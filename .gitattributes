@@ -1,1 +1,2 @@
-app/build.gradle filter=clean_signing_configs
+*.gradle filter=no_commit
+*.java filter=no_commit
