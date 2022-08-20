@@ -1,9 +1,11 @@
 name: Build Release Apk
 
-on: push
+on:
+  schedule:
+    - cron: '59 23 * * *'
 
 jobs:
-  build:
+  build_prerelease:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,8 +46,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Prerelease build ${{ github.ref }}
+          tag_name: nightly
+          release_name: WeiJu2 development pre-release build
           draft: false
           prerelease: true
           
