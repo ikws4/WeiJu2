@@ -108,6 +108,9 @@ public class HomeViewModel extends BaseViewModel {
         mPreferences.put(Preferences.APP_LIST_SELECTED_PACKAGE, pkg);
         mCurrentSelectedAppPkg.setValue(pkg);
         refreshMyScripts();
+
+        // add loading state
+        mAvaliableScripts.setValue(null);
         refreshScripts();
     }
 
