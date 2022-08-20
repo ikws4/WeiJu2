@@ -1,8 +1,6 @@
 name: Build Release Apk
 
-on:
-  schedule:
-    - cron: '59 23 * * *'
+on: push
 
 jobs:
   build:
@@ -40,8 +38,26 @@ jobs:
           keyStorePassword: ${{ secrets.STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload apk
-        uses: actions/upload-artifact@v3.1.0
+      - name: Create Release
+        id: createRelease
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: "WeiJu2.apk"
-          path: ${{ steps.signApk.outputs.signedReleaseFile }}
+          tag_name: ${{ github.ref }}
+          release_name: Prerelease build ${{ github.ref }}
+          draft: false
+          prerelease: true
+          
+      - name: Upload Prerelease Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.createRelease.outputs.upload_url }}
+          asset_path: ${{ steps.signApk.outputs.signedReleaseFile }}
+          asset_name: WeiJu2.apk
+          asset_content_type: application/zip
+      
+      
