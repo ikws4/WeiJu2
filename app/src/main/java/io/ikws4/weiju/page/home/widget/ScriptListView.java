@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -97,7 +99,7 @@ public class ScriptListView extends RecyclerView {
         mCallbacks = callbacks;
     }
 
-    private static final DiffUtil.ItemCallback<Item> CALLBACK = new DiffUtil.ItemCallback<Item>() {
+    private static final DiffUtil.ItemCallback<Item> CALLBACK = new DiffUtil.ItemCallback<>() {
         @Override
         public boolean areItemsTheSame(@NonNull Item oldItem, @NonNull Item newItem) {
             return oldItem.equals(newItem);
@@ -220,9 +222,14 @@ public class ScriptListView extends RecyclerView {
             private void showActionMenu(View v, ScriptItem item) {
                 PopupMenu popup = new PopupMenu(getContext(), v);
                 popup.inflate(R.menu.my_script_item_actions);
+                Menu menu = popup.getMenu();
 
                 if (item.hasNewVersion) {
-                    popup.getMenu().findItem(R.id.update_script).setVisible(true);
+                    menu.findItem(R.id.update_script).setVisible(true);
+                }
+
+                if (!TextUtils.isEmpty(item.example)) {
+                    menu.findItem(R.id.copy_example).setVisible(true);
                 }
 
                 popup.setGravity(Gravity.END);
@@ -232,6 +239,8 @@ public class ScriptListView extends RecyclerView {
                         mCallbacks.onRequireRemoveFromMyScripts(v, item);
                     } else if (id == R.id.update_script) {
                         mCallbacks.onRequireUpdateScript(item);
+                    } else if (id == R.id.copy_example) {
+                        mCallbacks.onRequireCopyExample(item);
                     }
                     return true;
                 });
@@ -368,22 +377,24 @@ public class ScriptListView extends RecyclerView {
     public static class ScriptItem implements Parcelable, Cloneable {
         private static final Globals GLOBALS = JsePlatform.standardGlobals();
         private static final Pattern META_DATA_PATTERN = Pattern.compile("^@metadata([\\s\\S]*)@end$", Pattern.MULTILINE);
-        public static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "");
+        public static final ScriptItem EMPTY_ITEM = new ScriptItem("", "", "", "", "", "");
         public final String id;
         public final String name;
         public final String author;
         public final String version;
         public final String description;
+        public final String example;
         public final String script;
         public boolean hasNewVersion;
         public boolean isPackage;
 
-        private ScriptItem(@NonNull String name, @NonNull String author, @NonNull String version, @NonNull String description, @NonNull String script) {
+        private ScriptItem(String name, String author, String version, String description, String example, String script) {
             this.id = Strings.join(".", author, name);
             this.name = name.isEmpty() ? " " : name;
             this.author = author;
             this.version = version;
             this.description = description;
+            this.example = example;
             this.script = script;
         }
 
@@ -393,6 +404,7 @@ public class ScriptListView extends RecyclerView {
             author = in.readString();
             version = in.readString();
             description = in.readString();
+            example = in.readString();
             script = in.readString();
             hasNewVersion = in.readByte() != 0;
             isPackage = in.readByte() != 0;
@@ -405,6 +417,7 @@ public class ScriptListView extends RecyclerView {
             dest.writeString(author);
             dest.writeString(version);
             dest.writeString(description);
+            dest.writeString(example);
             dest.writeString(script);
             dest.writeByte((byte) (hasNewVersion ? 1 : 0));
             dest.writeByte((byte) (isPackage ? 1 : 0));
@@ -415,7 +428,7 @@ public class ScriptListView extends RecyclerView {
             return 0;
         }
 
-        public static final Creator<ScriptItem> CREATOR = new Creator<ScriptItem>() {
+        public static final Creator<ScriptItem> CREATOR = new Creator<>() {
             @Override
             public ScriptItem createFromParcel(Parcel in) {
                 return new ScriptItem(in);
@@ -436,9 +449,10 @@ public class ScriptListView extends RecyclerView {
                     String author = metadata.get("author").checkjstring();
                     String version = metadata.get("version").checkjstring();
                     String description = metadata.get("description").checkjstring();
+                    String example = Strings.reindentMutipleLine(metadata.get("example").optjstring(""));
 
                     // Using the metadate to create ScriptItem
-                    return new ScriptItem(name, author, version, description, script);
+                    return new ScriptItem(name, author, version, description, example, script);
                 }
             } catch (LuaError e) {
                 Logger.d("WeiJu", e);
@@ -470,7 +484,7 @@ public class ScriptListView extends RecyclerView {
             return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(author, item.author) && Objects.equals(version, item.version) && Objects.equals(description, item.description) && Objects.equals(script, item.script) && Objects.equals(hasNewVersion, item.hasNewVersion) && Objects.equals(isPackage, item.isPackage);
         }
 
-        public boolean metadataEquals(ScriptItem item) {
+        public boolean idEquals(ScriptItem item) {
             if (this == item) return true;
             if (item == null) return false;
             return Objects.equals(id, item.id);
@@ -503,7 +517,7 @@ public class ScriptListView extends RecyclerView {
         @NonNull
         @Override
         protected ScriptItem clone() {
-            ScriptItem item = new ScriptItem(name, author, version, description, script);
+            ScriptItem item = new ScriptItem(name, author, version, description, example, script);
             item.hasNewVersion = hasNewVersion;
             item.isPackage = isPackage;
             return item;
@@ -520,6 +534,8 @@ public class ScriptListView extends RecyclerView {
         void onRequireCreateNewScripts();
 
         void onRequireUpdateScript(ScriptItem item);
+
+        void onRequireCopyExample(ScriptItem item);
     }
 
     public static class EmptyCallbacks implements Callbacks {
@@ -542,6 +558,10 @@ public class ScriptListView extends RecyclerView {
 
         @Override
         public void onRequireUpdateScript(ScriptItem item) {
+        }
+
+        @Override
+        public void onRequireCopyExample(ScriptItem item) {
         }
     }
 }

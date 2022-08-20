@@ -42,4 +42,29 @@ public class Strings {
         }
         return sb.toString();
     }
+
+    public static String reindentMutipleLine(String s) {
+        int leadingSpace = 0;
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == ' ') leadingSpace++;
+            else break;
+        }
+
+        sb.setLength(0);
+        int i = 0;
+        while (i < n) {
+            i += leadingSpace;
+            while (i < n && s.charAt(i) != '\n') {
+                sb.append(s.charAt(i));
+                i++;
+            }
+            if (i < n) {
+                sb.append('\n');
+                i++; // skip newline
+            }
+        }
+
+        return sb.toString();
+    }
 }

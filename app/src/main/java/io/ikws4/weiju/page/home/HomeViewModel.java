@@ -165,7 +165,7 @@ public class HomeViewModel extends BaseViewModel {
         mMyScripts.publish();
 
         // reload avaliable script from server
-        if (!oldItem.metadataEquals(newItem)) {
+        if (!oldItem.idEquals(newItem)) {
             refreshScripts();
         }
     }
@@ -276,7 +276,7 @@ public class HomeViewModel extends BaseViewModel {
 
                     if (oldMyScripts != null) {
                         oldMyScripts.stream()
-                            .filter(it -> it.metadataEquals(item))
+                            .filter(it -> it.idEquals(item))
                             .findFirst()
                             .ifPresent((it) -> {
                                 item.hasNewVersion = it.hasNewVersion;
@@ -317,7 +317,7 @@ public class HomeViewModel extends BaseViewModel {
     private boolean isMyScriptsMetadataContains(ScriptListView.ScriptItem item) {
         if (mMyScripts.getValue() == null) return false;
         for (var script : mMyScripts.getValue()) {
-            if (script.metadataEquals(item)) {
+            if (script.idEquals(item)) {
 
                 // set script status
                 script.isPackage = true;

@@ -135,8 +135,8 @@ public class EditorFragment extends BaseFragment {
 
     private boolean hasSameMetadataInMyScripts(ScriptListView.ScriptItem item) {
         for (var it : vm.getMyScripts().getValue()) {
-            if (it.metadataEquals(mItem)) continue;
-            if (it.metadataEquals(item)) return true;
+            if (it.idEquals(mItem)) continue;
+            if (it.idEquals(item)) return true;
         }
         return false;
     }

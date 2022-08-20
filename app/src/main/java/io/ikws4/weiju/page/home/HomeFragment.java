@@ -1,6 +1,7 @@
 package io.ikws4.weiju.page.home;
 
 import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
@@ -96,6 +97,12 @@ public class HomeFragment extends BaseFragment {
             public void onRequireUpdateScript(ScriptListView.ScriptItem item) {
                 Toast.makeText(getContext(), "Updating...", Toast.LENGTH_SHORT).show();
                 vm.updateScript(item);
+            }
+
+            @Override
+            public void onRequireCopyExample(ScriptListView.ScriptItem item) {
+                ClipboardManager clipboard = WeiJu.getService(ClipboardManager.class);
+                clipboard.setPrimaryClip(ClipData.newPlainText("Script Example", item.example));
             }
         });
 

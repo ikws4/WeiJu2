@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/update_script"
-        android:visible="false"
-        android:title="Update" />
+        android:title="Update"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/copy_example"
+        android:title="Copy Example"
+        android:visible="false" />
 
     <item
         android:id="@+id/remove_from_my_scripts"
