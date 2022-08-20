@@ -47,7 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: nightly
-          release_name: WeiJu2 development pre-release build
+          release_name: WeiJu2 nightly build
           draft: false
           prerelease: true
           
