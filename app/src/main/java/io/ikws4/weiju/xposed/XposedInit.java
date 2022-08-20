@@ -33,6 +33,11 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         classloader = lpparam.classLoader;
         currnetPackageName = lpparam.packageName;
 
+        if (currnetPackageName.equals(BuildConfig.APPLICATION_ID)) {
+            updateHostXposedStatus();
+            return;
+        }
+
         XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
@@ -44,17 +49,12 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
                 Logger.d("  DeviceInfo:", Build.DEVICE);
                 Logger.d("  AndroidVersion:", Build.VERSION.RELEASE);
 
-                onApplicationCreated(context);
+                injectScripts(context);
             }
         });
     }
 
-    public void onApplicationCreated(Context context) {
-        if (currnetPackageName.equals(BuildConfig.APPLICATION_ID)) {
-            updateHostXposedStatus();
-            return;
-        }
-
+    public void injectScripts(Context context) {
         Globals globals = XposedPlatform.create();
         store = XScriptStore.getInstance(context);
         Set<String> keys = store.get(currnetPackageName, Collections.emptySet());
@@ -69,7 +69,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     }
 
     private void updateHostXposedStatus() {
-        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.page.home.HomeFragment", classloader);
+        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.WeiJu", classloader);
         XposedHelpers.setStaticBooleanField(clazz, "XPOSED_ENABLED", true);
     }
 }

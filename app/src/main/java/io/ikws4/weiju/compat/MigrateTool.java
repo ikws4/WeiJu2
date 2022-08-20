@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
+import android.widget.Toast;
 
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.ikws4.weiju.BuildConfig;
+import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.storage.ScriptStore;
@@ -35,7 +37,7 @@ public class MigrateTool {
         SharedPreferences hookList = getSharedPreferences(context, "hook_list");
 
         if (hookList == null) {
-            Logger.e("[MigrateTool] Cannot load hook_list");
+            Toast.makeText(context, "MigrateTool: Cannot load hook_list.", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -43,6 +45,15 @@ public class MigrateTool {
             // Don't need migrate
             return;
         }
+
+        // Only migrate when WeiJu is enabled in lsposed/xposed
+        if (!WeiJu.XPOSED_ENABLED) {
+            Toast.makeText(context, "MigrateTool: Please enabled WeiJu2 in xposed(lposed) first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Toast.makeText(context, "MigrateTool: Successfully migrated from the old version of WeiJu.", Toast.LENGTH_LONG).show();
+
 
         // Copy app list
         Set<String> appList = new HashSet<>(Preferences.getInstance(context).get(Preferences.APP_LIST, Collections.emptySet()));

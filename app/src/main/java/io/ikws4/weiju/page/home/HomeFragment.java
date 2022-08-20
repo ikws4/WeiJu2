@@ -25,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.io.IOException;
 
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.page.about.AboutFragment;
 import io.ikws4.weiju.page.editor.EditorFragment;
@@ -35,10 +36,6 @@ import io.ikws4.weiju.widget.searchbar.SearchBar;
 import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
 
 public class HomeFragment extends BaseFragment {
-    // For xposed to hook this variable to indicate
-    // that xposed works.
-    private static boolean XPOSED_ENABLED = false;
-
     private boolean isDrag = false;
     private HomeViewModel vm;
 
@@ -197,7 +194,7 @@ public class HomeFragment extends BaseFragment {
         super.onCreateMenu(menu, menuInflater);
 
         menuInflater.inflate(R.menu.home_menu, menu);
-        if (XPOSED_ENABLED) {
+        if (WeiJu.XPOSED_ENABLED) {
             menu.findItem(R.id.xposed_status).setVisible(false);
         }
     }
