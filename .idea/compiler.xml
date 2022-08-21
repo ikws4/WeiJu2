@@ -2,7 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
+      <module name="sora-editor.app" target="11" />
+      <module name="sora-editor.buildSrc" target="11" />
+      <module name="sora-editor.buildSrc.main" target="11" />
+      <module name="sora-editor.buildSrc.test" target="11" />
+      <module name="sora-editor.editor" target="11" />
+      <module name="sora-editor.editor-lsp" target="11" />
+      <module name="sora-editor.language-java" target="11" />
+      <module name="sora-editor.language-textmate" target="11" />
       <module name="Weiju.app" target="11" />
+      <module name="Weiju.buildSrc" target="11" />
+      <module name="Weiju.buildSrc.main" target="11" />
+      <module name="Weiju.buildSrc.test" target="11" />
       <module name="Weiju.editor" target="11" />
       <module name="Weiju.glide" target="11" />
       <module name="Weiju.util" target="11" />

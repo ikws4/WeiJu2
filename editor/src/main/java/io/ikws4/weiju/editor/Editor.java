@@ -10,14 +10,12 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
@@ -29,13 +27,10 @@ import java.util.Map;
 
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.EventReceiver;
-import io.github.rosemoe.sora.event.LongPressEvent;
 import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
 import io.github.rosemoe.sora.text.Content;
-import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
-import io.github.rosemoe.sora.widget.EditorRenderer;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.github.rosemoe.sora.widget.component.DefaultCompletionLayout;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
@@ -73,6 +68,7 @@ public class Editor extends CodeEditor {
         getProps().deleteMultiSpaces = 1;
         getProps().deleteEmptyLineFast = false;
         getProps().roundTextBackgroundFactor = 0;
+        getProps().boldHighlightMatchingDelimiters = false;
 
         getComponent(Magnifier.class).setEnabled(false);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
@@ -97,20 +93,6 @@ public class Editor extends CodeEditor {
                             deleteText();
                         }
                     }
-                }
-            }
-        });
-
-        subscribeEvent(LongPressEvent.class, new EventReceiver<LongPressEvent>() {
-            @Override
-            public void onReceive(LongPressEvent event, Unsubscribe unsubscribe) {
-                if (getCursor().isSelected()) {
-
-                    long res = getPointPositionOnScreen(event.getX(), event.getY());
-                    int line = IntPair.getFirst(res);
-                    int column = IntPair.getSecond(res);
-                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    selectWord(line, column);
                 }
             }
         });
@@ -171,12 +153,6 @@ public class Editor extends CodeEditor {
         }
 
         super.commitText(text, applyAutoIndent);
-    }
-
-    @NonNull
-    @Override
-    protected EditorRenderer onCreateRenderer() {
-        return new io.ikws4.weiju.editor.EditorRenderer(this);
     }
 
     private static class AutoCompletion extends EditorAutoCompletion {

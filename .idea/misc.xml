@@ -88,8 +88,11 @@
         <entry key="editor/src/main/res/layout/completion_item.xml" value="0.29259259259259257" />
         <entry key="editor/src/main/res/layout/editor.xml" value="0.1059322033898305" />
         <entry key="editor/src/main/res/layout/text_action_window.xml" value="0.5548254925271738" />
-        <entry key="editor/src/main/res/layout/text_compose_panel.xml" value="0.19572296142578122" />
+        <entry key="editor/src/main/res/layout/text_compose_panel.xml" value="0.4288787841796875" />
+        <entry key="editor/src/main/res/layout/text_compose_panel_1.xml" value="0.16843971631205673" />
         <entry key="editor/src/main/res/layout/toolbar.xml" value="0.1" />
+        <entry key="sora-editor/editor/src/main/res/drawable/round_content_copy_20.xml" value="0.195" />
+        <entry key="sora-editor/editor/src/main/res/layout/text_compose_panel.xml" value="0.46447906494140634" />
       </map>
     </option>
   </component>

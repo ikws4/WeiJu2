@@ -1,0 +1,3 @@
+[submodule "sora-editor"]
+	path = sora-editor
+	url = https://github.com/ikws4/sora-editor.git
