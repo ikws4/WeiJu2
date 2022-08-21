@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:background="#2a273f"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:scrollbarThumbHorizontal="@null"
+    android:scrollbarTrackHorizontal="@null">
+
+    <Button
+        android:id="@+id/panel_btn_select_all"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_select_all"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:textColor="#e0def4"
+        android:textSize="11sp" />
+
+    <Button
+        android:id="@+id/panel_btn_copy"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_copy"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="14dp"
+        android:textColor="#e0def4"
+        android:textSize="11sp" />
+
+    <Button
+        android:id="@+id/panel_btn_paste"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_paste"
+        android:drawablePadding="8dp"
+        android:paddingHorizontal="14dp"
+        android:textColor="#e0def4"
+        android:textSize="11sp" />
+
+    <Button
+        android:id="@+id/panel_btn_cut"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_cut"
+        android:drawablePadding="8dp"
+        android:focusable="false"
+        android:paddingHorizontal="14dp"
+        android:textColor="#e0def4"
+        android:textSize="11sp" />
+
+</LinearLayout>
