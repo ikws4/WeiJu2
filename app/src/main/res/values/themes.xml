@@ -5,11 +5,18 @@
         <item name="android:statusBarColor">@color/base</item>
         <item name="android:navigationBarColor">@color/base</item>
         <item name="dividerColor">@color/surface</item>
+        <item name="colorAccent">@color/iris</item>
         <item name="actionOverflowButtonStyle">@style/Widget.WeiJu.ActionButton.Overflow</item>
         <item name="actionOverflowMenuStyle">@style/Widget.WeiJu.PopupMenu.Overflow</item>
         <item name="android:popupMenuStyle">@style/Widget.WeiJu.PopupMenu</item>
         <item name="android:foregroundTintMode">multiply</item>
         <item name="android:foregroundTint">@color/transparent_80</item>
+        <item name="snackbarStyle">@style/Widget.WeiJu.Snackbar</item>
+    </style>
+
+    <style name="Widget.WeiJu.Snackbar" parent="Widget.Design.Snackbar">
+        <item name="android:background">@color/surface</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.WeiJu.Circle" parent="">
