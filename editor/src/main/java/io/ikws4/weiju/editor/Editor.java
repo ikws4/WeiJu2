@@ -128,6 +128,31 @@ public class Editor extends CodeEditor {
         return mEditable;
     }
 
+    @Override
+    public void commitText(CharSequence text, boolean applyAutoIndent) {
+        // potential pairs
+        if (text.length() == 1) {
+            char c = getText().charAt(getCursor().getRight());
+            if (c == ')' || c == ']' || c == '}')
+            if (c == text.charAt(0)) {
+                moveSelectionRight();
+                return;
+            }
+        }
+
+        if (text.length() == 2) {
+            char c = getText().charAt(getCursor().getRight());
+            if (c == '"' || c == '\'') {
+                if (c == text.charAt(1)) {
+                    moveSelectionRight();
+                    return;
+                }
+            }
+        }
+
+        super.commitText(text, applyAutoIndent);
+    }
+
     @NonNull
     @Override
     protected EditorRenderer onCreateRenderer() {

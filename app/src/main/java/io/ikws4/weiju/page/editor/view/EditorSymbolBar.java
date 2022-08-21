@@ -52,9 +52,10 @@ public class EditorSymbolBar extends RecyclerView {
                     editor.moveSelectionRight();
                 } else {
                     if (replacement != null) {
-                        editor.insertText(replacement.text, replacement.selection);
+                        editor.commitText(replacement.text);
+                        editor.moveSelectionLeft();
                     } else {
-                        editor.insertText(s, 1);
+                        editor.commitText(s);
                     }
                 }
             }
