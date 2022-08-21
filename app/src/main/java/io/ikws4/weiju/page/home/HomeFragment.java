@@ -34,7 +34,7 @@ import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.page.logcat.LogcatFragment;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
-import io.ikws4.weiju.widget.searchbar.SelectedAppInfoItemLoader;
+import io.ikws4.weiju.widget.searchbar.UnselectedAppItemLoader;
 
 public class HomeFragment extends BaseFragment {
     private boolean isDrag = false;
@@ -106,7 +106,7 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
-        SearchBar searchBar = new SearchBar(getContext(), new SelectedAppInfoItemLoader());
+        SearchBar searchBar = new SearchBar(getContext(), new UnselectedAppItemLoader());
         searchBar.setOnItemClickListener(item -> {
             AppListView.AppItem app = (AppListView.AppItem) item.userData;
             vm.switchApp(app);

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.storage.Preferences;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -14,7 +15,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class SelectedAppInfoItemLoader extends SearchBar.ItemLoader {
+public class UnselectedAppItemLoader extends SearchBar.ItemLoader {
 
     private Disposable mDisposable;
 
@@ -29,6 +30,7 @@ public class SelectedAppInfoItemLoader extends SearchBar.ItemLoader {
         PackageManager pm = getContext().getPackageManager();
         mDisposable = Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
+            .filter(info -> !info.packageName.equals(BuildConfig.APPLICATION_ID))
             .filter(info -> !map.containsKey(info.packageName))
             .sorted((a, b) -> {
                 int res = Boolean.compare(AppListView.AppItem.isSystemApp(a), AppListView.AppItem.isSystemApp(b));
