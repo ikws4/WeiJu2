@@ -68,7 +68,7 @@ public class Editor extends CodeEditor {
         getProps().deleteMultiSpaces = 1;
         getProps().deleteEmptyLineFast = false;
         getProps().roundTextBackgroundFactor = 0;
-        getProps().boldHighlightMatchingDelimiters = false;
+        getProps().boldMatchingDelimiters = false;
 
         getComponent(Magnifier.class).setEnabled(false);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
