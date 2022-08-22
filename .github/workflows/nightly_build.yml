@@ -1,8 +1,6 @@
 name: Nightly Build
 
-on:
-  schedule:
-    - cron: '59 23 * * *'
+on: push
 
 jobs:
   nightly_build:
@@ -41,6 +39,13 @@ jobs:
           alias: ${{ secrets.KEY_ALIAS }}
           keyStorePassword: ${{ secrets.STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          delete_release: true
+          tag_name: nightly
 
       - name: Create Release
         id: createRelease
