@@ -2,7 +2,9 @@ package io.ikws4.weiju.xposed;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.widget.Toast;
 
 import org.luaj.vm2.Globals;
 
@@ -57,6 +59,18 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     public void injectScripts(Context context) {
         Globals globals = XposedPlatform.create();
         store = XScriptStore.getInstance(context);
+
+        if (!store.canRead()) {
+            PackageManager pm = context.getPackageManager();
+            try {
+                CharSequence name = pm.getApplicationInfo(currnetPackageName, 0).loadLabel(pm);
+                Toast.makeText(context, "WeiJu2: Can't load scripts. Please retry after force-stop both WeiJu2 and " + name + " .", Toast.LENGTH_LONG).show();
+            } catch (PackageManager.NameNotFoundException e) {
+                // ignored
+            }
+            return;
+        }
+
         Set<String> keys = store.get(currnetPackageName, Collections.emptySet());
         for (String key : keys) {
             String script = store.get(key, "");

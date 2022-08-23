@@ -13,6 +13,7 @@ import io.ikws4.weiju.util.Logger;
 
 public class XScriptStore {
     private final StoreStrategy strategy;
+    public boolean canRead = true;
 
     public XScriptStore(Context context) {
         XSharedPreferenceStoreStrategy strategy = new XSharedPreferenceStoreStrategy();
@@ -24,12 +25,17 @@ public class XScriptStore {
             Logger.d("XScriptStore:", "use RemoteSharedPreferencesStoreStrategy");
         } else {
             this.strategy = new EmptyStoreStrategy();
+            canRead = false;
             Logger.e("XScriptStore:", "can not load scripts.");
         }
     }
 
     public static void fixPermission() {
         XSharedPreferenceStoreStrategy.fixPermission();
+    }
+
+    public boolean canRead() {
+        return canRead;
     }
 
     public String get(String k, String defValue) {
