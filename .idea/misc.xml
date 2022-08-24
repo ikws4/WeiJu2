@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/drawable/ic_add_circle.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.1875" />
         <entry key="app/src/main/res/drawable/ic_bug_report.xml" value="0.1905" />
+        <entry key="app/src/main/res/drawable/ic_clear_all.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.259" />
         <entry key="app/src/main/res/drawable/ic_fullscreen.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_fullscreen_exit.xml" value="0.2895" />
@@ -75,7 +76,7 @@
         <entry key="app/src/main/res/menu/available_script_item_actions.xml" value="0.1" />
         <entry key="app/src/main/res/menu/editor_menu.xml" value="0.22515207926432293" />
         <entry key="app/src/main/res/menu/home_menu.xml" value="0.30092592592592593" />
-        <entry key="app/src/main/res/menu/logcat_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/logcat_menu.xml" value="0.29641418457031254" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.24493560791015623" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20233612060546877" />
         <entry key="editor/src/main/res/drawable/ic_copy.xml" value="0.2895" />

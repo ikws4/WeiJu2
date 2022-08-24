@@ -14,7 +14,7 @@ public class Preferences {
   /// Keys
   public static final String APP_LIST_SELECTED_PACKAGE = "app_list_selected_package";
   public static final String APP_LIST = "app_list";
-  public static final String LOGCAT_TAG = "logcat_tag";
+  public static final String LOGCAT_TIME = "logcat_time";
   public static final String PACKAGE_LIST_SUFFIX = "_package_list";
 
   private Preferences(Context context) {
