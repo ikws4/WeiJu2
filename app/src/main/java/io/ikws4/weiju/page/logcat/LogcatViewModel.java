@@ -1,6 +1,7 @@
 package io.ikws4.weiju.page.logcat;
 
 import android.app.Application;
+import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
@@ -40,7 +41,7 @@ public class LogcatViewModel extends BaseViewModel {
             .subscribeOn(Schedulers.io())
             .subscribe(() -> {
                 SpannableStringBuilder builder = new SpannableStringBuilder();
-                Process logcat = logcat("-d -v tag -b main Console:D *:S -t '" + mPreferences.get(Preferences.LOGCAT_TIME, getTime()) + "'");
+                Process logcat = logcat("-d -v tag -b main Console:D *:S -t '" + mPreferences.get(Preferences.LOGCAT_TIME, getRebootTime()) + "'");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(logcat.getInputStream()));
 
                 int errorColor = getApplication().getColor(R.color.love);
@@ -48,6 +49,8 @@ public class LogcatViewModel extends BaseViewModel {
                 int textColor = getApplication().getColor(R.color.surface);
                 reader.lines().forEach((line) -> {
                     var logline = LogLine.from(line);
+                    if (logline == null) return;
+
                     int startIndex = builder.length();
 
                     builder.append(" ")
@@ -72,14 +75,21 @@ public class LogcatViewModel extends BaseViewModel {
     }
 
     public void clearLogs() {
-        mPreferences.put(Preferences.LOGCAT_TIME, getTime());
+        mPreferences.put(Preferences.LOGCAT_TIME, getCurrentTime());
         readLogs();
     }
 
     private static final SimpleDateFormat LOGCAT_DATE_FORMAT = new SimpleDateFormat("MM-dd HH:mm:ss.s", Locale.US);
 
-    private String getTime() {
-        long t = System.currentTimeMillis();
+    private String getRebootTime() {
+        return getTime(SystemClock.elapsedRealtime());
+    }
+
+    private String getCurrentTime() {
+        return getTime(System.currentTimeMillis());
+    }
+
+    private String getTime(long t) {
         return LOGCAT_DATE_FORMAT.format(new Date(t));
     }
 
@@ -97,11 +107,12 @@ public class LogcatViewModel extends BaseViewModel {
         }
 
         public static LogLine from(String raw) {
-            int startIndex = 0;
-            while (raw.charAt(startIndex) != ':') startIndex++;
-            String level = String.valueOf(raw.charAt(0));
-            String msg = raw.substring(startIndex + 1).replaceAll("\t", "    ");
-            return new LogLine(level, msg);
+                int startIndex = raw.indexOf(':');
+                if (startIndex == -1) return null;
+
+                String level = String.valueOf(raw.charAt(0));
+                String msg = raw.substring(startIndex + 1).replaceAll("\t", "    ");
+                return new LogLine(level, msg);
         }
     }
 }
