@@ -37,8 +37,8 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = "2.5.0"
-    def fragment_version = "1.5.0"
+    def lifecycle_version = "2.5.1"
+    def fragment_version = "1.5.2"
     def libsuVersion = "5.0.2"
 
     implementation project(path: ':util')
@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation "androidx.fragment:fragment:$fragment_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
@@ -69,5 +69,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }
