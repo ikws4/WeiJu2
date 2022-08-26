@@ -1,9 +1,7 @@
 package io.ikws4.weiju.xposed;
 
-import android.app.Application;
+import android.app.AndroidAppHelper;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.widget.Toast;
 
 import org.luaj.vm2.Globals;
@@ -13,12 +11,10 @@ import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.storage.XScriptStore;
-import io.ikws4.weiju.util.Logger;
 
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit {
     /* package */ static ClassLoader classloader;
@@ -32,6 +28,8 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
+        XScriptStore.fixPermission();
+
         classloader = lpparam.classLoader;
         currnetPackageName = lpparam.packageName;
 
@@ -40,20 +38,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
             return;
         }
 
-        XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) {
-                Context context = (Context) param.thisObject;
-
-                Logger.d("DEBUG INFOS");
-                Logger.d("  AppName:", lpparam.appInfo.loadLabel(context.getPackageManager()));
-                Logger.d("  PackageName:", lpparam.packageName);
-                Logger.d("  DeviceInfo:", Build.DEVICE);
-                Logger.d("  AndroidVersion:", Build.VERSION.RELEASE);
-
-                injectScripts(context);
-            }
-        });
+        injectScripts(AndroidAppHelper.currentApplication());
     }
 
     public void injectScripts(Context context) {
@@ -61,13 +46,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         store = XScriptStore.getInstance(context);
 
         if (!store.canRead()) {
-            PackageManager pm = context.getPackageManager();
-            try {
-                CharSequence name = pm.getApplicationInfo(currnetPackageName, 0).loadLabel(pm);
-                Toast.makeText(context, "WeiJu2: Can't load scripts. Please retry after force-stop both WeiJu2 and " + name + " .", Toast.LENGTH_LONG).show();
-            } catch (PackageManager.NameNotFoundException e) {
-                // ignored
-            }
+            Toast.makeText(context, "Fail to load scripts, please retry after force-stop WeiJu2", Toast.LENGTH_LONG).show();
             return;
         }
 
