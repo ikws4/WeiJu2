@@ -1,6 +1,6 @@
 package io.ikws4.weiju.xposed;
 
-import android.app.AndroidAppHelper;
+import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -11,6 +11,7 @@ import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import io.ikws4.weiju.BuildConfig;
@@ -28,8 +29,6 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        XScriptStore.fixPermission();
-
         classloader = lpparam.classLoader;
         currnetPackageName = lpparam.packageName;
 
@@ -38,7 +37,12 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
             return;
         }
 
-        injectScripts(AndroidAppHelper.currentApplication());
+        XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) {
+                injectScripts((Application) param.thisObject);
+            }
+        });
     }
 
     public void injectScripts(Context context) {
@@ -46,7 +50,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         store = XScriptStore.getInstance(context);
 
         if (!store.canRead()) {
-            Toast.makeText(context, "Fail to load scripts, please retry after force-stop WeiJu2", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Fail to load scripts, please force-stop WeiJu2 and retry", Toast.LENGTH_LONG).show();
             return;
         }
 
