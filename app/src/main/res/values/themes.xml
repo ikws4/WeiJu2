@@ -12,6 +12,7 @@
         <item name="android:foregroundTintMode">multiply</item>
         <item name="android:foregroundTint">@color/transparent_80</item>
         <item name="snackbarStyle">@style/Widget.WeiJu.Snackbar</item>
+        <item name="colorBackgroundFloating">@color/base</item>
     </style>
 
     <style name="Widget.WeiJu.Snackbar" parent="Widget.Design.Snackbar">

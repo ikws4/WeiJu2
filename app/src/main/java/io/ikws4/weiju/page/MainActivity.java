@@ -8,12 +8,15 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.topjohnwu.superuser.Shell;
+
+import java.util.Objects;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.home.HomeFragment;
@@ -65,8 +68,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ensurePermissions() {
-        // Root permission
+        // root permission
         Shell.getShell();
+
+        if (Objects.equals(Shell.isAppGrantedRoot(), false)) {
+            new AlertDialog.Builder(this)
+                .setTitle("Permission Request")
+                .setCancelable(false)
+                .setMessage("We need root permission to access logcat and some other shell utilities.")
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+        }
     }
 
     @Override
