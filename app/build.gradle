@@ -39,10 +39,10 @@ android {
 dependencies {
     def lifecycle_version = "2.5.0"
     def fragment_version = "1.5.0"
+    def libsuVersion = "5.0.2"
 
     implementation project(path: ':util')
     implementation project(path: ':lua')
-//    implementation project(path: ':lua_library')
     implementation project(path: ':editor')
     implementation project(path: ':glide')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
@@ -50,6 +50,8 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
     implementation 'com.crossbowffs.remotepreferences:remotepreferences:0.8'
+
+    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
 
     implementation "io.reactivex.rxjava3:rxjava:3.1.5"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
