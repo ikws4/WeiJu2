@@ -10,9 +10,8 @@ import android.text.style.ForegroundColorSpan;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.topjohnwu.superuser.Shell;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -21,8 +20,6 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.ext.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.storage.Preferences;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LogcatViewModel extends BaseViewModel {
     private final MutableLiveDataExt<CharSequence> mLogs;
@@ -37,41 +34,36 @@ public class LogcatViewModel extends BaseViewModel {
     }
 
     public void readLogs() {
-        mDisposables.add(Completable.complete()
-            .subscribeOn(Schedulers.io())
-            .subscribe(() -> {
-                SpannableStringBuilder builder = new SpannableStringBuilder();
-                Process logcat = logcat("-d -v tag -b main Console:D *:S -t '" + mPreferences.get(Preferences.LOGCAT_TIME, getRebootTime()) + "'");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(logcat.getInputStream()));
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        String time = mPreferences.get(Preferences.LOGCAT_TIME, getRebootTime());
+        Shell.cmd("logcat -d -v tag -b main Console:D *:S -t '" + time + "'").submit(it -> {
+            int errorColor = getApplication().getColor(R.color.love);
+            int debugColor = getApplication().getColor(R.color.foam);
+            int textColor = getApplication().getColor(R.color.surface);
+            for (String line : it.getOut()) {
+                var logline = LogLine.from(line);
+                if (logline == null) continue;
 
-                int errorColor = getApplication().getColor(R.color.love);
-                int debugColor = getApplication().getColor(R.color.foam);
-                int textColor = getApplication().getColor(R.color.surface);
-                reader.lines().forEach((line) -> {
-                    var logline = LogLine.from(line);
-                    if (logline == null) return;
+                int startIndex = builder.length();
 
-                    int startIndex = builder.length();
+                builder.append(" ")
+                    .append(logline.level)
+                    .append(" ")
+                    .append(logline.msg)
+                    .append('\n');
 
-                    builder.append(" ")
-                        .append(logline.level)
-                        .append(" ")
-                        .append(logline.msg)
-                        .append('\n');
+                BackgroundColorSpan span;
+                if (logline.level.equals("D")) {
+                    span = new BackgroundColorSpan(debugColor);
+                } else {
+                    span = new BackgroundColorSpan(errorColor);
+                }
 
-                    BackgroundColorSpan span;
-                    if (logline.level.equals("D")) {
-                        span = new BackgroundColorSpan(debugColor);
-                    } else {
-                        span = new BackgroundColorSpan(errorColor);
-                    }
-
-                    builder.setSpan(span, startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    builder.setSpan(new ForegroundColorSpan(textColor), startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                });
-
-                mLogs.postValue(builder);
-            }));
+                builder.setSpan(span, startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new ForegroundColorSpan(textColor), startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            mLogs.setValue(builder);
+        });
     }
 
     public void clearLogs() {
@@ -93,9 +85,9 @@ public class LogcatViewModel extends BaseViewModel {
         return LOGCAT_DATE_FORMAT.format(new Date(t));
     }
 
-    private Process logcat(String args) throws IOException {
-        return Runtime.getRuntime().exec("su -c logcat " + args);
-    }
+    // private Process logcat(String args) throws IOException {
+    //     Shell.cmd("logcat ")
+    // }
 
     static class LogLine {
         public final String level;
@@ -107,12 +99,12 @@ public class LogcatViewModel extends BaseViewModel {
         }
 
         public static LogLine from(String raw) {
-                int startIndex = raw.indexOf(':');
-                if (startIndex == -1) return null;
+            int startIndex = raw.indexOf(':');
+            if (startIndex == -1) return null;
 
-                String level = String.valueOf(raw.charAt(0));
-                String msg = raw.substring(startIndex + 1).replaceAll("\t", "    ");
-                return new LogLine(level, msg);
+            String level = String.valueOf(raw.charAt(0));
+            String msg = raw.substring(startIndex + 1).replaceAll("\t", "    ");
+            return new LogLine(level, msg);
         }
     }
 }

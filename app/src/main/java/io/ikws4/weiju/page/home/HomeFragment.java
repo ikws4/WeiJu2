@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.io.IOException;
+import com.topjohnwu.superuser.Shell;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.WeiJu;
@@ -225,12 +225,7 @@ public class HomeFragment extends BaseFragment {
             String pkg = vm.getCurrentSelectedAppPkg().getValue();
             Intent launchAppIntent = pm.getLaunchIntentForPackage(pkg);
 
-            try {
-                Process process = Runtime.getRuntime().exec("su -c am force-stop " + pkg);
-                process.waitFor();
-            } catch (IOException | InterruptedException e) {
-                // ignore
-            }
+            Shell.cmd("am force-stop " + pkg).exec();
 
             startActivity(launchAppIntent);
         } else if (id == R.id.logcat) {

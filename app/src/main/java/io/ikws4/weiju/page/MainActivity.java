@@ -13,11 +13,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.topjohnwu.superuser.Shell;
 
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
+
     public MainActivity() {
         super(R.layout.main_activity);
     }
@@ -58,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
                     );
             }
         });
+
+        ensurePermissions();
+    }
+
+    private void ensurePermissions() {
+        // Root permission
+        Shell.getShell();
     }
 
     @Override
