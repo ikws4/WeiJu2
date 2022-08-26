@@ -73,14 +73,14 @@
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_info"
                 app:subtitle="1.0.0"
-                app:title="Version" />
+                app:title="@string/version" />
 
             <io.ikws4.weiju.widget.ListTile
                 android:id="@+id/v_bug_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_bug_report"
-                app:title="Bug report" />
+                app:title="@string/about_bug_report" />
 
             <io.ikws4.weiju.widget.ListTile
                 android:id="@+id/v_github"
@@ -88,8 +88,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:icon="@drawable/ic_github"
-                app:subtitle="If you like this app please hit the star button on github to support my work"
-                app:title="Source code" />
+                app:subtitle="@string/about_source_code_subtitle"
+                app:title="@string/about_source_code_title" />
 
         </LinearLayout>
     </LinearLayout>

@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/add_to_my_scripts"
-        android:title="Add To My Scripts" />
+        android:title="@string/home_add_to_my_scripts" />
 
     <item
         android:id="@+id/about_this_script"
-        android:title="About This Script" />
+        android:title="@string/home_about_this_script" />
 </menu>

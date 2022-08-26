@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (Objects.equals(Shell.isAppGrantedRoot(), false)) {
             new AlertDialog.Builder(this)
-                .setTitle("Permission Request")
+                .setTitle(R.string.main_permission_request)
                 .setCancelable(false)
-                .setMessage("We need root permission to access logcat and some other shell utilities.")
+                .setMessage(R.string.main_permission_request_root_description)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
         }

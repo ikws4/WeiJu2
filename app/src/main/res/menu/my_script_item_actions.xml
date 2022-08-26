@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/update_script"
-        android:title="Update"
+        android:title="@string/update"
         android:visible="false" />
 
     <item
         android:id="@+id/copy_example"
-        android:title="Copy Example"
+        android:title="@string/home_copy_example"
         android:visible="false" />
 
     <item
         android:id="@+id/remove_from_my_scripts"
-        android:title="Remove" />
+        android:title="@string/remove" />
 </menu>

@@ -28,7 +28,7 @@ public class LogcatFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Logcat");
+        getSupportActionBar().setTitle(R.string.logcat);
 
         TextView vLog = view.findViewById(R.id.tv_log);
         vRefresher = view.findViewById(R.id.refresher);

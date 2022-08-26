@@ -23,7 +23,7 @@ public class AboutFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("About");
+        getSupportActionBar().setTitle(R.string.about);
 
         ListTile vVersion = view.findViewById(R.id.v_version);
         vVersion.setSubtitle(BuildConfig.VERSION_NAME);

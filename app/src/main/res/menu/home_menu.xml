@@ -5,24 +5,25 @@
     <item
         android:id="@+id/xposed_status"
         android:icon="@drawable/ic_info"
-        android:title="Status"
+        android:title="@string/home_status"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/launch_app"
         android:icon="@drawable/ic_run"
-        android:title="Launch app"
+        android:title="@string/home_launch_app"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/logcat"
-        android:title="Logcat"
-        app:showAsAction="never" />
+        android:title="@string/logcat"
+        android:icon="@drawable/ic_terminal"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/about"
-        android:title="About"
+        android:title="@string/about"
         app:showAsAction="never" />
 
 </menu>

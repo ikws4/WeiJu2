@@ -95,7 +95,6 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onRequireUpdateScript(ScriptListView.ScriptItem item) {
-                Toast.makeText(getContext(), "Updating...", Toast.LENGTH_SHORT).show();
                 vm.updateScript(item);
             }
 
@@ -148,13 +147,13 @@ public class HomeFragment extends BaseFragment {
                 case DragEvent.ACTION_DRAG_STARTED:
                     isDrag = true;
                     vm.removeApp(app);
-                    actionBar.setSubtitle("Drag to the right");
+                    actionBar.setSubtitle(R.string.home_drag_to_the_right);
                     return true;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    actionBar.setSubtitle("Release to delete");
+                    actionBar.setSubtitle(R.string.home_release_to_delete);
                     return true;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    actionBar.setSubtitle("Drag to the right");
+                    actionBar.setSubtitle(R.string.home_drag_to_the_right);
                     return true;
                 case DragEvent.ACTION_DROP:
                     return true;
@@ -210,7 +209,7 @@ public class HomeFragment extends BaseFragment {
     public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.xposed_status) {
-            Toast.makeText(getContext(), "WeiJu2 was not actived in xposed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.home_status_not_active_in_xposed, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.about) {
             requireActivity().getSupportFragmentManager()
                 .beginTransaction()

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/clear"
-        android:title="Clear"
+        android:title="@string/clear"
         android:icon="@drawable/ic_clear_all"
         app:showAsAction="always" />
 </menu>

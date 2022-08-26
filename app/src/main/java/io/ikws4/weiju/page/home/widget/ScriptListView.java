@@ -129,7 +129,7 @@ public class ScriptListView extends RecyclerView {
                     view = new LoadingView(getContext(), 192);
                     return new ViewHolder(view);
                 case Item.MY_SCRIPTS_EMPTY_PLACEHOLDER:
-                    view = new EmptyView(getContext(), "click  button to create a new script", 192);
+                    view = new EmptyView(getContext(), getContext().getString(R.string.home_my_scripts_empty), 192);
                     return new ViewHolder(view);
                 case Item.MY_SCRIPT_ITEM:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.script_item, parent, false);
@@ -142,7 +142,7 @@ public class ScriptListView extends RecyclerView {
                     view = new LoadingView(getContext(), 192);
                     return new ViewHolder(view);
                 case Item.AVAILABLE_SCRIPTS_EMPTY_PLACEHOLDER:
-                    view = new EmptyView(getContext(), "No more scripts available for this app", 96);
+                    view = new EmptyView(getContext(), getContext().getString(R.string.home_available_scripts_empty), 96);
                     return new ViewHolder(view);
                 case Item.AVAILABLE_SCRIPT_ITEM:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.script_item, parent, false);
@@ -179,7 +179,7 @@ public class ScriptListView extends RecyclerView {
             public MyScriptHeaderViewHolder(@NonNull View itemView) {
                 super(itemView);
                 TextView vTitle = itemView.findViewById(R.id.tv_title);
-                vTitle.setText("My Scripts");
+                vTitle.setText(R.string.home_my_scripts);
 
                 ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
                 vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_add_circle));
@@ -253,12 +253,12 @@ public class ScriptListView extends RecyclerView {
             public AvaiableScriptsHeaderViewHolder(@NonNull View itemView) {
                 super(itemView);
                 TextView vTitle = itemView.findViewById(R.id.tv_title);
-                vTitle.setText("Avaiable Scripts");
+                vTitle.setText(R.string.home_available_scripts);
 
                 ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
                 vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_help));
                 vHelp.setOnClickListener((v) -> {
-                    Toast.makeText(v.getContext(), "Help", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), R.string.help, Toast.LENGTH_SHORT).show();
                 });
             }
         }
@@ -301,7 +301,7 @@ public class ScriptListView extends RecyclerView {
                     if (it.getItemId() == R.id.add_to_my_scripts) {
                         mCallbacks.onRequireAddToMyScripts(v, item);
                     } else if (it.getItemId() == R.id.about_this_script) {
-                        Toast.makeText(v.getContext(), "TODO: About this script", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), R.string.home_about_this_script, Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 });

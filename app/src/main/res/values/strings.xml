@@ -1,4 +1,35 @@
 <resources>
     <string name="app_name">WeiJu2</string>
     <string name="app_description">The first scriptable xposed module, provides a new way to change the application behavior.\nPowered by Lua and made with ♥</string>
+
+    <string name="logcat">Logcat</string>
+    <string name="about">About</string>
+    <string name="update">Update</string>
+    <string name="remove">Remove</string>
+    <string name="clear">Clear</string>
+    <string name="close">Close</string>
+    <string name="help">Help</string>
+    <string name="version">Version</string>
+
+    <string name="about_bug_report">Bug report</string>
+    <string name="about_source_code_title">Source code</string>
+    <string name="about_source_code_subtitle">If you like this app please hit the star button on github to support my work</string>
+
+    <string name="home_my_scripts_empty">click  button to create a new script</string>
+    <string name="home_available_scripts_empty">No more scripts available for this app</string>
+    <string name="home_my_scripts">My Scripts</string>
+    <string name="home_available_scripts">Available Scripts</string>
+    <string name="home_status">Status</string>
+    <string name="home_launch_app">Launch app</string>
+    <string name="home_drag_to_the_right">Drag to the right</string>
+    <string name="home_release_to_delete">Release to delete</string>
+    <string name="home_status_not_active_in_xposed">WeiJu2 was not actived in xposed</string>
+    <string name="home_new_version">new version</string>
+    <string name="home_package">package</string>
+    <string name="home_copy_example">Copy Example</string>
+    <string name="home_add_to_my_scripts">Add To My Scripts</string>
+    <string name="home_about_this_script">About This Script</string>
+
+    <string name="main_permission_request">Permission Request</string>
+    <string name="main_permission_request_root_description">We need root permission to access logcat and some other command line utilities</string>
 </resources>

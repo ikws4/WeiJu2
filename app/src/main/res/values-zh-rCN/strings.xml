@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeiJu2</string>
+    <string name="app_description">第一款可编程的 XP 模块，指在将 lua 带到 xposed 的生态系统给大家提供新的玩机方式</string>
+
+    <string name="logcat">日志</string>
+    <string name="about">关于</string>
+    <string name="update">更新</string>
+    <string name="remove">移除</string>
+    <string name="clear">清除</string>
+    <string name="close">关闭</string>
+    <string name="help">帮助</string>
+    <string name="version">版本</string>
+
+    <string name="about_bug_report">提交 BUG</string>
+    <string name="about_source_code_title">源码</string>
+    <string name="about_source_code_subtitle">如果你喜欢 WeiJu2 那就在 Github 上点个给它点个 star 吧～</string>
+
+    <string name="home_my_scripts_empty">单击  按钮创建新脚本</string>
+    <string name="home_available_scripts_empty">没有找到更多可适用于这个APP的脚本</string>
+
+    <string name="home_my_scripts">我的脚本</string>
+    <string name="home_available_scripts">拓展脚本</string>
+    <string name="home_status">状态</string>
+    <string name="home_launch_app">启动应用</string>
+    <string name="home_drag_to_the_right">往右边拖</string>
+    <string name="home_release_to_delete">松开移除</string>
+    <string name="home_status_not_active_in_xposed">WeiJu2 没有在 xposed 中激活</string>
+    <string name="home_new_version">新版本</string>
+    <string name="home_package">拓展</string>
+    <string name="home_copy_example">复制示例</string>
+    <string name="home_add_to_my_scripts">添加到我的脚本</string>
+    <string name="home_about_this_script">脚本信息</string>
+
+    <string name="main_permission_request">权限请求</string>
+    <string name="main_permission_request_root_description">我们需要 root 权限来访问日志以及一些命令行工具</string>
+</resources>
