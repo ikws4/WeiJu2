@@ -1,8 +1,13 @@
-package io.ikws4.weiju.storage.strategy;
+package io.ikws4.weiju.storage.scriptstore.strategy;
 
 import java.util.Set;
 
 public class EmptyStoreStrategy implements StoreStrategy {
+
+    @Override
+    public boolean canRead() {
+        return false;
+    }
 
     @Override
     public String get(String k, String defValue) {

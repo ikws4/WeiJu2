@@ -197,7 +197,7 @@ public class HomeFragment extends BaseFragment {
     public boolean onMenuItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.xposed_status) {
-            Toast.makeText(getContext(), R.string.home_status_not_active_in_xposed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.home_status_not_activated_in_xposed, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.launch_app) {
             PackageManager pm = getContext().getPackageManager();
 

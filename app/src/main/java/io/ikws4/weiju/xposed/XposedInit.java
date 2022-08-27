@@ -15,7 +15,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import io.ikws4.weiju.BuildConfig;
-import io.ikws4.weiju.storage.XScriptStore;
+import io.ikws4.weiju.storage.scriptstore.XScriptStore;
 
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit {
     /* package */ static ClassLoader classloader;

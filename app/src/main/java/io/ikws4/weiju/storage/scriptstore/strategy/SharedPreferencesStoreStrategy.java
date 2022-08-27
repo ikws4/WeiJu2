@@ -1,21 +1,22 @@
-package io.ikws4.weiju.storage.strategy;
+package io.ikws4.weiju.storage.scriptstore.strategy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-import com.crossbowffs.remotepreferences.RemotePreferenceProvider;
-import com.crossbowffs.remotepreferences.RemotePreferences;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
-    static final String AUTHORITY = "io.ikws4.weiju.storage";
+public class SharedPreferencesStoreStrategy implements StoreStrategy {
     private final SharedPreferences store;
 
-    public RemoteSharedPreferencesStoreStrategy(Context context) {
-        store = new RemotePreferences(context, AUTHORITY, STORE_NAME);
+    public SharedPreferencesStoreStrategy(Context context, int mode) {
+        store = context.getSharedPreferences(STORE_NAME, mode);
+    }
+
+    @Override
+    public boolean canRead() {
+        return true;
     }
 
     @Override
@@ -25,9 +26,6 @@ public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
 
     @Override
     public Set<String> get(String key, Set<String> defValue) {
-        if (store.contains(key)) {
-            return store.getStringSet(key, null);
-        }
         return store.getStringSet(key, defValue);
     }
 
@@ -47,11 +45,5 @@ public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
             v = null;
         }
         store.edit().putStringSet(k, v).apply();
-    }
-
-    public static class SharedPreferenceProvider extends RemotePreferenceProvider {
-        public SharedPreferenceProvider() {
-            super(AUTHORITY, new String[]{STORE_NAME});
-        }
     }
 }

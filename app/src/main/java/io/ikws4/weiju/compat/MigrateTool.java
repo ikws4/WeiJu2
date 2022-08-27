@@ -20,7 +20,7 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
-import io.ikws4.weiju.storage.ScriptStore;
+import io.ikws4.weiju.storage.scriptstore.ScriptStore;
 import io.ikws4.weiju.util.Logger;
 import io.ikws4.weiju.util.Strings;
 import io.ikws4.weiju.util.Template;

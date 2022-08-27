@@ -1,4 +1,4 @@
-package io.ikws4.weiju.storage.strategy;
+package io.ikws4.weiju.storage.scriptstore.strategy;
 
 import android.util.Base64;
 
@@ -32,6 +32,7 @@ public class XSharedPreferenceStoreStrategy implements StoreStrategy {
         store.reload();
     }
 
+    @Override
     public boolean canRead() {
         return store.getFile().canRead();
     }

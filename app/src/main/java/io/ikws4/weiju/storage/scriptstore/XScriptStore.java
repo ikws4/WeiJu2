@@ -1,33 +1,31 @@
-package io.ikws4.weiju.storage;
+package io.ikws4.weiju.storage.scriptstore;
 
 import android.content.Context;
-import android.os.Build;
 
 import java.util.Set;
 
-import io.ikws4.weiju.storage.strategy.EmptyStoreStrategy;
-import io.ikws4.weiju.storage.strategy.RemoteSharedPreferencesStoreStrategy;
-import io.ikws4.weiju.storage.strategy.StoreStrategy;
-import io.ikws4.weiju.storage.strategy.XSharedPreferenceStoreStrategy;
+import io.ikws4.weiju.storage.scriptstore.strategy.EmptyStoreStrategy;
+import io.ikws4.weiju.storage.scriptstore.strategy.RemoteSharedPreferencesStoreStrategy;
+import io.ikws4.weiju.storage.scriptstore.strategy.StoreStrategy;
+import io.ikws4.weiju.storage.scriptstore.strategy.XSharedPreferenceStoreStrategy;
 import io.ikws4.weiju.util.Logger;
 
 public class XScriptStore {
-    private final StoreStrategy strategy;
-    public boolean canRead = true;
+    private StoreStrategy strategy;
 
     public XScriptStore(Context context) {
-        XSharedPreferenceStoreStrategy strategy = new XSharedPreferenceStoreStrategy();
-        if (strategy.canRead()) {
-            this.strategy = strategy;
+        if ((strategy = new XSharedPreferenceStoreStrategy()).canRead()) {
             Logger.d("XScriptStore:", "use XSharedPreferenceStoreStrategy");
-        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
-            this.strategy = new RemoteSharedPreferencesStoreStrategy(context);
-            Logger.d("XScriptStore:", "use RemoteSharedPreferencesStoreStrategy");
-        } else {
-            this.strategy = new EmptyStoreStrategy();
-            canRead = false;
-            Logger.e("XScriptStore:", "can not load scripts.");
+            return;
         }
+
+        if ((strategy = new RemoteSharedPreferencesStoreStrategy(context)).canRead()) {
+            Logger.d("XScriptStore:", "use RemoteSharedPreferencesStoreStrategy");
+            return;
+        }
+
+        this.strategy = new EmptyStoreStrategy();
+        Logger.e("XScriptStore:", "can not load scripts.");
     }
 
     public static void fixPermission() {
@@ -35,7 +33,7 @@ public class XScriptStore {
     }
 
     public boolean canRead() {
-        return canRead;
+        return strategy.canRead();
     }
 
     public String get(String k, String defValue) {

@@ -28,7 +28,7 @@ import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
-import io.ikws4.weiju.storage.ScriptStore;
+import io.ikws4.weiju.storage.scriptstore.ScriptStore;
 import io.ikws4.weiju.util.Logger;
 import io.ikws4.weiju.util.RandomUtil;
 import io.ikws4.weiju.util.Strings;

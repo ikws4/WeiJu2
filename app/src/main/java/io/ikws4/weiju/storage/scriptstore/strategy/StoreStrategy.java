@@ -1,9 +1,11 @@
-package io.ikws4.weiju.storage.strategy;
+package io.ikws4.weiju.storage.scriptstore.strategy;
 
 import java.util.Set;
 
 public interface StoreStrategy {
     String STORE_NAME = "script_store";
+
+    boolean canRead();
 
     String get(String k, String defValue);
 

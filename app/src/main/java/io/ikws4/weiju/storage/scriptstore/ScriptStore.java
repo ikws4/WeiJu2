@@ -1,4 +1,4 @@
-package io.ikws4.weiju.storage;
+package io.ikws4.weiju.storage.scriptstore;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.os.Build;
 
 import java.util.Set;
 
-import io.ikws4.weiju.storage.strategy.SharedPreferencesStoreStrategy;
-import io.ikws4.weiju.storage.strategy.StoreStrategy;
+import io.ikws4.weiju.storage.scriptstore.strategy.SharedPreferencesStoreStrategy;
+import io.ikws4.weiju.storage.scriptstore.strategy.StoreStrategy;
 import io.ikws4.weiju.util.Logger;
 
 public class ScriptStore {

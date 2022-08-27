@@ -42,7 +42,7 @@
         </activity>
 
         <provider
-            android:name=".storage.strategy.RemoteSharedPreferencesStoreStrategy$SharedPreferenceProvider"
+            android:name=".storage.scriptstore.strategy.RemoteSharedPreferencesStoreStrategy$SharedPreferenceProvider"
             android:authorities="io.ikws4.weiju.storage"
             android:enabled="true"
             android:exported="true"
