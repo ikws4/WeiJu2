@@ -50,7 +50,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         store = XScriptStore.getInstance(context);
 
         if (!store.canRead()) {
-            Toast.makeText(context, "Fail to load scripts, please force-stop WeiJu2 and retry", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Failed to load the scripts, please restart WeiJu2", Toast.LENGTH_LONG).show();
             return;
         }
 

@@ -210,14 +210,6 @@ public class HomeFragment extends BaseFragment {
         int id = item.getItemId();
         if (id == R.id.xposed_status) {
             Toast.makeText(getContext(), R.string.home_status_not_active_in_xposed, Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.about) {
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .add(R.id.fragment_container, AboutFragment.class, null)
-                .addToBackStack("about")
-                .commit();
         } else if (id == R.id.launch_app) {
             PackageManager pm = getContext().getPackageManager();
 
@@ -235,7 +227,16 @@ public class HomeFragment extends BaseFragment {
                 .add(R.id.fragment_container, LogcatFragment.class, null)
                 .addToBackStack("logcat")
                 .commit();
-
+        } else if (id == R.id.restar) {
+            Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec();
+        } else if (id == R.id.about) {
+            requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .add(R.id.fragment_container, AboutFragment.class, null)
+                .addToBackStack("about")
+                .commit();
         } else {
             return false;
         }

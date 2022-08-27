@@ -10,6 +10,7 @@
     <string name="close">Close</string>
     <string name="help">Help</string>
     <string name="version">Version</string>
+    <string name="restart">Restart</string>
 
     <string name="about_bug_report">Bug report</string>
     <string name="about_source_code_title">Source code</string>

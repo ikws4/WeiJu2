@@ -11,6 +11,7 @@
     <string name="close">关闭</string>
     <string name="help">帮助</string>
     <string name="version">版本</string>
+    <string name="restart">重启</string>
 
     <string name="about_bug_report">提交 BUG</string>
     <string name="about_source_code_title">源码</string>

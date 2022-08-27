@@ -14,12 +14,16 @@
         android:title="@string/home_launch_app"
         app:showAsAction="always" />
 
-
     <item
         android:id="@+id/logcat"
         android:title="@string/logcat"
         android:icon="@drawable/ic_terminal"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/restar"
+        android:title="@string/restart"
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/about"
