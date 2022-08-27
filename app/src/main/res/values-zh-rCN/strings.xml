@@ -35,4 +35,8 @@
 
     <string name="main_permission_request">权限请求</string>
     <string name="main_permission_request_root_description">我们需要 root 权限来访问日志以及一些命令行工具</string>
+
+    <string name="migratetool_cannot_load_hooklist">迁移工具: 无法读取 hook_list</string>
+    <string name="migratetool_please_activate_weiju2">迁移工具: 请现在 xposed/lsposed 中激活 WeiJu2</string>
+    <string name="migratetool_migrate_success">迁移工具: 迁移成功</string>
 </resources>

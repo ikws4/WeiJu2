@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.ikws4.weiju.BuildConfig;
+import io.ikws4.weiju.R;
 import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.storage.Preferences;
@@ -37,7 +38,7 @@ public class MigrateTool {
         SharedPreferences hookList = getSharedPreferences(context, "hook_list");
 
         if (hookList == null) {
-            Toast.makeText(context, "MigrateTool: Cannot load hook_list", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.migratetool_cannot_load_hooklist, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -48,11 +49,11 @@ public class MigrateTool {
 
         // Only migrate when WeiJu is enabled in lsposed/xposed
         if (!WeiJu.XPOSED_ENABLED) {
-            Toast.makeText(context, "MigrateTool: Please activate WeiJu2 in xposed/lsposed first", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.migratetool_please_activate_weiju2, Toast.LENGTH_LONG).show();
             return;
         }
 
-        Toast.makeText(context, "MigrateTool: Successfully migrated from the old version of WeiJu", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, R.string.migratetool_migrate_success, Toast.LENGTH_LONG).show();
 
 
         // Copy app list

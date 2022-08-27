@@ -33,4 +33,8 @@
 
     <string name="main_permission_request">Permission Request</string>
     <string name="main_permission_request_root_description">We need root permission to access logcat and some other command line utilities</string>
+
+    <string name="migratetool_cannot_load_hooklist">MigrateTool: Cannot load hook_list</string>
+    <string name="migratetool_please_activate_weiju2">MigrateTool: Please activate WeiJu2 in xposed/lsposed first</string>
+    <string name="migratetool_migrate_success">MigrateTool: Successfully migrated from the old version of WeiJu</string>
 </resources>
