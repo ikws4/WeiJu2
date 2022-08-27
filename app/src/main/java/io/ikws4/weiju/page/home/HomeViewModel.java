@@ -142,6 +142,7 @@ public class HomeViewModel extends BaseViewModel {
         mScriptStore.put(key, item.script);
 
         mMyScripts.getValue().add(item);
+        mMyScripts.getValue().sort(this::myScriptsSortComparator);
         mMyScripts.publish();
     }
 
@@ -290,6 +291,7 @@ public class HomeViewModel extends BaseViewModel {
 
                     return item;
                 })
+                .sorted(this::myScriptsSortComparator)
                 .collect(Collectors.toList())
         );
     }
@@ -331,5 +333,11 @@ public class HomeViewModel extends BaseViewModel {
 
     private String getKey(ScriptListView.ScriptItem item) {
         return Strings.join("_", mCurrentSelectedAppPkg.getValue(), item.id);
+    }
+
+    private int myScriptsSortComparator(ScriptListView.ScriptItem a, ScriptListView.ScriptItem b) {
+        int res = Boolean.compare(a.isPackage, b.isPackage);
+        if (res == 0) return a.name.compareTo(b.name);
+        return res;
     }
 }
