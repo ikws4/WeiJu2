@@ -19,7 +19,6 @@ import com.topjohnwu.superuser.Shell;
 import java.util.Objects;
 
 import io.ikws4.weiju.R;
-import io.ikws4.weiju.page.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,13 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container, HomeFragment.class, null)
-                .commit();
-        }
 
         Toolbar vToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(vToolbar);

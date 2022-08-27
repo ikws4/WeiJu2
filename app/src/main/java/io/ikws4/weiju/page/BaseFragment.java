@@ -13,9 +13,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 
+import io.ikws4.weiju.R;
+
 public class BaseFragment extends Fragment implements MenuProvider {
+    public static final int FRAGMENT_NORMAL = 0;
+    public static final int FRAGMENT_FULL_SCREEN_DIALOG = 1;
 
     public BaseFragment(int contentLayoutId) {
         super(contentLayoutId);
@@ -33,6 +38,35 @@ public class BaseFragment extends Fragment implements MenuProvider {
 
     public ActionBar getSupportActionBar() {
         return requireAppCompatActivity().getSupportActionBar();
+    }
+
+    public void startFragment(Class<? extends BaseFragment> clazz) {
+        startFragment(clazz, FRAGMENT_NORMAL);
+    }
+
+    public void startFragment(Class<? extends BaseFragment> clazz, int type) {
+        startFragment(clazz, type, null);
+    }
+
+    public void startFragment(Class<? extends BaseFragment> clazz, int type, Bundle args) {
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager()
+            .beginTransaction()
+            .setReorderingAllowed(true);
+
+        if (type == FRAGMENT_NORMAL) {
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        } else if (type == FRAGMENT_FULL_SCREEN_DIALOG) {
+            transaction.setCustomAnimations(
+                R.anim.slide_in_bottom,
+                R.anim.slide_out_top,
+                R.anim.slide_in_bottom,
+                R.anim.slide_out_top
+            );
+        }
+
+        transaction.add(R.id.fragment_container, clazz, args)
+            .addToBackStack(null)
+            .commit();
     }
 
     @Override

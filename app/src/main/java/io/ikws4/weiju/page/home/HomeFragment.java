@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -73,18 +72,7 @@ public class HomeFragment extends BaseFragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("item", item);
 
-                requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .setReorderingAllowed(true)
-                    .setCustomAnimations(
-                        R.anim.slide_in_bottom,
-                        R.anim.slide_out_top,
-                        R.anim.slide_in_bottom,
-                        R.anim.slide_out_top
-                    )
-                    .add(R.id.fragment_container, EditorFragment.class, bundle)
-                    .addToBackStack("home")
-                    .commit();
+                startFragment(EditorFragment.class, FRAGMENT_FULL_SCREEN_DIALOG, bundle);
             }
 
             @Override
@@ -220,23 +208,11 @@ public class HomeFragment extends BaseFragment {
 
             startActivity(launchAppIntent);
         } else if (id == R.id.logcat) {
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .add(R.id.fragment_container, LogcatFragment.class, null)
-                .addToBackStack("logcat")
-                .commit();
+            startFragment(LogcatFragment.class);
         } else if (id == R.id.restar) {
             Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec();
         } else if (id == R.id.about) {
-            requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .add(R.id.fragment_container, AboutFragment.class, null)
-                .addToBackStack("about")
-                .commit();
+            startFragment(AboutFragment.class);
         } else {
             return false;
         }
