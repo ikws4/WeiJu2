@@ -26,7 +26,7 @@
     <string name="home_launch_app">启动应用</string>
     <string name="home_drag_to_the_right">往右边拖</string>
     <string name="home_release_to_delete">松开移除</string>
-    <string name="home_status_not_active_in_xposed">WeiJu2 没有在 xposed 中激活</string>
+    <string name="home_status_not_activated_in_xposed">WeiJu2 没有在 xposed 中激活</string>
     <string name="home_new_version">新版本</string>
     <string name="home_package">拓展</string>
     <string name="home_copy_example">复制示例</string>

@@ -24,7 +24,7 @@
     <string name="home_launch_app">Launch app</string>
     <string name="home_drag_to_the_right">Drag to the right</string>
     <string name="home_release_to_delete">Release to delete</string>
-    <string name="home_status_not_active_in_xposed">WeiJu2 was not actived in xposed</string>
+    <string name="home_status_not_activated_in_xposed">WeiJu2 was not activated in xposed</string>
     <string name="home_new_version">new version</string>
     <string name="home_package">package</string>
     <string name="home_copy_example">Copy Example</string>
