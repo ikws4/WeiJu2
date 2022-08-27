@@ -37,7 +37,7 @@ public class MigrateTool {
         SharedPreferences hookList = getSharedPreferences(context, "hook_list");
 
         if (hookList == null) {
-            Toast.makeText(context, "MigrateTool: Cannot load hook_list.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "MigrateTool: Cannot load hook_list", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -48,11 +48,11 @@ public class MigrateTool {
 
         // Only migrate when WeiJu is enabled in lsposed/xposed
         if (!WeiJu.XPOSED_ENABLED) {
-            Toast.makeText(context, "MigrateTool: Please enabled WeiJu2 in xposed(lposed) first.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "MigrateTool: Please activate WeiJu2 in xposed/lsposed first", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Toast.makeText(context, "MigrateTool: Successfully migrated from the old version of WeiJu.", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "MigrateTool: Successfully migrated from the old version of WeiJu", Toast.LENGTH_LONG).show();
 
 
         // Copy app list
