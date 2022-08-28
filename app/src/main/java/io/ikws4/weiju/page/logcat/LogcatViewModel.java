@@ -38,9 +38,9 @@ public class LogcatViewModel extends BaseViewModel {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String time = mPreferences.get(Preferences.LOGCAT_TIME, getRebootTime());
         Shell.cmd("logcat -d -v tag -b main " + Console.TAG + ":D *:S -t '" + time + "'").submit(it -> {
-            int errorColor = getApplication().getColor(R.color.love);
+            int errorColor = getApplication().getColor(R.color.rose);
             int debugColor = getApplication().getColor(R.color.foam);
-            int textColor = getApplication().getColor(R.color.surface);
+            int textColor = getApplication().getColor(R.color.base);
             for (String line : it.getOut()) {
                 var logline = LogLine.from(line);
                 if (logline == null) continue;
@@ -53,15 +53,11 @@ public class LogcatViewModel extends BaseViewModel {
                     .append(logline.msg)
                     .append('\n');
 
-                BackgroundColorSpan span;
-                if (logline.level.equals("D")) {
-                    span = new BackgroundColorSpan(debugColor);
-                } else {
-                    span = new BackgroundColorSpan(errorColor);
-                }
+                int color = logline.level.equals("D") ? debugColor : errorColor;
 
-                builder.setSpan(span, startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new BackgroundColorSpan(color), startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new ForegroundColorSpan(textColor), startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new ForegroundColorSpan(color), startIndex + 3, startIndex + 3 + logline.msg.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             }
             mLogs.setValue(builder);
         });

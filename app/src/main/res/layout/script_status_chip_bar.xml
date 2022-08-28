@@ -15,7 +15,7 @@
         android:backgroundTintMode="multiply"
         android:paddingHorizontal="4dp"
         android:text="@string/home_new_version"
-        android:textColor="@color/highlight_med"
+        android:textColor="@color/overlay"
         android:textSize="10sp"
         android:visibility="gone"
         tools:visibility="visible" />
@@ -29,7 +29,7 @@
         android:backgroundTintMode="multiply"
         android:paddingHorizontal="4dp"
         android:text="@string/home_package"
-        android:textColor="@color/highlight_med"
+        android:textColor="@color/overlay"
         android:textSize="10sp"
         android:visibility="gone"
         tools:visibility="visible" />
