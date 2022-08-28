@@ -15,7 +15,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 public class Console {
-    public static final String TAG = "Console";
+    public static final String TAG = "WeiJu2-Console";
 
     public static void printMsg(String msg) {
         println(Log.DEBUG, msg);

@@ -20,6 +20,7 @@ import io.ikws4.weiju.R;
 import io.ikws4.weiju.ext.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.storage.Preferences;
+import io.ikws4.weiju.xposed.Console;
 
 public class LogcatViewModel extends BaseViewModel {
     private final MutableLiveDataExt<CharSequence> mLogs;
@@ -36,7 +37,7 @@ public class LogcatViewModel extends BaseViewModel {
     public void readLogs() {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String time = mPreferences.get(Preferences.LOGCAT_TIME, getRebootTime());
-        Shell.cmd("logcat -d -v tag -b main Console:D *:S -t '" + time + "'").submit(it -> {
+        Shell.cmd("logcat -d -v tag -b main " + Console.TAG + ":D *:S -t '" + time + "'").submit(it -> {
             int errorColor = getApplication().getColor(R.color.love);
             int debugColor = getApplication().getColor(R.color.foam);
             int textColor = getApplication().getColor(R.color.surface);
