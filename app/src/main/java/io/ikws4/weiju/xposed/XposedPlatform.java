@@ -1,5 +1,7 @@
 package io.ikws4.weiju.xposed;
 
+import android.util.Log;
+
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LoadState;
 import org.luaj.vm2.compiler.LuaC;
@@ -9,24 +11,7 @@ import org.luaj.vm2.lib.StringLib;
 import org.luaj.vm2.lib.TableLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 public class XposedPlatform {
-    private static final PrintStream STDOUT = new PrintStream(new ByteArrayOutputStream() {
-        @Override
-        public void flush() {
-            Console.printMsg(new String(toByteArray()));
-        }
-    }, true);
-
-    private static final PrintStream STDERR = new PrintStream(new ByteArrayOutputStream() {
-        @Override
-        public void flush() {
-            Console.printErr(new String(toByteArray()));
-        }
-    }, true);
-
     public static Globals create() {
         Globals globals = new Globals();
 
@@ -41,8 +26,8 @@ public class XposedPlatform {
         globals.load(new XposedLuajavaLib());
 
         // redirect output stream to console
-        globals.STDOUT = STDOUT;
-        globals.STDERR = STDERR;
+        globals.STDOUT = new Console.LogginStream(Log.DEBUG);
+        globals.STDERR = new Console.LogginStream(Log.ERROR);
 
         // init compiler
         LoadState.install(globals);
