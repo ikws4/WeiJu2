@@ -55,14 +55,19 @@ class XposedBaselib extends JseBaseLib {
                 _params[_params.length - 1] = new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) {
-                        LuaValue[] vargs = new LuaValue[2];
-                        vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
-                        vargs[1] = CoerceJavaToLua.coerce(param.args);
+                        try {
+                            LuaValue[] vargs = new LuaValue[2];
+                            vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
+                            vargs[1] = CoerceJavaToLua.coerce(param.args);
 
-                        Varargs ret = replace.invoke(vargs);
-                        // handle return value
-                        if (isConstructor || ret.narg() == 0 || ret.arg1().isnil()) return null;
-                        return CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata());
+                            Varargs ret = replace.invoke(vargs);
+                            // handle return value
+                            if (isConstructor || ret.narg() == 0 || ret.arg1().isnil()) return null;
+                            return CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata());
+                        } catch (Throwable e) {
+                            Console.printErr(e);
+                            throw e;
+                        }
                     }
                 };
             } else {
@@ -78,19 +83,23 @@ class XposedBaselib extends JseBaseLib {
                     }
 
                     private void call(LuaValue func, MethodHookParam param) {
-                        if (func.isnil()) return;
+                        try {
+                            if (func.isnil()) return;
 
-                        LuaValue[] vargs = new LuaValue[2];
-                        vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
-                        vargs[1] = CoerceJavaToLua.coerce(param.args);
+                            LuaValue[] vargs = new LuaValue[2];
+                            vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
+                            vargs[1] = CoerceJavaToLua.coerce(param.args);
 
-                        Varargs ret = func.invoke(vargs);
-                        // handle return value
-                        if (isConstructor || ret.narg() == 0) return;
-                        if (ret.arg1().isnil()) {
-                            param.setResult(null);
-                        } else {
-                            param.setResult(CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata()));
+                            Varargs ret = func.invoke(vargs);
+                            // handle return value
+                            if (isConstructor || ret.narg() == 0) return;
+                            if (ret.arg1().isnil()) {
+                                param.setResult(null);
+                            } else {
+                                param.setResult(CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata()));
+                            }
+                        } catch (Throwable e) {
+                            Console.printErr(e);
                         }
                     }
                 };
