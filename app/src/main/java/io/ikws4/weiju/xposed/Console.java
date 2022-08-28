@@ -26,7 +26,7 @@ public class Console {
     }
 
     public static void printErr(Throwable err) {
-        println(Log.ERROR, Log.getStackTraceString(err));
+        println(Log.ERROR, err.getMessage());
     }
 
     private static void println(int priority, String s) {

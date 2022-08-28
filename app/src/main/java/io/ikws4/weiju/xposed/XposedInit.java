@@ -60,6 +60,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
             try {
                 globals.load(script).call();
             } catch (Throwable e) {
+                XposedBridge.log(e);
                 Console.printErr(e);
             }
         }

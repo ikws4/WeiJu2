@@ -566,10 +566,48 @@ public class LuaClosure extends LuaFunction {
 				line = p.lineinfo != null && pc >= 0 && pc < p.lineinfo.length ? p.lineinfo[pc] : -1;
 			}
 		}
-		le.fileline = file + ":" + line;
-		le.traceback = errorHook(le.getMessage(), le.level);
-	}
-	
+
+        le.fileline = formatError(file, line);
+        le.traceback = errorHook(le.getMessage(), le.level);
+    }
+
+    private String formatError(String source, int line) {
+        String[] lines = source.split("\n");
+        StringBuilder builder = new StringBuilder();
+        if (1 <= line && line <= lines.length) {
+            int topLine = Math.max(1, line - 2);
+            int bottomLine = Math.min(lines.length, line + 2);
+
+            int commomLeadingSpace = leadingSpace(lines[topLine - 1]);
+            for (int i = topLine + 1; i <= bottomLine; i++) {
+                commomLeadingSpace = Math.min(commomLeadingSpace, leadingSpace(lines[i - 1]));
+            }
+
+            while (topLine <= bottomLine) {
+                if (topLine < line) {
+                    builder.append("│ ");
+                } else if (topLine == line) {
+                    builder.append("└╴");
+                } else {
+                    builder.append("  ");
+                }
+                builder
+                    .append(topLine)
+                    .append(" ")
+                    .append(lines[topLine - 1].substring(commomLeadingSpace));
+                if (topLine < bottomLine) builder.append('\n');
+                topLine++;
+            }
+        }
+        return builder.toString();
+    }
+
+    private int leadingSpace(String line) {
+        int i = 0;
+        while (i < line.length() && line.charAt(i) == ' ') i++;
+        return i;
+    }
+
 	private UpValue findupval(LuaValue[] stack, short idx, UpValue[] openups) {
 		final int n = openups.length;
 		for (int i = 0; i < n; ++i)

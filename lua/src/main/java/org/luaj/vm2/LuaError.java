@@ -61,7 +61,7 @@ public class LuaError extends RuntimeException {
 		if (m == null)
 			return null;
 		if (fileline != null)
-			return fileline + " " + m;
+			return m + "\n" + fileline;
 		return m;
 	}
 
@@ -82,7 +82,7 @@ public class LuaError extends RuntimeException {
 	 * @param cause the Throwable that caused the error, if known.  
 	 */
 	public LuaError(Throwable cause) {
-		super( "vm error: "+cause );
+		super( "vm error: " + cause );
 		this.cause = cause;
 		this.level = 1;
 	}

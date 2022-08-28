@@ -11,6 +11,7 @@ import org.luaj.vm2.lib.jse.JseBaseLib;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 class XposedBaselib extends JseBaseLib {
@@ -65,6 +66,7 @@ class XposedBaselib extends JseBaseLib {
                             if (isConstructor || ret.narg() == 0 || ret.arg1().isnil()) return null;
                             return CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata());
                         } catch (Throwable e) {
+                            XposedBridge.log(e);
                             Console.printErr(e);
                             throw e;
                         }
@@ -99,6 +101,7 @@ class XposedBaselib extends JseBaseLib {
                                 param.setResult(CoerceLuaToJava.coerce(ret.arg1(), (Class<?>) returns.checkuserdata()));
                             }
                         } catch (Throwable e) {
+                            XposedBridge.log(e);
                             Console.printErr(e);
                         }
                     }

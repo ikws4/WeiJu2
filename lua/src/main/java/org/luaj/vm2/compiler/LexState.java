@@ -21,10 +21,6 @@
 ******************************************************************************/
 package org.luaj.vm2.compiler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Hashtable;
-
 import org.luaj.vm2.LocVars;
 import org.luaj.vm2.Lua;
 import org.luaj.vm2.LuaError;
@@ -34,6 +30,10 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Prototype;
 import org.luaj.vm2.compiler.FuncState.BlockCnt;
 import org.luaj.vm2.lib.MathLib;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
 
 
 public class LexState extends Constants {
@@ -263,7 +263,45 @@ public class LexState extends Constants {
 		L.pushfstring( cid+":"+linenumber+": "+msg );
 		if ( token != 0 )
 			L.pushfstring( "syntax error: "+msg+" near "+txtToken(token) );
-		throw new LuaError(cid+":"+linenumber+": "+msg);
+		// throw new LuaError(cid+":"+linenumber+": "+msg);
+		throw new LuaError(msg + "\n" + formatError(source.tojstring(), linenumber));
+	}
+
+	private String formatError(String source, int line) {
+		String[] lines = source.split("\n");
+		StringBuilder builder = new StringBuilder();
+		if (1 <= line && line <= lines.length) {
+			int topLine = Math.max(1, line - 2);
+			int bottomLine = Math.min(lines.length, line + 2);
+
+			int commomLeadingSpace = leadingSpace(lines[topLine - 1]);
+			for (int i = topLine + 1; i <= bottomLine; i++) {
+				commomLeadingSpace = Math.min(commomLeadingSpace, leadingSpace(lines[i - 1]));
+			}
+
+			while (topLine <= bottomLine) {
+				if (topLine < line) {
+					builder.append("│ ");
+				} else if (topLine == line) {
+					builder.append("└╴");
+				} else {
+					builder.append("  ");
+				}
+				builder
+					.append(topLine)
+					.append(" ")
+					.append(lines[topLine - 1].substring(commomLeadingSpace));
+				if (topLine < bottomLine) builder.append('\n');
+				topLine++;
+			}
+		}
+		return builder.toString();
+	}
+
+	private int leadingSpace(String line) {
+		int i = 0;
+		while (i < line.length() && line.charAt(i) == ' ') i++;
+		return i;
 	}
 
 	void syntaxerror( String msg ) {
@@ -891,9 +929,12 @@ public class LexState extends Constants {
 			if (where == linenumber)
 				error_expected(what);
 			else {
-				syntaxerror(L.pushfstring(LUA_QS(token2str(what))
+				int _linenumber = linenumber;
+				linenumber = where;
+				syntaxerror("syntax error: " + L.pushfstring(LUA_QS(token2str(what))
 						+ " expected " + "(to close " + LUA_QS(token2str(who))
 						+ " at line " + where + ")"));
+				linenumber = _linenumber;
 			}
 		}
 	}
