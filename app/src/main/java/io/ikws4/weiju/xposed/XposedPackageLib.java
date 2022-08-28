@@ -13,7 +13,13 @@ class XposedPackageLib extends PackageLib {
     public LuaValue call(LuaValue modname, LuaValue env) {
         super.call(modname, env);
         LuaTable searchers = package_.get("searchers").checktable();
-        searchers.set(4, new xposed_script_searcher());
+
+        // rmeove builtin searchers to improve performance, we dont't need those
+        searchers.set(1, NIL);
+        searchers.set(2, NIL);
+        searchers.set(3, NIL);
+
+        searchers.set(1, new xposed_script_searcher());
         return env;
     }
 
