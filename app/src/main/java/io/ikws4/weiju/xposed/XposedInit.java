@@ -6,12 +6,14 @@ import android.widget.Toast;
 
 import org.luaj.vm2.Globals;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import io.ikws4.weiju.BuildConfig;
