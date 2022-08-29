@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">WeiJu2</string>
+    <string name="app_description">第一個可編寫  Lua 的 Xposed 模組，提供了一種新的方式來改變應用程式的行為 ♥</string>
+
+    <string name="logcat">日誌</string>
+    <string name="about">關於</string>
+    <string name="update">更新</string>
+    <string name="remove">移除</string>
+    <string name="clear">清除</string>
+    <string name="close">關閉</string>
+    <string name="help">幫助</string>
+    <string name="version">版本</string>
+    <string name="restart">重啟</string>
+
+    <string name="about_bug_report">提交 BUG</string>
+    <string name="about_source_code_title">原始碼</string>
+    <string name="about_source_code_subtitle">如果你喜歡 WeiJu2 那就在 Github 上給我們一個星星吧</string>
+
+    <string name="home_my_scripts_empty">單擊  按鈕建立新的腳本</string>
+    <string name="home_available_scripts_empty">沒有找到更多可適用於這個 APP 的腳本</string>
+    <string name="home_my_scripts">我的腳本</string>
+    <string name="home_available_scripts">拓展腳本</string>
+    <string name="home_status">狀態</string>
+    <string name="home_launch_app">啟動應用</string>
+    <string name="home_drag_to_the_right">往右邊拖</string>
+    <string name="home_release_to_delete">鬆開移除</string>
+    <string name="home_status_not_activated_in_xposed">WeiJu2 沒有在 Xposed 中啟用</string>
+    <string name="home_new_version">新版本</string>
+    <string name="home_package">拓展</string>
+    <string name="home_copy_example">複製範例</string>
+    <string name="home_add_to_my_scripts">新增到我的腳本</string>
+    <string name="home_about_this_script">腳本資訊</string>
+
+    <string name="main_permission_request">使用權請求</string>
+    <string name="main_permission_request_root_description">我們需要 root 權限來訪問日誌以及一些命令列工具</string>
+
+    <string name="migratetool_cannot_load_hooklist">遷移工具: 無法讀取 hook_list</string>
+    <string name="migratetool_please_activate_weiju2">遷移工具: 請現在 Xposed/LSPosed 中啟用 WeiJu2</string>
+    <string name="migratetool_migrate_success">遷移工具: 遷移成功</string>
+</resources>
