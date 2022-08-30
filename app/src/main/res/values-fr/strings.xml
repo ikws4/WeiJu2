@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">WeiJu2</string>
+    <string name="app_description">Le premier module xposed pouvant être scripté, fournissant une nouvelle manière de changer le comportement d\’application.\nMis en avant par Lua et fait avec ♥</string>
+
+    <string name="logcat">Journal</string>
+    <string name="about">A propos</string>
+    <string name="update">Mis à jour</string>
+    <string name="remove">Supprimer</string>
+    <string name="clear">Éffacer</string>
+    <string name="close">Fermer</string>
+    <string name="help">Aide</string>
+    <string name="version">Version</string>
+    <string name="restart">Redémarrer</string>
+
+    <string name="about_bug_report">Soumettre un bug</string>
+    <string name="about_source_code_title">Code source</string>
+    <string name="about_source_code_subtitle">Si vous aimez cette application merci d\’appuyer sur le boutton étoile sur github pour féliciter mon travail</string>
+
+    <string name="home_my_scripts_empty">appuyer sur le boutton  pour créer un nouveau script</string>
+    <string name="home_available_scripts_empty">Pas d\’autres scripts disponible pour cette application</string>
+    <string name="home_my_scripts">Mes Scripts</string>
+    <string name="home_available_scripts">Scripts Disponibles</string>
+    <string name="home_status">Status</string>
+    <string name="home_launch_app">Lancer l\’appli</string>
+    <string name="home_drag_to_the_right">Faire glisser vers la droite</string>
+    <string name="home_release_to_delete">Libérer pour supprimer</string>
+    <string name="home_status_not_activated_in_xposed">WeiJu2 n\’a pas été activé dans Xposed</string>
+    <string name="home_new_version">nouvelle version</string>
+    <string name="home_package">paquet</string>
+    <string name="home_copy_example">Copier Exemple</string>
+    <string name="home_add_to_my_scripts">Ajouter A Mes Scripts</string>
+    <string name="home_about_this_script">A Propos De Ce Script</string>
+
+    <string name="main_permission_request">Demande De Permission</string>
+    <string name="main_permission_request_root_description">Nous avons besoin de l\’accès à la raçine pour accéder au journal du système et certains autres outils en ligne de commandes</string>
+
+    <string name="migratetool_cannot_load_hooklist">OutilMigration: Ne peut pas charger hook_list</string>
+    <string name="migratetool_please_activate_weiju2">OutilMigration: Merci d\’activer WeiJu2 dans xposed/lsposed pour commencer</string>
+    <string name="migratetool_migrate_success">OutilMigration: Migration réussie de l\’ancienne version de WeiJu</string>
+</resources>
