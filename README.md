@@ -18,7 +18,7 @@ Powered by Lua and made with ♥
 ### How to write a hook?
 
 ```lua
--- You can import any java
+-- You can import any java class
 local Toast = import("android.widget.Toast")
 local Activity = import("android.app.Activity")
 local Bundle = import("android.os.Bundle")
@@ -65,7 +65,7 @@ Build.VERSION.RELEASE = "13"
 
 ```lua
 require("ikws4.system_variable").setup {
-  -- configs goes here
+  -- config goes here
 }
 ```
 
@@ -78,10 +78,13 @@ A basic package template:
 --[[ 
 @metadata
   return {
-    name = "my_package",
+    name = "your_package",
     author = "you",
     version = "1.0.0",
-    description = "Describle your package"
+    description = "Describle your package",
+    example = [[
+      -- you can provide an example here for others to reference
+    ]]
   }
 @end
 --]]
@@ -93,6 +96,8 @@ local M = {}
 
 M.setup = function(opts)
   config = table.extend(config, opts or {})
+  
+  -- write hook here
 end
 
 return M
