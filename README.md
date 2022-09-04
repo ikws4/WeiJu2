@@ -24,6 +24,7 @@ local Activity = import("android.app.Activity")
 local Bundle = import("android.os.Bundle")
 local StringBuilder = import("java.lang.StringBuilder")
 
+-- Hook a method
 hook {
   class = Activity,
   returns = void,
@@ -40,6 +41,21 @@ hook {
     Toast:makeText(this, sb:toString(), Toast.LENGTH_SHORT):show()
     --              ^
     -- Note: `this` is the Activity instance
+  end,
+}
+
+-- Hook a constructor
+local AttributeSet = import("android.util.AttributeSet")
+
+hook {
+  class = Activity,
+  params = {
+    Context,
+    AttributeSet,
+    int
+  },
+  after = function(this, params)
+  
   end,
 }
 ```
@@ -75,7 +91,7 @@ require("ikws4.system_variable").setup {
 A basic package template:
 
 ```lua
---[[ 
+--[=[ 
 @metadata
   return {
     name = "your_package",
@@ -87,7 +103,7 @@ A basic package template:
     ]]
   }
 @end
---]]
+--]=]
 
 local config = {
 }
