@@ -54,7 +54,7 @@ public class Editor extends CodeEditor {
         setEdgeEffectColor(RosepineColorScheme.BASE);
         setCursorAnimationEnabled(false);
         setHighlightCurrentLine(false);
-        setLigatureEnabled(true);
+        setLigatureEnabled(false);
         setInputType(EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         setScrollBarEnabled(false);
         setCursorWidth(2 * getDpUnit());
