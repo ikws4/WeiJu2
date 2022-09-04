@@ -23,6 +23,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     /* package */ static ClassLoader classloader;
     /* package */ static XScriptStore store;
     /* package */ static String currnetPackageName;
+    /* package */ static WeakReference<Context> context;
 
     @Override
     public void initZygote(StartupParam startupParam) {
@@ -42,7 +43,9 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
-                injectScripts((Application) param.thisObject);
+                Context application = (Application) param.thisObject;
+                context = new WeakReference<>(application);
+                injectScripts(application);
             }
         });
     }

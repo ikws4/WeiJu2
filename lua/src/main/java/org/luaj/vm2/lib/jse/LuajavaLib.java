@@ -10,7 +10,7 @@
 *
 * The above copyright notice and this permission notice shall be included in
 * all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,13 +21,6 @@
 ******************************************************************************/
 package org.luaj.vm2.lib.jse;
 
-
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
@@ -37,13 +30,19 @@ import org.luaj.vm2.compiler.LuaC;
 import org.luaj.vm2.lib.LibFunction;
 import org.luaj.vm2.lib.VarArgFunction;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
 /**
  * Subclass of {@link LibFunction} which implements the features of the luajava package.
  * <p>
  * Luajava is an approach to mixing lua and java using simple functions that bind
  * java classes and methods to lua dynamically.  The API is documented on the
  * <a href="http://www.keplerproject.org/luajava/">luajava</a> documentation pages.
- * 
+ *
  * <p>
  * Typically, this library is included as part of a call to
  * {@link org.luaj.vm2.lib.jse.JsePlatform#standardGlobals()}
@@ -64,7 +63,7 @@ import org.luaj.vm2.lib.VarArgFunction;
  *      "print ( sys:currentTimeMillis() )\n", "main.lua" ).call();
  * } </pre>
  * <p>
- * 
+ *
  * The {@code luajava} library is available
  * on all JSE platforms via the call to {@link org.luaj.vm2.lib.jse.JsePlatform#standardGlobals()}
  * and the luajava api's are simply invoked from lua.
@@ -72,7 +71,7 @@ import org.luaj.vm2.lib.VarArgFunction;
  * on JME, but can be used in Android applications.
  * <p>
  * This has been implemented to match as closely as possible the behavior in the corresponding library in C.
- * 
+ *
  * @see LibFunction
  * @see org.luaj.vm2.lib.jse.JsePlatform
  * @see org.luaj.vm2.lib.jme.JmePlatform
@@ -88,16 +87,18 @@ public class LuajavaLib extends VarArgFunction {
 	static final int NEWINSTANCE	= 2;
 	static final int NEW			= 3;
 	static final int CREATEPROXY	= 4;
-	static final int LOADLIB		= 5;
+	static final int OBJECT			= 5;
+	static final int LOADLIB		= 6;
 
 	static final String[] NAMES = {
 		"bindClass",
 		"newInstance",
 		"new",
 		"createProxy",
+		"object",
 		"loadLib",
 	};
-	
+
 	static final int METHOD_MODIFIERS_VARARGS = 0x80;
 
 	public LuajavaLib() {
@@ -127,27 +128,32 @@ public class LuajavaLib extends VarArgFunction {
 				final Varargs consargs = args.subargs(2);
 				return JavaClass.forClass(clazz).getConstructor().invoke(consargs);
 			}
-				
+
 			case CREATEPROXY: {
 				final int niface = args.narg()-1;
 				if ( niface <= 0 )
 					throw new LuaError("no interfaces");
 				final LuaValue lobj = args.checktable(niface+1);
-				
+
 				// get the interfaces
 				final Class[] ifaces = new Class[niface];
 				for ( int i=0; i<niface; i++ )
-					ifaces[i] = classForName(args.checkjstring(i+1));
-				
+                    ifaces[i] = (Class) args.checkuserdata(i+1);
+					// ifaces[i] = classForName(args.checkjstring(i+1));
+
 				// create the invocation handler
 				InvocationHandler handler = new ProxyInvocationHandler(lobj);
-				
+
 				// create the proxy object
 				Object proxy = Proxy.newProxyInstance(getClass().getClassLoader(), ifaces, handler);
-				
+
 				// return the proxy
 				return LuaValue.userdataOf( proxy );
 			}
+			case OBJECT:
+				Class klass = (Class) args.checkuserdata(1);
+				LuaValue lobj = args.checktable(2);
+				return LuaValue.userdataOf(object(klass, lobj));
 			case LOADLIB: {
 				// get constructor
 				String classname = args.checkjstring(1);
@@ -173,15 +179,19 @@ public class LuajavaLib extends VarArgFunction {
 		}
 	}
 
+	protected Object object(Class clazz, LuaValue lobj) {
+		return null;
+	}
+
 	// load classes using app loader to allow luaj to be used as an extension
 	protected Class classForName(String name) throws ClassNotFoundException {
 		return Class.forName(name, true, ClassLoader.getSystemClassLoader());
 	}
-	
-	private static final class ProxyInvocationHandler implements InvocationHandler {
+
+	protected static final class ProxyInvocationHandler implements InvocationHandler {
 		private final LuaValue lobj;
 
-		private ProxyInvocationHandler(LuaValue lobj) {
+		public ProxyInvocationHandler(LuaValue lobj) {
 			this.lobj = lobj;
 		}
 
@@ -196,19 +206,20 @@ public class LuajavaLib extends VarArgFunction {
 			if ( isvarargs ) {
 				Object o = args[--n];
 				int m = Array.getLength( o );
-				v = new LuaValue[n+m];
+				v = new LuaValue[n+m+1];
+				v[0] = CoerceJavaToLua.coerce(proxy);
 				for ( int i=0; i<n; i++ )
-					v[i] = CoerceJavaToLua.coerce(args[i]);
+					v[i+1] = CoerceJavaToLua.coerce(args[i]);
 				for ( int i=0; i<m; i++ )
-					v[i+n] = CoerceJavaToLua.coerce(Array.get(o,i));
+					v[i+n+1] = CoerceJavaToLua.coerce(Array.get(o,i));
 			} else {
-				v = new LuaValue[n];
+				v = new LuaValue[n+1];
+				v[0] = CoerceJavaToLua.coerce(proxy);
 				for ( int i=0; i<n; i++ )
-					v[i] = CoerceJavaToLua.coerce(args[i]);
+					v[i+1] = CoerceJavaToLua.coerce(args[i]);
 			}
 			LuaValue result = func.invoke(v).arg1();
 			return CoerceLuaToJava.coerce(result, method.getReturnType());
 		}
 	}
-	
 }
