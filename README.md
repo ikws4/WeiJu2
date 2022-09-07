@@ -150,7 +150,7 @@ function import(class_name) end
 ---   my_runnable:run()
 ---
 --- @param class Class
---- @param proxy function
+--- @param proxy table<string, function>
 --- @return Class
 function object(class, proxy) end
 ```
