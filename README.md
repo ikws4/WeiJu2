@@ -45,10 +45,11 @@ hook {
 }
 
 -- Hook a constructor
+local View = import("android.view.View")
 local AttributeSet = import("android.util.AttributeSet")
 
 hook {
-  class = Activity,
+  class = View,
   params = {
     Context,
     AttributeSet,
