@@ -46,6 +46,7 @@ hook {
 
 -- Hook a constructor
 local View = import("android.view.View")
+local Context = import("android.content.Context")
 local AttributeSet = import("android.util.AttributeSet")
 
 hook {
@@ -122,6 +123,85 @@ return M
 
 Want to share your work with others? Create a PR at [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts).
 
+
+# API
+
+### import
+```lua
+--- Examples:
+---   local StringBuilder = import("java.lang.StringBuilder")
+---   local my_string_builder = StringBuilder("hi")
+---   print(my_string_builder:toString())
+---
+--- @param class_name string
+--- @return Class
+function import(class_name) end
+```
+
+### object
+```lua
+--- Examples:
+---   local Runnable = import("java.lang.Runnable")
+---   local my_runnable = object(Runnable, {
+---     run = function(this)
+---     
+---     end
+---   })
+---   my_runnable:run()
+---
+--- @param class Class
+--- @param proxy function
+--- @return Class
+function object(class, proxy) end
+```
+
+### hook
+```lua
+--- Exampels:
+---   local View = import("android.view.View")
+---   local Context = import("android.content.Context")
+---   local AttributeSet = import("android.util.AttributeSet")
+---
+---   hook {
+---     class = View,
+---     params = {
+---       Context,
+---       AttributeSet,
+---       int
+---     },
+---     after = function(this, params)
+---       -- Add your own logic after constructor is called
+---        
+---     end
+---   }
+---
+---   local Canvas = import("android.graphics.Canvas")
+---
+---   hook {
+---     class = View,
+---     returns = void,
+---     method = "onDraw",
+---     params = {
+---       Canvas
+---     },
+---     after = function(this, params)
+---       local canvas = params[1]
+---       -- Using canvas to draw anything you want
+---     
+---     end
+---   }
+---
+--- @param config table This table also accepts the following keys
+---                     - class: (Class) The hook target.
+---                     - returns: (nil or Class) The method return type.
+---                     - method: (string) The method name.
+---                     - params: (nil|table) The method argument types, can be nil if there is no argument.
+---                     - before: (nil|function) Executed before the method is called.
+---                     - after: (nil|function) Executed after the method is called.
+---                     - replace: (nil|function) A simple version of `before`, use to rewrite the whole method.
+--- @return Unhook
+function hook(config) end
+```
 
 # Screenshots
 
