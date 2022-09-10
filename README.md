@@ -191,7 +191,7 @@ function object(class, proxy) end
 ---     end
 ---   }
 ---
---- @param config table This table also accepts the following keys
+--- @param config table This table accepts the following keys
 ---                     - class: (Class) The hook target.
 ---                     - returns: (nil or Class) The method return type.
 ---                     - method: (string) The method name.
