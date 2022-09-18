@@ -13,4 +13,9 @@
     <item
         android:id="@+id/remove_from_my_scripts"
         android:title="@string/remove" />
+
+    <item
+        android:id="@+id/about_this_package"
+        android:title="@string/home_about_this_package"
+        android:visible="false" />
 </menu>

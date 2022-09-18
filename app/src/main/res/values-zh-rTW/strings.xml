@@ -29,7 +29,7 @@
     <string name="home_package">拓展</string>
     <string name="home_copy_example">複製範例</string>
     <string name="home_add_to_my_scripts">新增到我的腳本</string>
-    <string name="home_about_this_script">腳本資訊</string>
+    <string name="home_about_this_package">腳本資訊</string>
 
     <string name="main_permission_request">使用權請求</string>
     <string name="main_permission_request_root_description">我們需要 root 權限來訪問日誌以及一些命令列工具</string>

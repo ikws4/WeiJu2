@@ -1,7 +1,9 @@
 package io.ikws4.weiju.page.home.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -233,6 +235,10 @@ public class ScriptListView extends RecyclerView {
                     menu.findItem(R.id.copy_example).setVisible(true);
                 }
 
+                if (item.isPackage) {
+                    menu.findItem(R.id.about_this_package).setVisible(true);
+                }
+
                 popup.setGravity(Gravity.END);
                 popup.setOnMenuItemClickListener(it -> {
                     int id = it.getItemId();
@@ -242,6 +248,9 @@ public class ScriptListView extends RecyclerView {
                         mCallbacks.onRequireUpdateScript(item);
                     } else if (id == R.id.copy_example) {
                         mCallbacks.onRequireCopyExample(item);
+                    } else if (id == R.id.about_this_package) {
+                        Intent indent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ikws4/WeiJu2-Scripts/tree/main/docs/" + item.id + ".md"));
+                        getContext().startActivity(indent);
                     }
                     return true;
                 });
@@ -301,8 +310,9 @@ public class ScriptListView extends RecyclerView {
                 popup.setOnMenuItemClickListener(it -> {
                     if (it.getItemId() == R.id.add_to_my_scripts) {
                         mCallbacks.onRequireAddToMyScripts(v, item);
-                    } else if (it.getItemId() == R.id.about_this_script) {
-                        Toast.makeText(v.getContext(), R.string.home_about_this_script, Toast.LENGTH_SHORT).show();
+                    } else if (it.getItemId() == R.id.about_this_package) {
+                        Intent indent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ikws4/WeiJu2-Scripts/tree/main/docs/" + item.id + ".md"));
+                        getContext().startActivity(indent);
                     }
                     return true;
                 });
@@ -526,16 +536,22 @@ public class ScriptListView extends RecyclerView {
     }
 
     public interface Callbacks {
-        default void onRequireAddToMyScripts(View v, ScriptItem item) {}
+        default void onRequireAddToMyScripts(View v, ScriptItem item) {
+        }
 
-        default void onRequireRemoveFromMyScripts(View v, ScriptItem item) {}
+        default void onRequireRemoveFromMyScripts(View v, ScriptItem item) {
+        }
 
-        default void onRequireGotoEditorFragment(ScriptItem item) {}
+        default void onRequireGotoEditorFragment(ScriptItem item) {
+        }
 
-        default void onRequireCreateNewScripts(View v) {}
+        default void onRequireCreateNewScripts(View v) {
+        }
 
-        default void onRequireUpdateScript(ScriptItem item) {}
+        default void onRequireUpdateScript(ScriptItem item) {
+        }
 
-        default void onRequireCopyExample(ScriptItem item) {}
+        default void onRequireCopyExample(ScriptItem item) {
+        }
     }
 }

@@ -7,6 +7,6 @@
         android:title="@string/home_add_to_my_scripts" />
 
     <item
-        android:id="@+id/about_this_script"
-        android:title="@string/home_about_this_script" />
+        android:id="@+id/about_this_package"
+        android:title="@string/home_about_this_package" />
 </menu>

@@ -29,7 +29,7 @@
     <string name="home_package">paquet</string>
     <string name="home_copy_example">Copier Exemple</string>
     <string name="home_add_to_my_scripts">Ajouter A Mes Scripts</string>
-    <string name="home_about_this_script">A Propos De Ce Script</string>
+    <string name="home_about_this_package">A Propos De Ce Script</string>
 
     <string name="main_permission_request">Demande De Permission</string>
     <string name="main_permission_request_root_description">Nous avons besoin de l\’accès à la raçine pour accéder au journal du système et certains autres outils en ligne de commandes</string>

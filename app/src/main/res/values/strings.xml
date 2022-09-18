@@ -34,7 +34,7 @@
     <string name="home_package">package</string>
     <string name="home_copy_example">Copy Example</string>
     <string name="home_add_to_my_scripts">Add To My Scripts</string>
-    <string name="home_about_this_script">About This Script</string>
+    <string name="home_about_this_package">About This Package</string>
     <string name="home_script_name">Script Name</string>
 
     <string name="main_permission_request">Permission Request</string>
