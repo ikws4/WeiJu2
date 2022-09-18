@@ -30,6 +30,7 @@ import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.page.about.AboutFragment;
 import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.page.home.widget.AppListView;
+import io.ikws4.weiju.page.home.widget.CreateScriptDialog;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.page.logcat.LogcatFragment;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
@@ -76,9 +77,18 @@ public class HomeFragment extends BaseFragment {
             }
 
             @Override
-            public void onRequireCreateNewScripts() {
-                ScriptListView.ScriptItem item = vm.createNewScriptAndAddToMyScripts();
-                onRequireGotoEditorFragment(item);
+            public void onRequireCreateNewScripts(View v) {
+                new CreateScriptDialog(getContext())
+                    .setOnCreateListener(dialog -> {
+                        ScriptListView.ScriptItem item = vm.createNewScriptAndAddToMyScripts(
+                            dialog.getName(),
+                            dialog.getAuthor(),
+                            dialog.getDescription(),
+                            dialog.getTemplate()
+                        );
+                        onRequireGotoEditorFragment(item);
+                    })
+                    .show();
             }
 
             @Override

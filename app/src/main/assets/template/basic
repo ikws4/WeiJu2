@@ -1,0 +1,28 @@
+--[[
+@metadata
+  return {
+    name = "${name}",
+    author = "${author}",
+    version = "${version}",
+    description = "${description}"
+  }
+@end
+--]]
+
+local Activity = import("android.app.Activity");
+local Bundle = import("android.os.Bundle");
+
+hook {
+  class = Activity,
+  returns = void,
+  method = "onCreate",
+  params = {
+    Bundle
+  },
+  before = function(this, params)
+    print("Activity.onCreate: before hook");
+  end,
+  after = function(this, params)
+    print("Activity.onCreate: after hook");
+  end,
+}

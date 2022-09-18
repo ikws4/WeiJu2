@@ -1,0 +1,28 @@
+--[=[
+@metadata
+  return {
+    name = "${name}",
+    author = "${author}",
+    version = "${version}",
+    description = "${description}",
+    example = [[
+      require("${author}.${name}").setup {
+        
+      }
+    ]]
+  }
+@end
+--]=]
+
+local config = {
+}
+
+local M = {}
+
+M.setup = function(opts)
+  config = table.extend(config, opts or {})
+
+  -- write hook here
+end
+
+return M

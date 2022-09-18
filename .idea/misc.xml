@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/cursor.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/dialog.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/dialog_cursor.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/edit_text_background.xml" value="0.1615" />
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_add_circle.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.1875" />
@@ -52,10 +53,11 @@
         <entry key="app/src/main/res/layout/app_item.xml" value="0.648388671875" />
         <entry key="app/src/main/res/layout/available_scripts_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/create_new_script.xml" value="0.3842857142857143" />
+        <entry key="app/src/main/res/layout/create_script_dialog.xml" value="0.3670033918108259" />
         <entry key="app/src/main/res/layout/editor_context_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/editor_fragment.xml" value="0.30917053222656254" />
         <entry key="app/src/main/res/layout/editor_symbol_item.xml" value="0.7755757649739583" />
-        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.3220108032226563" />
         <entry key="app/src/main/res/layout/item_add_app.xml" value="0.863793436686198" />
         <entry key="app/src/main/res/layout/item_app.xml" value="0.4987847900390625" />
         <entry key="app/src/main/res/layout/list_tile.xml" value="0.504183429690963" />

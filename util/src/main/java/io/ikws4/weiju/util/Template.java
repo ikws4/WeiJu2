@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class Template {
     private final String mSource;
-    private final Map<String, Span> mKeywordSpan = new HashMap<>();
+    private final Map<String, List<Span>> mKeywordSpan = new HashMap<>();
 
     public Template(InputStream in) {
         String source = "";
@@ -57,10 +57,13 @@ public class Template {
                     }
 
                     String keyword = mSource.substring(start, end);
+                    if (!mKeywordSpan.containsKey(keyword)) {
+                        mKeywordSpan.put(keyword, new ArrayList<>());
+                    }
                     // "${longgggggggggggname}"
                     //    ^                  ^
                     //  start               end
-                    mKeywordSpan.put(keyword, new Span(start - 2, end, ""));
+                    mKeywordSpan.get(keyword).add(new Span(start - 2, end, ""));
 
                     if (end == mSource.length()) {
                         throw new IllegalArgumentException("Expect a '}'");
@@ -73,16 +76,21 @@ public class Template {
     }
 
     public void set(String name, String value) {
-        Span span = mKeywordSpan.get(name);
-        if (span == null) {
+        List<Span> spans = mKeywordSpan.get(name);
+        if (spans == null) {
             throw new IllegalArgumentException("Can't find a placeholder with name '" + name + "'");
         }
-        span.value = value;
+        for (Span span : spans) {
+            span.value = value;
+        }
     }
 
     @Override
     public String toString() {
-        List<Span> spans = new ArrayList<>(mKeywordSpan.values());
+        List<Span> spans = new ArrayList<>();
+        for (List<Span> values : mKeywordSpan.values()) {
+            spans.addAll(values);
+        }
         Collections.sort(spans);
 
         int i = 0;

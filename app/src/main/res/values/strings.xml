@@ -11,6 +11,11 @@
     <string name="help">Help</string>
     <string name="version">Version</string>
     <string name="restart">Restart</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="author">Author</string>
+    <string name="description">Description</string>
+    <string name="template">Template</string>
 
     <string name="about_bug_report">Bug report</string>
     <string name="about_source_code_title">Source code</string>
@@ -30,6 +35,7 @@
     <string name="home_copy_example">Copy Example</string>
     <string name="home_add_to_my_scripts">Add To My Scripts</string>
     <string name="home_about_this_script">About This Script</string>
+    <string name="home_script_name">Script Name</string>
 
     <string name="main_permission_request">Permission Request</string>
     <string name="main_permission_request_root_description">We need root permission to access logcat and some other command line utilities</string>

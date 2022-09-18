@@ -16,6 +16,7 @@ public class Preferences {
   public static final String APP_LIST = "app_list";
   public static final String LOGCAT_TIME = "logcat_time";
   public static final String PACKAGE_LIST_SUFFIX = "_package_list";
+  public static final String AUTHOR = "author";
 
   private Preferences(Context context) {
     storage = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);

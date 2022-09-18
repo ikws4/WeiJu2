@@ -70,15 +70,15 @@ public class HomeViewModel extends BaseViewModel {
         return mCurrentSelectedAppPkg;
     }
 
-    public ScriptListView.ScriptItem createNewScriptAndAddToMyScripts() {
+    public ScriptListView.ScriptItem createNewScriptAndAddToMyScripts(String name, String author, String description, String templateName) {
         ScriptListView.ScriptItem item = null;
         try {
-            InputStream in = getApplication().getAssets().open("script_template");
+            InputStream in = getApplication().getAssets().open("template/" + templateName);
             Template template = new Template(in);
-            template.set("name", RandomUtil.nextWords("_", 3).toLowerCase());
-            template.set("author", RandomUtil.nextWords("", 1));
+            template.set("name", name.isEmpty() ? RandomUtil.nextWords("_", 3).toLowerCase() : name);
+            template.set("author", author.isEmpty() ? RandomUtil.nextWords("", 1) : author);
             template.set("version", "0.0.1");
-            template.set("description", RandomUtil.nextWords(" ", 10));
+            template.set("description", description.isEmpty() ? RandomUtil.nextWords(" ", 10) : description);
             addToMyScripts(item = ScriptListView.ScriptItem.from(template.toString()));
         } catch (IOException e) {
             Logger.e(e);

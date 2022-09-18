@@ -68,7 +68,7 @@ public class MigrateTool {
 
             SharedPreferences sp = getSharedPreferences(context, pkg);
             try {
-                Template t = new Template(context.getAssets().open("migrate_init_template"));
+                Template t = new Template(context.getAssets().open("template/migrate_init"));
                 migrateStatusBar(sp, t);
                 migrateNavBar(sp, t);
                 migrateScreen(sp, t);

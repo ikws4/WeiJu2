@@ -47,7 +47,8 @@ import io.ikws4.weiju.util.UnitConverter;
 
 public class ScriptListView extends RecyclerView {
     private Adapter mAdapter;
-    private Callbacks mCallbacks = new EmptyCallbacks();
+    private Callbacks mCallbacks = new Callbacks() {
+    };
 
     public ScriptListView(@NonNull Context context) {
         super(context);
@@ -184,7 +185,7 @@ public class ScriptListView extends RecyclerView {
                 ImageButton vHelp = itemView.findViewById(R.id.btn_icon);
                 vHelp.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_add_circle));
                 vHelp.setOnClickListener((v) -> {
-                    mCallbacks.onRequireCreateNewScripts();
+                    mCallbacks.onRequireCreateNewScripts(v);
                 });
             }
         }
@@ -525,43 +526,16 @@ public class ScriptListView extends RecyclerView {
     }
 
     public interface Callbacks {
-        void onRequireAddToMyScripts(View v, ScriptItem item);
+        default void onRequireAddToMyScripts(View v, ScriptItem item) {}
 
-        void onRequireRemoveFromMyScripts(View v, ScriptItem item);
+        default void onRequireRemoveFromMyScripts(View v, ScriptItem item) {}
 
-        void onRequireGotoEditorFragment(ScriptItem item);
+        default void onRequireGotoEditorFragment(ScriptItem item) {}
 
-        void onRequireCreateNewScripts();
+        default void onRequireCreateNewScripts(View v) {}
 
-        void onRequireUpdateScript(ScriptItem item);
+        default void onRequireUpdateScript(ScriptItem item) {}
 
-        void onRequireCopyExample(ScriptItem item);
-    }
-
-    public static class EmptyCallbacks implements Callbacks {
-
-        @Override
-        public void onRequireAddToMyScripts(View v, ScriptItem item) {
-        }
-
-        @Override
-        public void onRequireRemoveFromMyScripts(View v, ScriptItem item) {
-        }
-
-        @Override
-        public void onRequireGotoEditorFragment(ScriptItem item) {
-        }
-
-        @Override
-        public void onRequireCreateNewScripts() {
-        }
-
-        @Override
-        public void onRequireUpdateScript(ScriptItem item) {
-        }
-
-        @Override
-        public void onRequireCopyExample(ScriptItem item) {
-        }
+        default void onRequireCopyExample(ScriptItem item) {}
     }
 }

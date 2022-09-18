@@ -12,6 +12,11 @@
     <string name="help">帮助</string>
     <string name="version">版本</string>
     <string name="restart">重启</string>
+    <string name="cancel">取消</string>
+    <string name="create">创建</string>
+    <string name="author">作者</string>
+    <string name="description">描述</string>
+    <string name="template">模版</string>
 
     <string name="about_bug_report">提交 BUG</string>
     <string name="about_source_code_title">源码</string>
@@ -32,6 +37,7 @@
     <string name="home_copy_example">复制示例</string>
     <string name="home_add_to_my_scripts">添加到我的脚本</string>
     <string name="home_about_this_script">脚本信息</string>
+    <string name="home_script_name">脚本名称</string>
 
     <string name="main_permission_request">权限请求</string>
     <string name="main_permission_request_root_description">我们需要 root 权限来访问日志以及一些命令行工具</string>
