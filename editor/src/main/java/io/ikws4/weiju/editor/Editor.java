@@ -18,10 +18,10 @@ import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import org.eclipse.tm4e.core.internal.theme.reader.ThemeReader;
-import org.eclipse.tm4e.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.registry.IThemeSource;
 
 import java.lang.ref.WeakReference;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,7 +104,7 @@ public class Editor extends CodeEditor {
     private void setLanguageAndTheme() {
         try {
             String themePath = "textmate/theme/rose-pine.json";
-            IRawTheme _theme = ThemeReader.readThemeSync(themePath, getContext().getAssets().open(themePath));
+            IThemeSource _theme = IThemeSource.fromInputStream(getContext().getAssets().open(themePath), themePath, Charset.defaultCharset());
 
             LuaLanguage language = new LuaLanguage(this, _theme);
             language.setTabSize(getTabWidth());

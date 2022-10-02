@@ -1,6 +1,6 @@
 package io.ikws4.weiju.editor;
 
-import org.eclipse.tm4e.core.theme.IRawTheme;
+import org.eclipse.tm4e.core.registry.IThemeSource;
 
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 
@@ -22,7 +22,7 @@ class RosepineColorScheme extends TextMateColorScheme {
     public static final int HIGHLIGHT_MED = 0xff44415a;
     public static final int HIGHLIGHT_HIGH = 0xff56526e;
 
-    public RosepineColorScheme(IRawTheme iRawTheme) {
+    public RosepineColorScheme(IThemeSource iRawTheme) throws Exception {
         super(iRawTheme);
     }
 
@@ -48,6 +48,7 @@ class RosepineColorScheme extends TextMateColorScheme {
         setColor(LINE_DIVIDER, BASE);
         setColor(LINE_NUMBER_BACKGROUND, BASE);
         setColor(LINE_NUMBER, MUTED);
+        setColor(LINE_NUMBER_CURRENT, TEXT);
 
         setColor(HIGHLIGHTED_DELIMITERS_BACKGROUND, TRANSPARENT);
         setColor(HIGHLIGHTED_DELIMITERS_FOREGROUND, SUBTLE);
