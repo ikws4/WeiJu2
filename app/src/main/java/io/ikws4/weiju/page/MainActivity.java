@@ -8,15 +8,13 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.topjohnwu.superuser.Shell;
-
-import java.util.Objects;
 
 import io.ikws4.weiju.R;
 
@@ -63,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         // root permission
         Shell.getShell();
 
-        if (Objects.equals(Shell.isAppGrantedRoot(), false)) {
-            new AlertDialog.Builder(this)
+        if (!Shell.rootAccess()) {
+            new MaterialAlertDialogBuilder(this, R.style.Dialog_WeiJu)
                 .setTitle(R.string.main_permission_request)
                 .setCancelable(false)
                 .setMessage(R.string.main_permission_request_root_description)

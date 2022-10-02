@@ -220,7 +220,9 @@ public class HomeFragment extends BaseFragment {
         } else if (id == R.id.logcat) {
             startFragment(LogcatFragment.class);
         } else if (id == R.id.restar) {
-            Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec();
+             if (!Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec().isSuccess()) {
+                 Toast.makeText(getContext(), "Restart failed: need root access", Toast.LENGTH_SHORT).show();
+             }
         } else if (id == R.id.about) {
             startFragment(AboutFragment.class);
         } else {
