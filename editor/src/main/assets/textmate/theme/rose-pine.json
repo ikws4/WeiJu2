@@ -234,10 +234,18 @@
     },
     {
       "scope": [
-        "variable"
+        "support.function.any-method"
       ],
       "settings": {
         "foreground": "#ea9a97"
+      }
+    },
+    {
+      "scope": [
+        "variable"
+      ],
+      "settings": {
+        "foreground": "#e0def4"
       }
     },
     {
