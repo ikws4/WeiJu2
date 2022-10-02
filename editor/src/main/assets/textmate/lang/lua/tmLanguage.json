@@ -175,11 +175,7 @@
       "name": "support.function.library.lua"
     },
     {
-      "match": "\\b(and|or|not)\\b",
-      "name": "keyword.logical.lua"
-    },
-    {
-      "match": "\\b(\\|\\||\\&\\&|\\!)\\b",
+      "match": "\\b(and|or|not|\\|\\||\\&\\&|\\!)\\b",
       "name": "keyword.operator.lua"
     },
     {
