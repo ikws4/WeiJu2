@@ -9,8 +9,8 @@
 @end
 --]]
 
-local Activity = import("android.app.Activity");
-local Bundle = import("android.os.Bundle");
+local Activity = import("android.app.Activity")
+local Bundle = import("android.os.Bundle")
 
 hook {
   class = Activity,
@@ -20,9 +20,9 @@ hook {
     Bundle
   },
   before = function(this, params)
-    print("Activity.onCreate: before hook");
+    print("Activity.onCreate: before hook")
   end,
   after = function(this, params)
-    print("Activity.onCreate: after hook");
-  end,
+    print("Activity.onCreate: after hook")
+  end
 }
