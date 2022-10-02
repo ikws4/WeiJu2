@@ -56,6 +56,14 @@
     },
     {
       "scope": [
+        "entity.other.attribute",
+      ],
+      "settings": {
+        "foreground": "#e0def4"
+      }
+    },
+    {
+      "scope": [
         "entity.other.attribute-name",
         "entity.other.inherited-class"
       ],
