@@ -15,7 +15,6 @@ public class XposedLuajavaLib extends LuajavaLib {
         ProxyInvocationHandler handler = new ProxyInvocationHandler(lobj);
 
         try {
-            // FIXME: class cannot be instantiate
             return ProxyBuilder.forClass(clazz)
                 .dexCache(XposedInit.context.get().getCodeCacheDir())
                 .parentClassLoader(XposedInit.classloader)
