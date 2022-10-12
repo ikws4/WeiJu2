@@ -196,7 +196,7 @@
     },
     {
       "match": "\\+|-|%|#|\\*|\\/|\\^|==?|~=|!=|<=?|>=?|(?<!\\.)\\.{2}(?!\\.)",
-      "name": "keyword.operator.lua"
+      "name": "punctuation.operator.lua"
     }
   ],
   "repository": {
