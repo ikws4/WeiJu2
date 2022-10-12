@@ -55,7 +55,6 @@
     <style name="Dialog.WeiJu" parent="Theme.MaterialComponents.Dialog">
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
         <item name="colorAccent">@color/iris</item>
-        <item name="android:background">@color/base</item>
     </style>
 
     <style name="DialogAnimation">

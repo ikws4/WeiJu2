@@ -62,12 +62,13 @@ public class MainActivity extends AppCompatActivity {
         Shell.getShell();
 
         if (!Shell.rootAccess()) {
-            new MaterialAlertDialogBuilder(this, R.style.Dialog_WeiJu)
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.Dialog_WeiJu)
                 .setTitle(R.string.main_permission_request)
                 .setCancelable(false)
                 .setMessage(R.string.main_permission_request_root_description)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+                .setPositiveButton(android.R.string.ok, null);
+            builder.getBackground().setTint(getColor(R.color.base));
+            builder.show();
         }
     }
 
