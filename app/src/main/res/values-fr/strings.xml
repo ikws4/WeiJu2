@@ -38,7 +38,7 @@
     <string name="home_script_name">Script Name</string>
 
     <string name="main_permission_request">Demande De Permission</string>
-    <string name="main_permission_request_root_description">Nous avons besoin de l\’accès à la raçine pour accéder au journal du système et certains autres outils en ligne de commandes</string>
+    <string name="main_permission_request_root_description">Nous avons besoin de l\’accès à la raçine pour le `logcat` et certains autres outils en ligne de commandes comme `am` pour forcer l\’arrêt d\’une application</string>
 
     <string name="migratetool_cannot_load_hooklist">OutilMigration: Ne peut pas charger hook_list</string>
     <string name="migratetool_please_activate_weiju2">OutilMigration: Merci d\’activer WeiJu2 dans xposed/lsposed pour commencer</string>
