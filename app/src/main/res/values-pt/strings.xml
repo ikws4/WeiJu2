@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">WeiJu2</string>
+    <string name="app_description">O primeiro módulo xposed programável, fornece uma nova maneira de alterar o comportamento dos aplicativos.\nMovido pelo Lua e feito com ♥</string>
+
+    <string name="logcat">Logcat</string>
+    <string name="about">Sobre</string>
+    <string name="update">Atualizar</string>
+    <string name="remove">Remover</string>
+    <string name="clear">Limpar</string>
+    <string name="close">Fechar</string>
+    <string name="help">Ajuda</string>
+    <string name="version">Versão</string>
+    <string name="restart">Reiniciar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="create">Criar</string>
+    <string name="author">Autor</string>
+    <string name="description">Descrição</string>
+    <string name="template">Modelo</string>
+
+    <string name="about_bug_report">Relatar erro</string>
+    <string name="about_source_code_title">Código fonte</string>
+    <string name="about_source_code_subtitle">Se você gostou deste app, por favor clique no botão estrela no github para apoiar o meu trabalho</string>
+
+    <string name="home_my_scripts_empty">clique no botão  para criar um novo Script</string>
+    <string name="home_available_scripts_empty">Não há mais Scripts disponíveis para este app</string>
+    <string name="home_my_scripts">Meus Scripts</string>
+    <string name="home_available_scripts">Scripts Disponíveis</string>
+    <string name="home_status">Estado</string>
+    <string name="home_launch_app">Abrir app</string>
+    <string name="home_drag_to_the_right">Arraste para a direita</string>
+    <string name="home_release_to_delete">Solte para deletar</string>
+    <string name="home_status_not_activated_in_xposed">WeiJu2 não foi ativado no xposed</string>
+    <string name="home_new_version">nova versão</string>
+    <string name="home_package">pacote</string>
+    <string name="home_copy_example">Copiar Exemplo</string>
+    <string name="home_add_to_my_scripts">Add aos Meus Scripts</string>
+    <string name="home_about_this_package">Sobre Este Pacote</string>
+    <string name="home_script_name">Nome do Script</string>
+
+    <string name="main_permission_request">Solicitação de Permissão</string>
+    <string name="main_permission_request_root_description">É necessário acesso root para o `logcat` e outras ferramentas e comandos como `am` para poder parar a execução de algum app</string>
+
+    <string name="migratetool_cannot_load_hooklist">MigrateTool: Não foi possível carregar a lista de hooks</string>
+    <string name="migratetool_please_activate_weiju2">MigrateTool: Favor ativar o WeiJu2 no xposed/lsposed primeiro</string>
+    <string name="migratetool_migrate_success">MigrateTool: Migrado com sucesso da versão antiga do WeiJu</string>
+</resources>
