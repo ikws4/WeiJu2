@@ -12,12 +12,12 @@ import org.luaj.vm2.lib.TableLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 
 public class XposedPlatform {
-    public static Globals create() {
+    public static Globals create(String pkgName) {
         Globals globals = new Globals();
 
         // java impl libs
         globals.load(new XposedBaselib());
-        globals.load(new XposedPackageLib());
+        globals.load(new XposedPackageLib(pkgName));
         globals.load(new Bit32Lib());
         globals.load(new TableLib());
         globals.load(new StringLib());

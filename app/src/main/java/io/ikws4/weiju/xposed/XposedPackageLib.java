@@ -8,6 +8,11 @@ import org.luaj.vm2.lib.PackageLib;
 import org.luaj.vm2.lib.VarArgFunction;
 
 class XposedPackageLib extends PackageLib {
+    private final String mCurrentHookPackageName;
+
+    public XposedPackageLib(String currrentHookPackageName) {
+        mCurrentHookPackageName = currrentHookPackageName;
+    }
 
     @Override
     public LuaValue call(LuaValue modname, LuaValue env) {
@@ -28,7 +33,7 @@ class XposedPackageLib extends PackageLib {
             LuaString name = args.checkstring(1);
 
             // First try to load user package
-            String script = XposedInit.store.get(XposedInit.currnetPackageName + "_" + name.tojstring(), "null");
+            String script = XposedInit.store.get(mCurrentHookPackageName + "_" + name.tojstring(), "null");
             if (!script.equals("null")) {
                 LuaValue v = globals.load(script);
                 if (v.isfunction())

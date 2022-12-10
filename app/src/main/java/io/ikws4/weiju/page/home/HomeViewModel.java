@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.api.API;
 import io.ikws4.weiju.ext.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
@@ -303,17 +304,23 @@ public class HomeViewModel extends BaseViewModel {
             .collect(Collectors.toMap(it -> it.split(",")[0], it -> Long.valueOf(it.split(",")[1])));
 
         List<AppListView.AppItem> selectedData = new ArrayList<>();
+
+        // Add a global app at the top
+        selectedData.add(new AppListView.AppItem("Global", "io.ikws4.weiju", false));
+
         mDisposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
+            .filter(info -> !info.packageName.equals(BuildConfig.APPLICATION_ID))
             .filter(info -> map.containsKey(info.packageName))
             .sorted(Comparator.comparingLong(a -> map.get(a.packageName)))
             .map(info -> new AppListView.AppItem(info.loadLabel(pm).toString(), info.packageName, AppListView.AppItem.isSystemApp(info)))
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
-                selectedData.addAll(infos);
-                mSelectedApps.setValue(selectedData);
-            }));
+                    selectedData.addAll(infos);
+                    mSelectedApps.setValue(selectedData);
+                }
+            ));
     }
 
     private boolean isMyScriptsMetadataContains(ScriptListView.ScriptItem item) {

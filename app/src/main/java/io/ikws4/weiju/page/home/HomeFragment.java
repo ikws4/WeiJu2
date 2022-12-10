@@ -214,9 +214,8 @@ public class HomeFragment extends BaseFragment {
             String pkg = vm.getCurrentSelectedAppPkg().getValue();
             Intent launchAppIntent = pm.getLaunchIntentForPackage(pkg);
 
-            Shell.cmd("am force-stop " + pkg).exec();
-
-            startActivity(launchAppIntent);
+            Shell.cmd("am force-stop " + pkg + " && am start -n " + launchAppIntent.getComponent().flattenToShortString()).exec();
+            // startActivity(launchAppIntent);
         } else if (id == R.id.logcat) {
             startFragment(LogcatFragment.class);
         } else if (id == R.id.restar) {

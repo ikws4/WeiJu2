@@ -51,7 +51,6 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     }
 
     public void injectScripts(Context context) {
-        Globals globals = XposedPlatform.create();
         store = XScriptStore.getInstance(context);
 
         if (!store.canRead()) {
@@ -59,7 +58,13 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
             return;
         }
 
-        Set<String> keys = store.get(currnetPackageName, Collections.emptySet());
+        injectScripts(BuildConfig.APPLICATION_ID); // global scripts
+        injectScripts(currnetPackageName);
+    }
+
+    private void injectScripts(String pkgName) {
+        Globals globals = XposedPlatform.create(pkgName);
+        Set<String> keys = store.get(pkgName, Collections.emptySet());
         for (String key : keys) {
             String script = store.get(key, "");
             try {
