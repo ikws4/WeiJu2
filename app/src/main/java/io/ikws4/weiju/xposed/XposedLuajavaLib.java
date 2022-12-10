@@ -17,7 +17,7 @@ public class XposedLuajavaLib extends LuajavaLib {
         try {
             return ProxyBuilder.forClass(clazz)
                 .dexCache(XposedInit.context.get().getCodeCacheDir())
-                .parentClassLoader(XposedInit.classloader)
+                .parentClassLoader(XposedInit.lpparam.classLoader)
                 .handler(handler)
                 .build();
         } catch (Exception e) {
@@ -28,7 +28,7 @@ public class XposedLuajavaLib extends LuajavaLib {
     @Override
     protected Class classForName(String name) {
         try {
-            return XposedHelpers.findClass(name, XposedInit.classloader);
+            return XposedHelpers.findClass(name, XposedInit.lpparam.classLoader);
         } catch (XposedHelpers.ClassNotFoundError e) {
             throw new LuaError(e);
         }

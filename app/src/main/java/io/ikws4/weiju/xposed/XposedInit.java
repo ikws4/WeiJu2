@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import org.luaj.vm2.Globals;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -20,10 +21,9 @@ import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.storage.scriptstore.XScriptStore;
 
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit {
-    /* package */ static ClassLoader classloader;
     /* package */ static XScriptStore store;
-    /* package */ static String currnetPackageName;
     /* package */ static WeakReference<Context> context;
+    /* package */ static XC_LoadPackage.LoadPackageParam lpparam;
 
     @Override
     public void initZygote(StartupParam startupParam) {
@@ -32,10 +32,9 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        classloader = lpparam.classLoader;
-        currnetPackageName = lpparam.packageName;
+        XposedInit.lpparam = lpparam;
 
-        if (currnetPackageName.equals(BuildConfig.APPLICATION_ID)) {
+        if (lpparam.packageName.equals(BuildConfig.APPLICATION_ID)) {
             updateHostXposedStatus();
             return;
         }
@@ -59,12 +58,14 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         }
 
         injectScripts(BuildConfig.APPLICATION_ID); // global scripts
-        injectScripts(currnetPackageName);
+        injectScripts(lpparam.packageName);
     }
 
     private void injectScripts(String pkgName) {
         Globals globals = XposedPlatform.create(pkgName);
         Set<String> keys = store.get(pkgName, Collections.emptySet());
+
+        globals.set("lpparam", CoerceJavaToLua.coerce(lpparam));
         for (String key : keys) {
             String script = store.get(key, "");
             try {
@@ -77,7 +78,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     }
 
     private void updateHostXposedStatus() {
-        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.WeiJu", classloader);
+        Class<?> clazz = XposedHelpers.findClass("io.ikws4.weiju.WeiJu", lpparam.classLoader);
         XposedHelpers.setStaticBooleanField(clazz, "XPOSED_ENABLED", true);
     }
 }
