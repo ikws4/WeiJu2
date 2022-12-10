@@ -21,14 +21,19 @@ import androidx.core.content.res.ResourcesCompat;
 import org.eclipse.tm4e.core.registry.IThemeSource;
 
 import java.lang.ref.WeakReference;
-import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.EventReceiver;
 import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
@@ -46,6 +51,8 @@ public class Editor extends CodeEditor {
 
     public Editor(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+
         mCharWidth = getTextPaint().measureText("1") / 2;
 
         Typeface font = ResourcesCompat.getFont(context, R.font.jetbrains_mono_regular);
@@ -86,11 +93,14 @@ public class Editor extends CodeEditor {
                     CharSequence changed = event.getChangedText();
                     if (changed.length() == 1) {
                         char deltedChar = event.getChangedText().charAt(0);
-                        SymbolPairMatch pair = getEditorLanguage().getSymbolPairs();
-                        SymbolPairMatch.Replacement replacement = pair.getCompletion(deltedChar);
-                        if (replacement != null && replacement.text.charAt(1) == afterChar) {
-                            setSelection(event.getChangeStart().line, event.getChangeStart().column + 1);
-                            deleteText();
+                        SymbolPairMatch matchPairs = getEditorLanguage().getSymbolPairs();
+                        List<SymbolPairMatch.SymbolPair> pairs = matchPairs.matchBestPairList(deltedChar);
+                        for (SymbolPairMatch.SymbolPair pair : pairs) {
+                            if (pair != null && pair.close.charAt(0) == afterChar) {
+                                setSelection(event.getChangeStart().line, event.getChangeStart().column + 1);
+                                deleteText();
+                                break;
+                            }
                         }
                     }
                 }
@@ -101,15 +111,27 @@ public class Editor extends CodeEditor {
         setCompletionWndPositionMode(CodeEditor.WINDOW_POS_MODE_FOLLOW_CURSOR_ALWAYS);
     }
 
+    public static void initialize(Context context) {
+        FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(context.getAssets()));
+        GrammarRegistry.getInstance().loadGrammars("textmate/languages/languages.json");
+
+        try {
+            String themesPath = "textmate/themes";
+            for (String themeName : context.getAssets().list(themesPath)) {
+                String themePath = themesPath + "/" + themeName;
+                ThemeRegistry.getInstance().loadTheme(new ThemeModel(
+                    IThemeSource.fromInputStream(context.getAssets().open(themePath), themeName, null)
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setLanguageAndTheme() {
         try {
-            String themePath = "textmate/theme/rose-pine.json";
-            IThemeSource _theme = IThemeSource.fromInputStream(getContext().getAssets().open(themePath), themePath, Charset.defaultCharset());
-
-            LuaLanguage language = new LuaLanguage(this, _theme);
-            language.setTabSize(getTabWidth());
-            setEditorLanguage(language);
-            setColorScheme(new RosepineColorScheme(_theme));
+            setEditorLanguage(new LuaLanguage(this));
+            setColorScheme(new RosepineColorScheme());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,10 +158,10 @@ public class Editor extends CodeEditor {
         if (text.length() == 1) {
             char c = getText().charAt(getCursor().getRight());
             if (c == ')' || c == ']' || c == '}')
-            if (c == text.charAt(0)) {
-                moveSelectionRight();
-                return;
-            }
+                if (c == text.charAt(0)) {
+                    moveSelectionRight();
+                    return;
+                }
         }
 
         if (text.length() == 2) {

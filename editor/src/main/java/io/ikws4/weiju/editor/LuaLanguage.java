@@ -1,18 +1,17 @@
 package io.ikws4.weiju.editor;
 
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import org.eclipse.tm4e.core.registry.IGrammarSource;
-import org.eclipse.tm4e.core.registry.IThemeSource;
+import org.eclipse.tm4e.core.internal.oniguruma.OnigResult;
+import org.eclipse.tm4e.core.internal.oniguruma.OnigString;
+import org.eclipse.tm4e.languageconfiguration.model.IndentationRules;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.nio.charset.Charset;
 
 import io.github.rosemoe.sora.lang.EmptyLanguage;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
@@ -21,7 +20,9 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
+import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentLine;
@@ -32,34 +33,25 @@ import io.ikws4.weiju.lua.LuaDiagnostic;
 import io.ikws4.weiju.util.Strings;
 
 class LuaLanguage extends EmptyLanguage {
-    private TextMateLanguage mTextMateLanguage;
-    // FIXME: should read from langauge configuration
-    private final String mIncreaseIndentPattern = "^((?!(\\-\\-)).)*((\\b(else|function|then|do|repeat)\\b((?!\\b(end|until)\\b).)*)|(\\{\\s*))$";
-    private final String mDecreaseIndentPattern = "^\\s*((\\b(elseif|else|end|until)\\b)|(\\})|(\\)))";
+    private final TextMateLanguage mTextMateLanguage;
+    private final IndentationRules mIndentationRules;
     private final Editor mEditor;
 
-    public LuaLanguage(Editor editor, IThemeSource theme) {
+    public LuaLanguage(Editor editor) {
         mEditor = editor;
 
-        try {
-            AssetManager assets = editor.getContext().getAssets();
-            // String configuration = "textmate/lang/lua/language-configuration.json";
-            String grammar = "textmate/lang/lua/tmLanguage.json";
+        mTextMateLanguage = TextMateLanguage.create("source.lua", true);
+        mTextMateLanguage.setTabSize(editor.getTabWidth());
+        mIndentationRules = GrammarRegistry.getInstance().findLanguageConfiguration("source.lua").getIndentationRules();
 
-            mTextMateLanguage = TextMateLanguage.create(IGrammarSource.fromInputStream(assets.open(grammar), grammar, Charset.defaultCharset()), theme);
-            // mIndentationRule = LanguageConfiguration.load(new InputStreamReader(assets.open(configuration))).getIndentationRule();
-
-            String[] keywords = {
-                "and", "break", "do", "else", "elseif",
-                "end", "false", "for", "function", "if",
-                "in", "local", "nil", "not", "or",
-                "repeat", "return", "then", "true", "until", "while"
-            };
-            mTextMateLanguage.setCompleterKeywords(keywords);
-            DiagnosticTask.launch(editor);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String[] keywords = {
+            "and", "break", "do", "else", "elseif",
+            "end", "false", "for", "function", "if",
+            "in", "local", "nil", "not", "or",
+            "repeat", "return", "then", "true", "until", "while"
+        };
+        mTextMateLanguage.setCompleterKeywords(keywords);
+        DiagnosticTask.launch(editor);
     }
 
     @Override
@@ -68,18 +60,11 @@ class LuaLanguage extends EmptyLanguage {
     }
 
     public int getIndentAdvance(String line) {
-        if (line.matches(mIncreaseIndentPattern)) {
-            return getTabSize();
+        OnigResult ret = mIndentationRules.increaseIndentPattern.search(OnigString.of(line), 0);
+        if (ret != null && ret.count() > 0) {
+            return mEditor.getTabWidth();
         }
         return 0;
-    }
-
-    public void setTabSize(int tabSize) {
-        mTextMateLanguage.setTabSize(tabSize);
-    }
-
-    public int getTabSize() {
-        return mTextMateLanguage.getTabSize();
     }
 
     private final NewlineHandler[] mNewlineHandlers = new NewlineHandler[]{new EndwiseNewlineHandler()};
@@ -108,16 +93,24 @@ class LuaLanguage extends EmptyLanguage {
     public class EndwiseNewlineHandler implements NewlineHandler {
         private static final String ENDWISE_PATTERN = "^((?!(--)).)*(\\b(else|function|then|do|repeat)\\b((?!\\b(end|until)\\b).)*)$";
 
-        @Override
-        public boolean matchesRequirement(String beforeText, String afterText) {
-            return beforeText.matches(mIncreaseIndentPattern);
-        }
-
         private final StringBuilder mStringBuilder = new StringBuilder();
 
         @Override
+        public boolean matchesRequirement(@NonNull Content text, @NonNull CharPosition position, @Nullable Styles style) {
+            String line = text.getLineString(position.line);
+            String beforeText = line.substring(0, position.column);
+
+            OnigResult ret = mIndentationRules.increaseIndentPattern.search(OnigString.of(beforeText), 0);
+            return ret != null && ret.count() > 0;
+        }
+
         @NonNull
-        public NewlineHandleResult handleNewline(String beforeText, String afterText, int tabSize) {
+        @Override
+        public NewlineHandleResult handleNewline(@NonNull Content text, @NonNull CharPosition position, @Nullable Styles style, int tabSize) {
+            String line = text.getLineString(position.line);
+            String beforeText = line.substring(0, position.column);
+            String afterText = line.substring(position.column);
+
             String leadingSpaces = Strings.repeat(" ", Strings.leadingSpaceCount(beforeText));
             String indent = Strings.repeat(" ", getIndentAdvance(beforeText));
 
@@ -131,12 +124,12 @@ class LuaLanguage extends EmptyLanguage {
                 if (nextLine == mEditor.getText().getLineCount()) {
                     shouldAddEnd = true;
                 } else {
-                    ContentLine line;
+                    ContentLine contentLine;
                     do {
-                        line = mEditor.getText().getLine(nextLine++);
-                    } while (nextLine < lines && Strings.isOnlySpaces(line));
+                        contentLine = mEditor.getText().getLine(nextLine++);
+                    } while (nextLine < lines && Strings.isOnlySpaces(contentLine));
 
-                    if (!line.toString().startsWith(leadingSpaces + "end")) {
+                    if (!contentLine.toString().startsWith(leadingSpaces + "end")) {
                         shouldAddEnd = true;
                     }
                 }

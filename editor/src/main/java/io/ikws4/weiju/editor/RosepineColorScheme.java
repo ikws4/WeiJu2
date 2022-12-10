@@ -1,8 +1,7 @@
 package io.ikws4.weiju.editor;
 
-import org.eclipse.tm4e.core.registry.IThemeSource;
-
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 
 class RosepineColorScheme extends TextMateColorScheme {
     public static final int TRANSPARENT = 0x00000000;
@@ -22,8 +21,8 @@ class RosepineColorScheme extends TextMateColorScheme {
     public static final int HIGHLIGHT_MED = 0xff44415a;
     public static final int HIGHLIGHT_HIGH = 0xff56526e;
 
-    public RosepineColorScheme(IThemeSource iRawTheme) throws Exception {
-        super(iRawTheme);
+    public RosepineColorScheme() throws Exception {
+        super(ThemeRegistry.getInstance(), ThemeRegistry.getInstance().findThemeByFileName("rose-pine"));
     }
 
     @Override

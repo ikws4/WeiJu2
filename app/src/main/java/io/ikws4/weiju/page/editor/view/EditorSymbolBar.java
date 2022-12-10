@@ -43,19 +43,25 @@ public class EditorSymbolBar extends RecyclerView {
         registerCallbacks(new EditorSymbolBar.Callbacks() {
             @Override
             public void onClickSymbol(String s) {
-                SymbolPairMatch pair = editor.getEditorLanguage().getSymbolPairs();
-                SymbolPairMatch.Replacement replacement = pair.getCompletion(s.charAt(0));
-                Content content = editor.getText();
-                Cursor cursor = editor.getCursor();
-                char afterChar = content.charAt(cursor.getRight());
-                if (afterChar == s.charAt(0)) {
-                    editor.moveSelectionRight();
+                SymbolPairMatch pariMathces = editor.getEditorLanguage().getSymbolPairs();
+                List<SymbolPairMatch.SymbolPair> pairs = pariMathces.matchBestPairList(s.charAt(0));
+
+                if (pairs.isEmpty()) {
+                    editor.commitText(s);
                 } else {
-                    if (replacement != null) {
-                        editor.commitText(replacement.text);
-                        editor.moveSelectionLeft();
+                    SymbolPairMatch.SymbolPair pair = pairs.get(0);
+                    Content content = editor.getText();
+                    Cursor cursor = editor.getCursor();
+                    char afterChar = content.charAt(cursor.getRight());
+                    if (afterChar == s.charAt(0)) {
+                        editor.moveSelectionRight();
                     } else {
-                        editor.commitText(s);
+                        if (pair != null) {
+                            editor.commitText(pair.open + pair.close);
+                            editor.moveSelectionLeft();
+                        } else {
+                            editor.commitText(s);
+                        }
                     }
                 }
             }
