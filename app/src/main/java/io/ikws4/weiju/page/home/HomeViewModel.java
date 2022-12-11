@@ -306,7 +306,11 @@ public class HomeViewModel extends BaseViewModel {
         List<AppListView.AppItem> selectedData = new ArrayList<>();
 
         // Add a global app at the top
-        selectedData.add(new AppListView.AppItem("Global", "io.ikws4.weiju", false));
+        selectedData.add(new AppListView.AppItem("Global", BuildConfig.APPLICATION_ID, false));
+        mSelectedApps.setValue(selectedData);
+        if (mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "").equals("")) {
+            switchApp(BuildConfig.APPLICATION_ID);
+        }
 
         mDisposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())
@@ -317,10 +321,9 @@ public class HomeViewModel extends BaseViewModel {
             .buffer(5, 5)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(infos -> {
-                    selectedData.addAll(infos);
-                    mSelectedApps.setValue(selectedData);
-                }
-            ));
+                selectedData.addAll(infos);
+                mSelectedApps.setValue(selectedData);
+            }));
     }
 
     private boolean isMyScriptsMetadataContains(ScriptListView.ScriptItem item) {
