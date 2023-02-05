@@ -214,14 +214,17 @@ public class HomeFragment extends BaseFragment {
             String pkg = vm.getCurrentSelectedAppPkg().getValue();
             Intent launchAppIntent = pm.getLaunchIntentForPackage(pkg);
 
-            Shell.cmd("am force-stop " + pkg + " && am start -n " + launchAppIntent.getComponent().flattenToShortString()).exec();
-            // startActivity(launchAppIntent);
+            String component = launchAppIntent.getComponent().flattenToShortString();
+            if (!Shell.cmd("am force-stop " + pkg + " && am start -n " + component).exec().isSuccess()) {
+                Toast.makeText(getContext(), R.string.home_status_can_not_force_stop, Toast.LENGTH_SHORT).show();
+                startActivity(launchAppIntent);
+            }
         } else if (id == R.id.logcat) {
             startFragment(LogcatFragment.class);
         } else if (id == R.id.restart) {
-             if (!Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec().isSuccess()) {
-                 Toast.makeText(getContext(), "Restart failed: need root access", Toast.LENGTH_SHORT).show();
-             }
+            if (!Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec().isSuccess()) {
+                Toast.makeText(getContext(), R.string.home_status_can_not_restart, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.about) {
             startFragment(AboutFragment.class);
         } else {

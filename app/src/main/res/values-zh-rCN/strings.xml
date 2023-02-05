@@ -45,4 +45,7 @@
     <string name="migratetool_cannot_load_hooklist">迁移工具: 无法读取 hook_list</string>
     <string name="migratetool_please_activate_weiju2">迁移工具: 请现在 xposed/lsposed 中激活 WeiJu2</string>
     <string name="migratetool_migrate_success">迁移工具: 迁移成功</string>
+
+    <string name="home_status_can_not_force_stop">自动强制停止失败: 需要 root 权限</string>
+    <string name="home_status_can_not_restart">重新启动失败: 需要 root 权限</string>
 </resources>
