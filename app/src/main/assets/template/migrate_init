@@ -365,7 +365,7 @@ local function setup_variable()
   if variable.imei then
     hook {
       class = TelephonyManager,
-      returns = string,
+      returns = String,
       method = "getDeviceId",
       replace = function(this, params)
         if Build.VERSION.SDK_INT >= Build.VERSION_CODES.O then
@@ -380,7 +380,7 @@ local function setup_variable()
   if variable.imsi then
     hook {
       class = TelephonyManager,
-      returns = string,
+      returns = String,
       method = "getSubscriberId",
       replace = function(this, params)
         return variable.imsi
