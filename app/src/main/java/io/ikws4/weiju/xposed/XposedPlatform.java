@@ -35,11 +35,9 @@ public class XposedPlatform {
 
         // lua libs
         globals.load(BuiltinPackage.require("java_common_syntax")).call();
-        globals.load(BuiltinPackage.require("java_primitives")).call();
+        globals.load(BuiltinPackage.require("java_common_types")).call();
         globals.load(BuiltinPackage.require("table_util")).call();
         globals.load(BuiltinPackage.require("string_util")).call();
-        globals.load(BuiltinPackage.require("java_common_type")).call();
-        globals.load(BuiltinPackage.require("android_common_type")).call();
 
         return globals;
     }
