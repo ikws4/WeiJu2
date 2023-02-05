@@ -21,7 +21,7 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/restar"
+        android:id="@+id/restart"
         android:title="@string/restart"
         app:showAsAction="never"/>
 
