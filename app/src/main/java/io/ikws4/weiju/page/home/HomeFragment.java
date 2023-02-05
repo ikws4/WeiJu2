@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.topjohnwu.superuser.Shell;
 
+import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.BaseFragment;
@@ -39,6 +40,7 @@ import io.ikws4.weiju.widget.searchbar.UnselectedAppItemLoader;
 public class HomeFragment extends BaseFragment {
     private boolean isDrag = false;
     private HomeViewModel vm;
+    private Menu menu;
 
     public HomeFragment() {
         super(R.layout.home_fragment);
@@ -115,6 +117,11 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onRequireSwitchApp(AppListView.AppItem app) {
+                // Hide launch button
+                if (menu != null) {
+                    menu.findItem(R.id.launch_app).setVisible(!app.pkg.equals(BuildConfig.APPLICATION_ID));
+                }
+
                 vm.switchApp(app);
             }
 
@@ -201,6 +208,7 @@ public class HomeFragment extends BaseFragment {
         if (WeiJu.XPOSED_ENABLED) {
             menu.findItem(R.id.xposed_status).setVisible(false);
         }
+        this.menu = menu;
     }
 
     @Override
