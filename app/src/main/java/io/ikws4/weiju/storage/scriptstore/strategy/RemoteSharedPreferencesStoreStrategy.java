@@ -2,7 +2,6 @@ package io.ikws4.weiju.storage.scriptstore.strategy;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.util.Base64;
 
 import com.crossbowffs.remotepreferences.RemotePreferenceProvider;
@@ -21,7 +20,7 @@ public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
 
     @Override
     public boolean canRead() {
-        return Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q;
+        return store.getBoolean(DUMMY_KEY, false);
     }
 
     @Override

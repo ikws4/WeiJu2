@@ -1,6 +1,7 @@
 package io.ikws4.weiju.xposed;
 
 import android.app.Application;
+import android.app.Instrumentation;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -25,6 +26,8 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     /* package */ static WeakReference<Context> context;
     /* package */ static XC_LoadPackage.LoadPackageParam lpparam;
 
+    private boolean scriptInjected;
+
     @Override
     public void initZygote(StartupParam startupParam) {
         XScriptStore.fixPermission();
@@ -39,29 +42,35 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
             return;
         }
 
-        XposedHelpers.findAndHookMethod(Application.class, "onCreate", new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(Instrumentation.class, "callApplicationOnCreate", Application.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
-                Context application = (Application) param.thisObject;
-                context = new WeakReference<>(application);
-                injectScripts(application);
+                Context ctx = (Context) (param.args[0]);
+                context = new WeakReference<>(ctx);
+                injectScripts(context.get());
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) {
+                if (scriptInjected) return;
+                injectScripts(context.get());
+                if (scriptInjected) return;
+                Toast.makeText(context.get(), "Failed to load the scripts, please restart WeiJu2", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public void injectScripts(Context context) {
-        store = XScriptStore.getInstance(context);
-
+    private void injectScripts(Context context) {
+        store = new XScriptStore(context);
         if (!store.canRead()) {
-            Toast.makeText(context, "Failed to load the scripts, please restart WeiJu2", Toast.LENGTH_LONG).show();
             return;
         }
-
-        injectScripts(BuildConfig.APPLICATION_ID); // global scripts
-        injectScripts(lpparam.packageName);
+        injectScriptsFor(BuildConfig.APPLICATION_ID); // global scripts
+        injectScriptsFor(lpparam.packageName);
+        scriptInjected = true;
     }
 
-    private void injectScripts(String pkgName) {
+    private void injectScriptsFor(String pkgName) {
         Globals globals = XposedPlatform.create(pkgName);
         Set<String> keys = store.get(pkgName, Collections.emptySet());
 

@@ -34,7 +34,7 @@ public class XSharedPreferenceStoreStrategy implements StoreStrategy {
 
     @Override
     public boolean canRead() {
-        return store.getFile().canRead();
+        return store.getBoolean(DUMMY_KEY, false);
     }
 
     @Override

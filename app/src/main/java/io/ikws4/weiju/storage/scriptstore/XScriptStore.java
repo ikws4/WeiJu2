@@ -43,13 +43,4 @@ public class XScriptStore {
     public Set<String> get(String key, Set<String> defValue) {
         return strategy.get(key, defValue);
     }
-
-    private static XScriptStore instance;
-
-    public static XScriptStore getInstance(Context context) {
-        if (instance == null) {
-            instance = new XScriptStore(context);
-        }
-        return instance;
-    }
 }

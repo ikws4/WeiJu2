@@ -4,6 +4,7 @@ import java.util.Set;
 
 public interface StoreStrategy {
     String STORE_NAME = "script_store";
+    String DUMMY_KEY = "dummy_key";
 
     boolean canRead();
 

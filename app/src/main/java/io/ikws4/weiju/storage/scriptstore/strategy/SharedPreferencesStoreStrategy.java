@@ -12,11 +12,12 @@ public class SharedPreferencesStoreStrategy implements StoreStrategy {
 
     public SharedPreferencesStoreStrategy(Context context, int mode) {
         store = context.getSharedPreferences(STORE_NAME, mode);
+        store.edit().putBoolean(DUMMY_KEY, true).apply();
     }
 
     @Override
     public boolean canRead() {
-        return true;
+        return store.getBoolean(DUMMY_KEY, false);
     }
 
     @Override
