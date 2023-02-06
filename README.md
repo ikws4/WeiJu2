@@ -193,7 +193,7 @@ function object(class, proxy) end
 ---
 --- @param config table This table accepts the following keys
 ---                     - class: (Class) The hook target.
----                     - returns: (nil or Class) The method return type.
+---                     - returns: (nil|Class) The method return type.
 ---                     - method: (string) The method name.
 ---                     - params: (nil|table) The method argument types, can be nil if there is no argument.
 ---                     - before: (nil|function) Executed before the method is called.
@@ -201,6 +201,25 @@ function object(class, proxy) end
 ---                     - replace: (nil|function) A simple version of `before`, use to rewrite the whole method.
 --- @return Unhook
 function hook(config) end
+```
+
+### Auto imported common java types
+
+These types are common used in scripts, therefore we auto imported them for you, [View Source](https://github.com/ikws4/WeiJu2/blob/main/app/src/main/resources/java_common_types.lua).
+
+```lua
+byte
+short
+int
+long
+float
+double
+char
+boolean
+void
+
+String
+List
 ```
 
 # Screenshots
