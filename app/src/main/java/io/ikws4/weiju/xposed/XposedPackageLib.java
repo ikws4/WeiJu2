@@ -32,22 +32,21 @@ class XposedPackageLib extends PackageLib {
         public Varargs invoke(Varargs args) {
             LuaString name = args.checkstring(1);
 
-            // First try to load user package
-            String script = XposedInit.store.get(mCurrentHookPackageName + "_" + name.tojstring(), "null");
-            if (!script.equals("null")) {
-                LuaValue v = globals.load(script);
-                if (v.isfunction())
-                    return LuaValue.varargsOf(v, name);
-            }
-
-
-            // Second try to load builtin package if founded
-            script = BuiltinPackage.require(name.checkjstring());
+            // First try to load builtin package if founded
+            String script = BuiltinPackage.require(name.checkjstring());
             if (!script.isEmpty()) {
                 LuaValue v = globals.load(script);
                 if (v.isfunction())
                     return LuaValue.varargsOf(v, name);
 
+            }
+
+            // Seconds try to load user package
+            script = XposedInit.store.get(mCurrentHookPackageName + "_" + name.tojstring(), "null");
+            if (!script.equals("null")) {
+                LuaValue v = globals.load(script);
+                if (v.isfunction())
+                    return LuaValue.varargsOf(v, name);
             }
 
             // report error
