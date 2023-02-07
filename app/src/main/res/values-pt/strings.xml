@@ -43,4 +43,7 @@
     <string name="migratetool_cannot_load_hooklist">MigrateTool: Não foi possível carregar a lista de hooks</string>
     <string name="migratetool_please_activate_weiju2">MigrateTool: Favor ativar o WeiJu2 no xposed/lsposed primeiro</string>
     <string name="migratetool_migrate_success">MigrateTool: Migrado com sucesso da versão antiga do WeiJu</string>
+
+    <string name="home_status_can_not_force_stop">Falha ao forçar parada automaticamente: necessário permissão do root</string>
+    <string name="home_status_can_not_restart">Falha ao reiniciar: necessário permissão do root</string>
 </resources>
