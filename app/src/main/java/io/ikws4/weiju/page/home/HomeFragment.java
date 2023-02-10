@@ -117,11 +117,6 @@ public class HomeFragment extends BaseFragment {
 
             @Override
             public void onRequireSwitchApp(AppListView.AppItem app) {
-                // Hide launch button
-                if (menu != null) {
-                    menu.findItem(R.id.launch_app).setVisible(!app.pkg.equals(BuildConfig.APPLICATION_ID));
-                }
-
                 vm.switchApp(app);
             }
 
@@ -198,17 +193,24 @@ public class HomeFragment extends BaseFragment {
         vm.getMyScripts().observe(getViewLifecycleOwner(), scripts -> {
             vScripts.setData(scripts, vm.getAvaliableScripts().getValue());
         });
+
+        vm.getCurrentSelectedAppPkg().observe(getViewLifecycleOwner(), pkg -> {
+            // Hide launch button
+            if (menu != null) {
+                menu.findItem(R.id.launch_app).setVisible(!pkg.equals(BuildConfig.APPLICATION_ID));
+            }
+        });
     }
 
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         super.onCreateMenu(menu, menuInflater);
-
+        this.menu = menu;
         menuInflater.inflate(R.menu.home_menu, menu);
         if (WeiJu.XPOSED_ENABLED) {
             menu.findItem(R.id.xposed_status).setVisible(false);
         }
-        this.menu = menu;
+        vm.getCurrentSelectedAppPkg().publish();;
     }
 
     @Override

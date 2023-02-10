@@ -67,7 +67,7 @@ public class HomeViewModel extends BaseViewModel {
         return mSelectedApps;
     }
 
-    public LiveData<String> getCurrentSelectedAppPkg() {
+    public MutableLiveDataExt<String> getCurrentSelectedAppPkg() {
         return mCurrentSelectedAppPkg;
     }
 
