@@ -26,7 +26,7 @@ public class AboutFragment extends BaseFragment {
         getSupportActionBar().setTitle(R.string.about);
 
         ListTile vVersion = view.findViewById(R.id.v_version);
-        vVersion.setSubtitle(BuildConfig.VERSION_NAME);
+        vVersion.setSubtitle(BuildConfig.VERSION_NAME + "-" + BuildConfig.COMMIT_HASH);
 
         ListTile vGithub = view.findViewById(R.id.v_github);
         vGithub.setOnClickListener((v) -> {
