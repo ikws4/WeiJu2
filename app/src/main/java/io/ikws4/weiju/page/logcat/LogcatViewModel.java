@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import io.ikws4.weiju.R;
-import io.ikws4.weiju.ext.MutableLiveDataExt;
+import io.ikws4.weiju.utils.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.storage.Preferences;
 import io.ikws4.weiju.xposed.Console;

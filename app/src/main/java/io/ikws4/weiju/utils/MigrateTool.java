@@ -1,4 +1,4 @@
-package io.ikws4.weiju.compat;
+package io.ikws4.weiju.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

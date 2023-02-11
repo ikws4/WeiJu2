@@ -1,4 +1,4 @@
-package io.ikws4.weiju.ext;
+package io.ikws4.weiju.utils;
 
 import androidx.lifecycle.MutableLiveData;
 

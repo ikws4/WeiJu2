@@ -3,9 +3,12 @@ package io.ikws4.weiju.page.home;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.Menu;
@@ -210,7 +213,8 @@ public class HomeFragment extends BaseFragment {
         if (WeiJu.XPOSED_ENABLED) {
             menu.findItem(R.id.xposed_status).setVisible(false);
         }
-        vm.getCurrentSelectedAppPkg().publish();;
+        vm.getCurrentSelectedAppPkg().publish();
+        ;
     }
 
     @Override
@@ -226,8 +230,14 @@ public class HomeFragment extends BaseFragment {
 
             String component = launchAppIntent.getComponent().flattenToShortString();
             if (!Shell.cmd("am force-stop " + pkg + " && am start -n " + component).exec().isSuccess()) {
-                Toast.makeText(getContext(), R.string.home_status_can_not_force_stop, Toast.LENGTH_SHORT).show();
-                startActivity(launchAppIntent);
+                if (isAppRunning(pkg)) {
+                    Toast.makeText(getContext(), R.string.home_status_can_not_force_stop, Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", pkg, null));
+                    startActivity(intent);
+                } else {
+                    startActivity(launchAppIntent);
+                }
             }
         } else if (id == R.id.logcat) {
             startFragment(LogcatFragment.class);
@@ -241,5 +251,16 @@ public class HomeFragment extends BaseFragment {
             return false;
         }
         return true;
+    }
+
+    private boolean isAppRunning(String pkg) {
+        for (var it : getContext().getPackageManager().getInstalledPackages(0)) {
+            if (!it.packageName.equals(pkg)) continue;
+
+            if ((ApplicationInfo.FLAG_STOPPED & it.applicationInfo.flags) != 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

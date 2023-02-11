@@ -3,7 +3,7 @@ package io.ikws4.weiju.page;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import io.ikws4.weiju.ext.MutableLiveDataExt;
+import io.ikws4.weiju.utils.MutableLiveDataExt;
 
 public class MainViewModel extends ViewModel {
     public MutableLiveDataExt<Boolean> progressBarStatus = new MutableLiveDataExt<>(false);

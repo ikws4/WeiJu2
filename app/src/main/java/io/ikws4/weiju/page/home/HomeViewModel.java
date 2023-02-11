@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.api.API;
-import io.ikws4.weiju.ext.MutableLiveDataExt;
+import io.ikws4.weiju.utils.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;

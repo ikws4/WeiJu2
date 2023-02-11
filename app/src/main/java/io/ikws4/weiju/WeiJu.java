@@ -6,7 +6,7 @@ import android.content.Context;
 import java.lang.ref.WeakReference;
 
 import io.ikws4.weiju.api.API;
-import io.ikws4.weiju.compat.MigrateTool;
+import io.ikws4.weiju.utils.MigrateTool;
 import io.ikws4.weiju.editor.Editor;
 import io.ikws4.weiju.sdk.FirebaseSdk;
 
