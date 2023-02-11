@@ -8,6 +8,7 @@ import java.lang.ref.WeakReference;
 import io.ikws4.weiju.api.API;
 import io.ikws4.weiju.compat.MigrateTool;
 import io.ikws4.weiju.editor.Editor;
+import io.ikws4.weiju.sdk.FirebaseSdk;
 
 public class WeiJu extends Application {
     // For xposed to hook this variable to indicate
@@ -24,6 +25,7 @@ public class WeiJu extends Application {
         API.initialize(this);
         MigrateTool.migrate(this);
         Editor.initialize(this);
+        FirebaseSdk.initialize(this);
     }
 
     public static <T> T getService(Class<T> serviceClass) {
