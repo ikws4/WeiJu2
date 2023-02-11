@@ -39,8 +39,8 @@ public class XSharedPreferenceStoreStrategy implements StoreStrategy {
 
     @Override
     public String get(String k, String defValue) {
-        String v = store.getString(k, defValue);
-        return new String(Base64.decode(v, 0));
+        if (!store.contains(k)) return defValue;
+        return new String(Base64.decode(store.getString(k, defValue), 0));
     }
 
     @Override

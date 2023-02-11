@@ -25,14 +25,12 @@ public class RemoteSharedPreferencesStoreStrategy implements StoreStrategy {
 
     @Override
     public String get(String k, String defValue) {
+        if (!store.contains(k)) return defValue;
         return new String(Base64.decode(store.getString(k, defValue), 0));
     }
 
     @Override
     public Set<String> get(String key, Set<String> defValue) {
-        if (store.contains(key)) {
-            return store.getStringSet(key, null);
-        }
         return store.getStringSet(key, defValue);
     }
 
