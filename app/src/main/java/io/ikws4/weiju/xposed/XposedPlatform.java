@@ -11,7 +11,7 @@ import org.luaj.vm2.lib.StringLib;
 import org.luaj.vm2.lib.TableLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
 
-public class XposedPlatform {
+class XposedPlatform {
     public static Globals create(String pkgName) {
         Globals globals = new Globals();
 

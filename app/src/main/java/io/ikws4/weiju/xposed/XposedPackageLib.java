@@ -1,5 +1,6 @@
 package io.ikws4.weiju.xposed;
 
+import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
@@ -20,13 +21,34 @@ class XposedPackageLib extends PackageLib {
         LuaTable searchers = package_.get("searchers").checktable();
 
         // rmeove builtin searchers to improve performance, we dont't need those
-        searchers.set(1, NIL);
-        searchers.set(2, NIL);
+        searchers.set(1, new java_searcher());
+        searchers.set(2, new xposed_script_searcher());
         searchers.set(3, NIL);
-
-        searchers.set(1, new xposed_script_searcher());
         return env;
     }
+
+    public class java_searcher extends VarArgFunction {
+        private String pathPrefix = "io.ikws4.weiju.xposed.lib.";
+
+        public Varargs invoke(Varargs args) {
+            String name = pathPrefix + args.checkjstring(1);
+            String classname = toClassname( name );
+            Class c = null;
+            LuaValue v = null;
+            try {
+                c = Class.forName(classname);
+                v = (LuaValue) c.newInstance();
+                if (v.isfunction())
+                    ((LuaFunction)v).initupvalue1(globals);
+                return varargsOf(v, globals);
+            } catch ( ClassNotFoundException  cnfe ) {
+                return valueOf("\n\tno class '"+classname+"'" );
+            } catch ( Exception e ) {
+                return valueOf("\n\tjava load failed on '"+classname+"', "+e );
+            }
+        }
+    }
+
 
     public class xposed_script_searcher extends VarArgFunction {
         public Varargs invoke(Varargs args) {
@@ -38,7 +60,6 @@ class XposedPackageLib extends PackageLib {
                 LuaValue v = globals.load(script);
                 if (v.isfunction())
                     return LuaValue.varargsOf(v, name);
-
             }
 
             // Seconds try to load user package

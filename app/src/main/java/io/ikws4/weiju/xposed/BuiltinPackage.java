@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * All the packages are in <i>app/src/main/resources/</i> folder
  */
-public class BuiltinPackage {
+class BuiltinPackage {
     private static final Map<String, String> scripts = new HashMap<>();
 
     /**
