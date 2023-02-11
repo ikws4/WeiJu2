@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1007244110063",
+    "project_id": "weiju2",
+    "storage_bucket": "weiju2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007244110063:android:3a1dd7caa7d49f7185531a",
+        "android_client_info": {
+          "package_name": "io.ikws4.weiju"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1007244110063-vqn2rbgarfvtkjvsfiqorglifa7r9lqi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTDJ1sT4pZ-A0wlwTIDqUTM5EIwWaA25k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1007244110063-vqn2rbgarfvtkjvsfiqorglifa7r9lqi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

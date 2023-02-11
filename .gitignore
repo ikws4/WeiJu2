@@ -16,4 +16,3 @@ local.properties
 keystore.properties
 key
 app/release
-app/google-services.json
