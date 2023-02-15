@@ -232,7 +232,6 @@ public class HomeFragment extends BaseFragment {
             if (!Shell.cmd("am force-stop " + pkg + " && am start -n " + component).exec().isSuccess()) {
                 if (isAppRunning(pkg)) {
                     Toast.makeText(getContext(), R.string.home_status_can_not_force_stop, Toast.LENGTH_SHORT).show();
-
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", pkg, null));
                     startActivity(intent);
                 } else {
@@ -257,7 +256,7 @@ public class HomeFragment extends BaseFragment {
         for (var it : getContext().getPackageManager().getInstalledPackages(0)) {
             if (!it.packageName.equals(pkg)) continue;
 
-            if ((ApplicationInfo.FLAG_STOPPED & it.applicationInfo.flags) != 0) {
+            if ((ApplicationInfo.FLAG_STOPPED & it.applicationInfo.flags) == 0) {
                 return true;
             }
         }
