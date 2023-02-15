@@ -46,14 +46,12 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.ikws4.weiju.util.UnitConverter;
 
 public class Editor extends CodeEditor {
-    private float mCharWidth = 0;
     private boolean mEditable = true;
 
     public Editor(Context context, AttributeSet attrs) {
         super(context, attrs);
+        float charWidth = getTextPaint().measureText("1") / 2;
 
-
-        mCharWidth = getTextPaint().measureText("1") / 2;
 
         Typeface font = ResourcesCompat.getFont(context, R.font.jetbrains_mono_regular);
         setTypefaceText(font);
@@ -66,16 +64,21 @@ public class Editor extends CodeEditor {
         setScrollBarEnabled(false);
         setCursorWidth(2 * getDpUnit());
         setDividerWidth(0);
-        setDividerMargin(mCharWidth);
+        setLineNumberMarginLeft(charWidth);
+        setDividerMargin(charWidth);
         setLineNumberAlign(Paint.Align.RIGHT);
         setTabWidth(2);
         setLineSpacing(0, 1.15f);
         setTextSize(14);
+        getScroller().getImplScroller().setFriction(0.05f);
 
         getProps().deleteMultiSpaces = 1;
         getProps().deleteEmptyLineFast = false;
+        getProps().highlightMatchingDelimiters = false;
         getProps().roundTextBackgroundFactor = 0;
         getProps().boldMatchingDelimiters = false;
+        getProps().indicatorWaveAmplitude = 2f;
+        getProps().indicatorWaveLength = 8f;
 
         getComponent(Magnifier.class).setEnabled(false);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
@@ -135,10 +138,6 @@ public class Editor extends CodeEditor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public float getCharWidth() {
-        return mCharWidth;
     }
 
     @Override

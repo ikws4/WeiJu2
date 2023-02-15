@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -49,9 +48,6 @@ public class EditorFragment extends BaseFragment {
         vEditor = view.findViewById(R.id.editor);
         EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);
 
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) vEditor.getLayoutParams();
-        layoutParams.leftMargin = (int) vEditor.getCharWidth();
-        vEditor.setLayoutParams(layoutParams);
         vEditor.setText(mItem.script);
         if (mItem.isPackage) {
             vEditor.setEditable(false);

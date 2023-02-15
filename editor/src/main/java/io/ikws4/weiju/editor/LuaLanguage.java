@@ -7,8 +7,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.eclipse.tm4e.core.internal.oniguruma.OnigResult;
-import org.eclipse.tm4e.core.internal.oniguruma.OnigString;
 import org.eclipse.tm4e.languageconfiguration.model.IndentationRules;
 
 import java.lang.ref.WeakReference;
@@ -22,6 +20,7 @@ import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
+import io.github.rosemoe.sora.langs.textmate.TextMateSymbolPairMatch;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
@@ -39,9 +38,7 @@ class LuaLanguage extends EmptyLanguage {
 
     public LuaLanguage(Editor editor) {
         mEditor = editor;
-
         mTextMateLanguage = TextMateLanguage.create("source.lua", true);
-        mTextMateLanguage.setTabSize(editor.getTabWidth());
         mIndentationRules = GrammarRegistry.getInstance().findLanguageConfiguration("source.lua").getIndentationRules();
 
         String[] keywords = {
@@ -51,6 +48,9 @@ class LuaLanguage extends EmptyLanguage {
             "repeat", "return", "then", "true", "until", "while"
         };
         mTextMateLanguage.setCompleterKeywords(keywords);
+        mTextMateLanguage.setTabSize(editor.getTabWidth());
+        ((TextMateSymbolPairMatch)mTextMateLanguage.getSymbolPairs()).setEnabled(true);
+
         DiagnosticTask.launch(editor);
     }
 
@@ -60,11 +60,7 @@ class LuaLanguage extends EmptyLanguage {
     }
 
     public int getIndentAdvance(String line) {
-        OnigResult ret = mIndentationRules.increaseIndentPattern.search(OnigString.of(line), 0);
-        if (ret != null && ret.count() > 0) {
-            return mEditor.getTabWidth();
-        }
-        return 0;
+        return line.matches(mIndentationRules.increaseIndentPattern.pattern()) ? mEditor.getTabWidth() : 0;
     }
 
     private final NewlineHandler[] mNewlineHandlers = new NewlineHandler[]{new EndwiseNewlineHandler()};
@@ -100,8 +96,7 @@ class LuaLanguage extends EmptyLanguage {
             String line = text.getLineString(position.line);
             String beforeText = line.substring(0, position.column);
 
-            OnigResult ret = mIndentationRules.increaseIndentPattern.search(OnigString.of(beforeText), 0);
-            return ret != null && ret.count() > 0;
+            return beforeText.matches(ENDWISE_PATTERN);
         }
 
         @NonNull

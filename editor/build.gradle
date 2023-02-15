@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    def editor_version = "0.18.1"
+    def editor_version = "0.21.0"
 
     implementation project(path: ':util')
     implementation project(path: ':lua')
