@@ -43,21 +43,19 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Delete previous nightly release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: larryjoelane/delete-release-action@v1.0.24
         with:
-          delete_release: true
-          tag_name: nightly
+          release-name: WeiJu2 nightly build
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create nightly release
         id: createRelease
-        uses: actions/create-release@v1
+        uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: nightly
-          release_name: WeiJu2 nightly build
+          tag: nightly
+          name: WeiJu2 nightly build
           draft: false
           prerelease: true
           
