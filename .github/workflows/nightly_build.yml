@@ -43,9 +43,9 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Delete previous nightly release
-        uses: larryjoelane/delete-release-action@v1.0.24
+        uses: cb80/delrel@latest
         with:
-          release-name: WeiJu2 nightly build
+          tag: nightly
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create nightly release
