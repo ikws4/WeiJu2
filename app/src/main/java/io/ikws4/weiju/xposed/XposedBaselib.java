@@ -57,7 +57,7 @@ class XposedBaselib extends JseBaseLib {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) {
                         try {
-                            LuaValue[] vargs = new LuaValue[2];
+                            LuaValue[] vargs = new LuaValue[3];
                             vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
                             vargs[1] = CoerceJavaToLua.coerce(param.args);
                             vargs[2] = CoerceJavaToLua.coerce(param.getResult());
@@ -89,7 +89,7 @@ class XposedBaselib extends JseBaseLib {
                         try {
                             if (func.isnil()) return;
 
-                            LuaValue[] vargs = new LuaValue[2];
+                            LuaValue[] vargs = new LuaValue[3];
                             vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
                             vargs[1] = CoerceJavaToLua.coerce(param.args);
                             vargs[2] = CoerceJavaToLua.coerce(param.getResult());
