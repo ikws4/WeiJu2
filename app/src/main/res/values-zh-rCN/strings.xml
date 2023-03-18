@@ -48,4 +48,11 @@
 
     <string name="home_status_can_not_force_stop">自动强制停止失败: 需要 root 权限</string>
     <string name="home_status_can_not_restart">重新启动失败: 需要 root 权限</string>
+    <string name="setting">设置</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="general">General</string>
+    <string name="setting_backup_summary">Export your settings and scripts to the clipboard in JSON format</string>
+    <string name="setting_restore_summary">Import your settings and scripts from the clipboard</string>
+    <string name="other">Other</string>
 </resources>

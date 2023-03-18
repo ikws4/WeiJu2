@@ -43,7 +43,7 @@ public class EditorFragment extends BaseFragment {
         mCompositeDisposable = new CompositeDisposable();
 
         mItem = requireArguments().getParcelable("item");
-        getSupportActionBar().setSubtitle(mItem.id);
+        // getSupportActionBar().setSubtitle(mItem.id);
 
         vEditor = view.findViewById(R.id.editor);
         EditorSymbolBar vSymbolBar = view.findViewById(R.id.editor_symbol_bar);
@@ -135,5 +135,15 @@ public class EditorFragment extends BaseFragment {
             if (it.idEquals(item)) return true;
         }
         return false;
+    }
+
+    @Override
+    public String getFragmentTitle() {
+        return getString(R.string.app_name);
+    }
+
+    @Override
+    public String getFragmentSubtitle() {
+        return mItem.id;
     }
 }

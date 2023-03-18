@@ -50,7 +50,7 @@ public class HomeViewModel extends BaseViewModel {
         super(application);
         mScriptStore = ScriptStore.getInstance(application);
         mLuaGlobals = JsePlatform.standardGlobals();
-        mCurrentSelectedAppPkg.setValue(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, ""));
+        mCurrentSelectedAppPkg.setValue(mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, BuildConfig.APPLICATION_ID));
         loadApplicationInfos();
         switchApp(mCurrentSelectedAppPkg.getValue());
     }

@@ -9,7 +9,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -17,8 +18,12 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.topjohnwu.superuser.Shell;
 
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.page.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int FRAGMENT_NORMAL = 0;
+    public static final int FRAGMENT_FULL_SCREEN_DIALOG = 1;
+    private MainViewModel vm;
 
     public MainActivity() {
         super(R.layout.main_activity);
@@ -27,12 +32,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vm = new ViewModelProvider(this).get(MainViewModel.class);
 
-        MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
+        setSupportActionBar(findViewById(R.id.toolbar));
+        setProgressBar();
+        getSupportFragmentManager().addOnBackStackChangedListener(this::updateActionBar);
+        startFragment(HomeFragment.class);
 
-        Toolbar vToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(vToolbar);
+        ensurePermissions();
+    }
 
+    private void setProgressBar() {
         LinearProgressIndicator vProgressBar = findViewById(R.id.progress_bar);
         vm.getProgressBarStatus().observe(this, visible -> {
             if (visible) {
@@ -53,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     );
             }
         });
-
-        ensurePermissions();
     }
 
     private void ensurePermissions() {
@@ -82,11 +90,39 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setSubtitle(null);
+    public void startFragment(Class<? extends Fragment> clazz) {
+        startFragment(clazz, FRAGMENT_NORMAL);
+    }
+
+    public void startFragment(Class<? extends Fragment> clazz, int type) {
+        startFragment(clazz, type, null);
+    }
+
+    public void startFragment(Class<? extends Fragment> clazz, int type, Bundle args) {
+        FragmentTransaction transaction = getSupportFragmentManager()
+            .beginTransaction()
+            .setReorderingAllowed(true);
+
+        if (type == FRAGMENT_NORMAL) {
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        } else if (type == FRAGMENT_FULL_SCREEN_DIALOG) {
+            transaction.setCustomAnimations(
+                R.anim.slide_in_bottom,
+                R.anim.slide_out_top,
+                R.anim.slide_in_bottom,
+                R.anim.slide_out_top
+            );
+        }
+
+        transaction.add(R.id.fragment_container, clazz, args)
+            .addToBackStack(null)
+            .commit();
+    }
+
+    private void updateActionBar() {
+        var fragment = (IFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(fragment.isDisplayHomeAsUp());
+        getSupportActionBar().setTitle(fragment.getFragmentTitle());
+        getSupportActionBar().setSubtitle(fragment.getFragmentSubtitle());
     }
 }

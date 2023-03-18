@@ -22,8 +22,8 @@ public class AboutFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.about);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setTitle(R.string.about);
 
         ListTile vVersion = view.findViewById(R.id.v_version);
         vVersion.setSubtitle(BuildConfig.VERSION_NAME + "-" + BuildConfig.COMMIT_HASH);
@@ -39,5 +39,10 @@ public class AboutFragment extends BaseFragment {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ikws4/WeiJu2/issues/new"));
             startActivity(intent);
         });
+    }
+
+    @Override
+    public String getFragmentTitle() {
+        return getString(R.string.about);
     }
 }

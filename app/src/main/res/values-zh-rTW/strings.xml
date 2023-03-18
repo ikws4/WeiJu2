@@ -43,4 +43,11 @@
     <string name="migratetool_cannot_load_hooklist">遷移工具: 無法讀取 hook_list</string>
     <string name="migratetool_please_activate_weiju2">遷移工具: 請現在 Xposed/LSPosed 中啟用 WeiJu2</string>
     <string name="migratetool_migrate_success">遷移工具: 遷移成功</string>
+    <string name="setting">Setting</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="general">General</string>
+    <string name="setting_backup_summary">Export your settings and scripts to the clipboard in JSON format</string>
+    <string name="setting_restore_summary">Import your settings and scripts from the clipboard</string>
+    <string name="other">Other</string>
 </resources>

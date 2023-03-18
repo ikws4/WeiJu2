@@ -26,8 +26,8 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/about"
-        android:title="@string/about"
-        app:showAsAction="never" />
+        android:id="@+id/setting"
+        android:title="@string/setting"
+        app:showAsAction="never"/>
 
 </menu>

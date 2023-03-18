@@ -15,6 +15,28 @@
         <item name="android:foregroundTint">@color/transparent_80</item>
         <item name="snackbarStyle">@style/Widget.WeiJu.Snackbar</item>
         <item name="colorBackgroundFloating">@color/base</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.WeiJu</item>
+        <item name="android:selectableItemBackground">@drawable/selection_background</item>
+        <item name="rippleColor">@color/highlight_low</item>
+        <item name="itemRippleColor">@color/highlight_low</item>
+        <item name="selectableItemBackgroundBorderless">@drawable/selection_background</item>
+    </style>
+
+    <style name="PreferenceThemeOverlay.WeiJu">
+        <item name="preferenceStyle">@style/Preference.Material.WeiJu</item>
+        <item name="preferenceCategoryStyle">@style/Preference.Category.Material.WeiJu</item>
+    </style>
+
+    <style name="Preference.Material.WeiJu">
+        <item name="allowDividerBelow">false</item>
+        <item name="allowDividerAbove">false</item>
+        <item name="iconSpaceReserved">false</item>
+    </style>
+
+    <style name="Preference.Category.Material.WeiJu">
+        <item name="allowDividerBelow">false</item>
+        <item name="allowDividerAbove">false</item>
+        <item name="iconSpaceReserved">false</item>
     </style>
 
     <style name="Widget.WeiJu.Snackbar" parent="Widget.Design.Snackbar">

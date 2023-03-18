@@ -31,12 +31,13 @@ import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.BaseFragment;
-import io.ikws4.weiju.page.about.AboutFragment;
+import io.ikws4.weiju.page.MainActivity;
 import io.ikws4.weiju.page.editor.EditorFragment;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.CreateScriptDialog;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
 import io.ikws4.weiju.page.logcat.LogcatFragment;
+import io.ikws4.weiju.page.setting.SettingFragment;
 import io.ikws4.weiju.widget.searchbar.SearchBar;
 import io.ikws4.weiju.widget.searchbar.UnselectedAppItemLoader;
 
@@ -52,7 +53,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        requireAppCompatActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
@@ -78,7 +78,7 @@ public class HomeFragment extends BaseFragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("item", item);
 
-                startFragment(EditorFragment.class, FRAGMENT_FULL_SCREEN_DIALOG, bundle);
+                getMainActivity().startFragment(EditorFragment.class, MainActivity.FRAGMENT_FULL_SCREEN_DIALOG, bundle);
             }
 
             @Override
@@ -214,7 +214,16 @@ public class HomeFragment extends BaseFragment {
             menu.findItem(R.id.xposed_status).setVisible(false);
         }
         vm.getCurrentSelectedAppPkg().publish();
-        ;
+    }
+
+    @Override
+    public String getFragmentTitle() {
+        return getString(R.string.app_name);
+    }
+
+    @Override
+    public boolean isDisplayHomeAsUp() {
+        return false;
     }
 
     @Override
@@ -239,13 +248,13 @@ public class HomeFragment extends BaseFragment {
                 }
             }
         } else if (id == R.id.logcat) {
-            startFragment(LogcatFragment.class);
+            getMainActivity().startFragment(LogcatFragment.class);
         } else if (id == R.id.restart) {
             if (!Shell.cmd("am force-stop io.ikws4.weiju && am start -n io.ikws4.weiju/.page.MainActivity").exec().isSuccess()) {
                 Toast.makeText(getContext(), R.string.home_status_can_not_restart, Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.about) {
-            startFragment(AboutFragment.class);
+        } else if (id == R.id.setting) {
+            getMainActivity().startFragment(SettingFragment.class);
         } else {
             return false;
         }

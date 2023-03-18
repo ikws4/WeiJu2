@@ -27,19 +27,20 @@ public class LogcatFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.logcat);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setTitle(R.string.logcat);
 
         TextView vLog = view.findViewById(R.id.tv_log);
-        vRefresher = view.findViewById(R.id.refresher);
-        vRefresher.setOnRefreshListener(() -> {
-            vm.readLogs();
-        });
 
         vm = new ViewModelProvider(requireActivity()).get(LogcatViewModel.class);
         vm.getLogs().observe(getViewLifecycleOwner(), log -> {
             vLog.setText(log);
             vRefresher.setRefreshing(false);
+        });
+
+        vRefresher = view.findViewById(R.id.refresher);
+        vRefresher.setOnRefreshListener(() -> {
+            vm.readLogs();
         });
 
         // auto-refresh when open logcat
@@ -63,5 +64,10 @@ public class LogcatFragment extends BaseFragment {
         }
 
         return true;
+    }
+
+    @Override
+    public String getFragmentTitle() {
+        return getString(R.string.logcat);
     }
 }

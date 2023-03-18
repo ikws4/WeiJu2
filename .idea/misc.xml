@@ -46,7 +46,7 @@
         <entry key="app/src/main/res/drawable/selection_background_circle.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/selection_background_rounded.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/shape_circle.xml" value="0.2685" />
-        <entry key="app/src/main/res/layout/about_fragment.xml" value="0.9919443862698089" />
+        <entry key="app/src/main/res/layout/about_fragment.xml" value="0.40493419339871506" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.49274444580078125" />
         <entry key="app/src/main/res/layout/add_app_item.xml" value="0.7849573554722129" />
         <entry key="app/src/main/res/layout/app_add_item.xml" value="0.29074074074074074" />
@@ -81,6 +81,7 @@
         <entry key="app/src/main/res/menu/logcat_menu.xml" value="0.29641418457031254" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.24493560791015623" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20233612060546877" />
+        <entry key="app/src/main/res/xml/settings.xml" value="0.1" />
         <entry key="editor/src/main/res/drawable/ic_copy.xml" value="0.2895" />
         <entry key="editor/src/main/res/drawable/ic_cut.xml" value="0.2895" />
         <entry key="editor/src/main/res/drawable/ic_more.xml" value="0.119" />

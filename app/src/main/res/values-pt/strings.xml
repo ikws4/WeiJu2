@@ -46,4 +46,11 @@
 
     <string name="home_status_can_not_force_stop">Falha ao forçar parada automaticamente: necessário permissão do root</string>
     <string name="home_status_can_not_restart">Falha ao reiniciar: necessário permissão do root</string>
+    <string name="setting">Setting</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="general">General</string>
+    <string name="setting_backup_summary">Export your settings and scripts to the clipboard in JSON format</string>
+    <string name="setting_restore_summary">Import your settings and scripts from the clipboard</string>
+    <string name="other">Other</string>
 </resources>
