@@ -121,6 +121,24 @@ end
 return M
 ```
 
+### How to get the result in after hook?
+
+```lua
+hook {
+  class = String,
+  returns = char,
+  method = "charAt",
+  params = {
+    int
+  },
+  after = function(this, params, ret)
+    print("return value: " .. ret)
+    -- make it always return 'a'
+    return string.byte("a")
+  end
+}
+```
+
 Want to share your work with others? Create a PR at [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts).
 
 

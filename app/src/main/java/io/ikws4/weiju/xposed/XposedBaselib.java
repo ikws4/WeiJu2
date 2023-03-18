@@ -60,6 +60,7 @@ class XposedBaselib extends JseBaseLib {
                             LuaValue[] vargs = new LuaValue[2];
                             vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
                             vargs[1] = CoerceJavaToLua.coerce(param.args);
+                            vargs[2] = CoerceJavaToLua.coerce(param.getResult());
 
                             Varargs ret = replace.invoke(vargs);
                             // handle return value
@@ -91,6 +92,7 @@ class XposedBaselib extends JseBaseLib {
                             LuaValue[] vargs = new LuaValue[2];
                             vargs[0] = CoerceJavaToLua.coerce(param.thisObject);
                             vargs[1] = CoerceJavaToLua.coerce(param.args);
+                            vargs[2] = CoerceJavaToLua.coerce(param.getResult());
 
                             Varargs ret = func.invoke(vargs);
                             // handle return value
