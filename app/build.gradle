@@ -66,6 +66,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation "androidx.fragment:fragment:$fragment_version"
+    implementation 'androidx.preference:preference:1.0.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
