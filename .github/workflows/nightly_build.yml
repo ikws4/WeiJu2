@@ -42,22 +42,20 @@ jobs:
           keyStorePassword: ${{ secrets.STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Delete previous nightly release
-        uses: cb80/delrel@latest
+      - uses: dev-drprasad/delete-tag-and-release@v0.2
         with:
-          tag: nightly
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create nightly release
-        id: createRelease
-        uses: ncipollo/release-action@v1
+          tag_name: nightly
+          delete_release: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: avakar/tag-and-release@v1
         with:
-          tag: nightly
-          name: WeiJu2 nightly build
-          draft: false
+          tag_name: nightly
+          release_name: WeiJu2 nightly build
           prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Upload nightly build asset
         id: upload-release-asset 
