@@ -18,7 +18,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.topjohnwu.superuser.Shell;
 
 import io.ikws4.weiju.R;
-import io.ikws4.weiju.page.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
     public static final int FRAGMENT_NORMAL = 0;
@@ -34,15 +33,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         vm = new ViewModelProvider(this).get(MainViewModel.class);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        setProgressBar();
+        setupActionBar();
+        setupProgressBar();
         getSupportFragmentManager().addOnBackStackChangedListener(this::updateActionBar);
-        startFragment(HomeFragment.class);
 
         ensurePermissions();
     }
 
-    private void setProgressBar() {
+    private void setupActionBar() {
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    private void setupProgressBar() {
         LinearProgressIndicator vProgressBar = findViewById(R.id.progress_bar);
         vm.getProgressBarStatus().observe(this, visible -> {
             if (visible) {
@@ -121,8 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateActionBar() {
         var fragment = (IFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(fragment.isDisplayHomeAsUp());
-        getSupportActionBar().setTitle(fragment.getFragmentTitle());
-        getSupportActionBar().setSubtitle(fragment.getFragmentSubtitle());
+        if (fragment != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(fragment.isDisplayHomeAsUp());
+            getSupportActionBar().setTitle(fragment.getFragmentTitle());
+            getSupportActionBar().setSubtitle(fragment.getFragmentSubtitle());
+        }
     }
 }
