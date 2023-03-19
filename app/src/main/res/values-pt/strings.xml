@@ -47,7 +47,7 @@
     <string name="home_status_can_not_force_stop">Auto force-stop failed: need root permission</string>
     <string name="home_status_can_not_restart">Restart failed: need root permission</string>
 
-    <string name="setting">Setting</string>
+    <string name="settings">Settings</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
     <string name="general">General</string>

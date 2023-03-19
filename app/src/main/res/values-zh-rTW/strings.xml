@@ -47,7 +47,7 @@
     <string name="home_status_can_not_force_stop">自动强制停止失败: 需要 root 权限</string>
     <string name="home_status_can_not_restart">重新启动失败: 需要 root 权限</string>
 
-    <string name="setting">设置</string>
+    <string name="settings">设置</string>
     <string name="backup">备份</string>
     <string name="restore">恢复</string>
     <string name="general">通用</string>

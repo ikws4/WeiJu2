@@ -87,7 +87,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements MenuPro
 
     @Override
     public String getFragmentTitle() {
-        return getString(R.string.setting);
+        return getString(R.string.settings);
     }
 
     @Override
