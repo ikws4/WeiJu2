@@ -17,10 +17,12 @@ import androidx.preference.PreferenceFragmentCompat;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.page.IFragment;
 import io.ikws4.weiju.page.MainActivity;
+import io.ikws4.weiju.page.MainViewModel;
 import io.ikws4.weiju.page.about.AboutFragment;
 
 public class SettingFragment extends PreferenceFragmentCompat implements MenuProvider, Preference.OnPreferenceClickListener, IFragment {
     protected SettingViewModel vm;
+    protected MainViewModel mainVM;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -33,12 +35,18 @@ public class SettingFragment extends PreferenceFragmentCompat implements MenuPro
         view.setBackgroundColor(getContext().getColor(R.color.base));
 
         vm = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
+        mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         getMainActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.STARTED);
 
         findPreference(getString(R.string.backup)).setOnPreferenceClickListener(this);
         findPreference(getString(R.string.restore)).setOnPreferenceClickListener(this);
         findPreference(getString(R.string.about)).setOnPreferenceClickListener(this);
+
+        vm.getShowProgressBar().observe(getViewLifecycleOwner(), (it) -> {
+            if (it) mainVM.showProgressBar();
+            else mainVM.hideProgressBar();
+        });
     }
 
     @Override
