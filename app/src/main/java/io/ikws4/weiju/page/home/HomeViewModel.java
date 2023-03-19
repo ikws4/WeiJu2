@@ -101,6 +101,10 @@ public class HomeViewModel extends BaseViewModel {
         mSelectedApps.publish();
     }
 
+    public void refresh() {
+        switchApp(mCurrentSelectedAppPkg.getValue());
+    }
+
     public void switchApp(AppListView.AppItem app) {
         switchApp(app.pkg);
     }
@@ -308,9 +312,6 @@ public class HomeViewModel extends BaseViewModel {
         // Add a global app at the top
         selectedData.add(new AppListView.AppItem("Global", BuildConfig.APPLICATION_ID, false));
         mSelectedApps.setValue(selectedData);
-        if (mPreferences.get(Preferences.APP_LIST_SELECTED_PACKAGE, "").equals("")) {
-            switchApp(BuildConfig.APPLICATION_ID);
-        }
 
         mDisposables.add(Observable.fromIterable(pm.getInstalledApplications(0))
             .subscribeOn(Schedulers.io())

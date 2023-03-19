@@ -19,10 +19,12 @@ import io.ikws4.weiju.page.IFragment;
 import io.ikws4.weiju.page.MainActivity;
 import io.ikws4.weiju.page.MainViewModel;
 import io.ikws4.weiju.page.about.AboutFragment;
+import io.ikws4.weiju.page.home.HomeViewModel;
 
 public class SettingFragment extends PreferenceFragmentCompat implements MenuProvider, Preference.OnPreferenceClickListener, IFragment {
     protected SettingViewModel vm;
     protected MainViewModel mainVM;
+    protected HomeViewModel homeVM;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -36,6 +38,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements MenuPro
 
         vm = new ViewModelProvider(requireActivity()).get(SettingViewModel.class);
         mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        homeVM = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
 
         getMainActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.STARTED);
 
@@ -52,6 +55,12 @@ public class SettingFragment extends PreferenceFragmentCompat implements MenuPro
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menu.clear();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        homeVM.refresh();
     }
 
     @Override
