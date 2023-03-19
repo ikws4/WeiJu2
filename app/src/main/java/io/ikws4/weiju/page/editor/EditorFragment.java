@@ -146,4 +146,9 @@ public class EditorFragment extends BaseFragment {
     public String getFragmentSubtitle() {
         return mItem.id;
     }
+
+    @Override
+    public boolean isDisplayHomeAsUp() {
+        return false;
+    }
 }
