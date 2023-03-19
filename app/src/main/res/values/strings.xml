@@ -46,6 +46,7 @@
 
     <string name="home_status_can_not_force_stop">Auto force-stop failed: need root permission</string>
     <string name="home_status_can_not_restart">Restart failed: need root permission</string>
+
     <string name="setting">Setting</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
@@ -53,4 +54,8 @@
     <string name="setting_backup_summary">Export your settings and scripts to the clipboard in JSON format</string>
     <string name="setting_restore_summary">Import your settings and scripts from the clipboard</string>
     <string name="other">Other</string>
+
+    <string name="setting_restore_succeed">Restore succeed</string>
+    <string name="setting_restore_failed">Restore failed, please check your json data</string>
+    <string name="setting_saved_to_clipbard">Saved to clipboard</string>
 </resources>

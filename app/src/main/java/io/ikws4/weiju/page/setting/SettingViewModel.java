@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import io.ikws4.weiju.R;
 import io.ikws4.weiju.WeiJu;
 import io.ikws4.weiju.page.BaseViewModel;
 
@@ -38,8 +39,8 @@ public class SettingViewModel extends BaseViewModel {
         var json = mGson.toJson(data);
 
         // save to the clipboard
-        mClipboardManager.setPrimaryClip(ClipData.newPlainText("", json));
-        Toast.makeText(getApplication(), "Saved to clipboard", Toast.LENGTH_SHORT).show();
+        mClipboardManager.setPrimaryClip(ClipData.newPlainText("WeiJu2 App Data", json));
+        Toast.makeText(getApplication(), R.string.setting_saved_to_clipbard, Toast.LENGTH_SHORT).show();
     }
 
     public void restore() {
@@ -79,9 +80,9 @@ public class SettingViewModel extends BaseViewModel {
                 }
                 editor.apply();
             }
-            Toast.makeText(getApplication(), "Restore succeed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), R.string.setting_restore_succeed, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(getApplication(), "Restore failed, please check your json data", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplication(), R.string.setting_restore_failed, Toast.LENGTH_LONG).show();
         }
     }
 }
