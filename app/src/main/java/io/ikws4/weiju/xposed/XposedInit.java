@@ -8,7 +8,6 @@ import android.widget.Toast;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 
-import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Set;
 
@@ -23,10 +22,7 @@ import io.ikws4.weiju.storage.scriptstore.XScriptStore;
 
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit {
     /* package */ static XScriptStore store;
-    /* package */ static WeakReference<Context> context;
     /* package */ static XC_LoadPackage.LoadPackageParam lpparam;
-
-    private boolean scriptInjected;
 
     @Override
     public void initZygote(StartupParam startupParam) {
@@ -42,32 +38,36 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
             return;
         }
 
+        if (injectScripts(null)) return;
+
         XposedHelpers.findAndHookMethod(Instrumentation.class, "callApplicationOnCreate", Application.class, new XC_MethodHook() {
+            private boolean injected = false;
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
-                Context ctx = (Context) (param.args[0]);
-                context = new WeakReference<>(ctx);
-                injectScripts(context.get());
+                Context context = (Context) (param.args[0]);
+                injected = injectScripts(context);
             }
 
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
-                if (scriptInjected) return;
-                injectScripts(context.get());
-                if (scriptInjected) return;
-                Toast.makeText(context.get(), "Failed to load the scripts, please restart WeiJu2", Toast.LENGTH_LONG).show();
+                if (injected) return;
+
+                Context context = (Context) (param.args[0]);
+                if (!injectScripts(context)) {
+                    Toast.makeText(context, "Failed to load the scripts, please restart WeiJu2", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
 
-    private void injectScripts(Context context) {
+    private boolean injectScripts(Context context) {
         store = new XScriptStore(context);
         if (!store.canRead()) {
-            return;
+            return false;
         }
         injectScriptsFor(BuildConfig.APPLICATION_ID); // global scripts
         injectScriptsFor(lpparam.packageName);
-        scriptInjected = true;
+        return true;
     }
 
     private void injectScriptsFor(String pkgName) {

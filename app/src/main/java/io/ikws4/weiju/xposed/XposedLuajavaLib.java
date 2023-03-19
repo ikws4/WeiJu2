@@ -6,6 +6,8 @@ import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.LuajavaLib;
 
+import java.io.File;
+
 import de.robv.android.xposed.XposedHelpers;
 
 public class XposedLuajavaLib extends LuajavaLib {
@@ -15,8 +17,9 @@ public class XposedLuajavaLib extends LuajavaLib {
         ProxyInvocationHandler handler = new ProxyInvocationHandler(lobj);
 
         try {
+            var path = new File(XposedInit.lpparam.appInfo.dataDir + "/code_cache/");
             return ProxyBuilder.forClass(clazz)
-                .dexCache(XposedInit.context.get().getCodeCacheDir())
+                .dexCache(path)
                 .parentClassLoader(XposedInit.lpparam.classLoader)
                 .handler(handler)
                 .build();
@@ -24,6 +27,7 @@ public class XposedLuajavaLib extends LuajavaLib {
             throw new LuaError(e);
         }
     }
+
 
     @Override
     protected Class classForName(String name) {

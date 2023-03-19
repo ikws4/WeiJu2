@@ -19,7 +19,7 @@ public class XScriptStore {
             return;
         }
 
-        if ((strategy = new RemoteSharedPreferencesStoreStrategy(context)).canRead()) {
+        if (context != null && (strategy = new RemoteSharedPreferencesStoreStrategy(context)).canRead()) {
             Logger.d("XScriptStore:", "use RemoteSharedPreferencesStoreStrategy");
             return;
         }
