@@ -3,6 +3,7 @@ name: Nightly Build
 on: 
   schedule:
     - cron: '59 23 * * *'
+  workflow_dispatch:
 
 jobs:
   nightly_build:
