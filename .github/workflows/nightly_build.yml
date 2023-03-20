@@ -51,6 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - uses: avakar/tag-and-release@v1
+        id: createRelease
         with:
           tag_name: nightly
           release_name: WeiJu2 nightly build
