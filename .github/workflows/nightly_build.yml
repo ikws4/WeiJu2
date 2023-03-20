@@ -42,7 +42,7 @@ jobs:
           keyStorePassword: ${{ secrets.STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - uses: dev-drprasad/delete-tag-and-release@v0.2
+      - uses: dev-drprasad/delete-tag-and-release@v0.2.1
         with:
           tag_name: nightly
           delete_release: true
