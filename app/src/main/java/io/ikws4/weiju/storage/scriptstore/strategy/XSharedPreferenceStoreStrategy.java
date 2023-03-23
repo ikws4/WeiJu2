@@ -24,6 +24,11 @@ public class XSharedPreferenceStoreStrategy implements StoreStrategy {
                 store.reload();
             }
         }
+
+        if (!canRead()) {
+            store = new XSharedPreferences(BuildConfig.APPLICATION_ID, STORE_NAME);
+            store.reload();
+        }
     }
 
     public static void fixPermission() {
