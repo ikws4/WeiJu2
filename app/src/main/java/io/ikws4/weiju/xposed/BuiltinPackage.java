@@ -12,13 +12,12 @@ class BuiltinPackage {
     private static final Map<String, String> scripts = new HashMap<>();
 
     /**
-     * returns a empty string if script not exist.
+     * returns an empty string if script not exist.
      */
     public static String require(String path) {
         if (scripts.containsKey(path)) return scripts.get(path);
 
-        try {
-            InputStream in = BuiltinPackage.class.getClassLoader().getResourceAsStream(path + ".lua");
+        try (InputStream in = BuiltinPackage.class.getClassLoader().getResourceAsStream(path + ".lua")) {
 
             if (in == null) {
                 throw new IOException("package: '" + path + "' not found");
