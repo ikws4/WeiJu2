@@ -2,50 +2,15 @@ package io.ikws4.weiju.api;
 
 import android.content.Context;
 
-import io.reactivex.rxjava3.core.Observable;
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import io.ikws4.weiju.api.github.GithubAPI;
+import io.ikws4.weiju.api.openai.OpenAIApi;
 
 public class API {
-    private final ScriptServer mServer;
+    public static OpenAIApi OpenAIApi;
+    public static GithubAPI GithubAPI;
 
-    public API(Context context) {
-        int MB = 1 << 20;
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-            .cache(new Cache(context.getCacheDir(), 5 * MB))
-            .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .client(okHttpClient)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-
-        mServer = retrofit.create(ScriptServer.class);
-    }
-
-    public Observable<GithubContentFile> getScopeConfig() {
-        return mServer.getScopeConfig();
-    }
-
-    public Observable<GithubContentFile> getScript(String name) {
-        return mServer.getScript(name);
-    }
-
-    private static API instance;
-
-    public static API getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("Not initialized.");
-        }
-        return instance;
-    }
-    
     public static void initialize(Context context) {
-        instance = new API(context);
+        OpenAIApi = new OpenAIApi(context);
+        GithubAPI = new GithubAPI(context);
     }
 }

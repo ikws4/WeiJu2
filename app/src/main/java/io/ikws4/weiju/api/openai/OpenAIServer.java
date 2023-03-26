@@ -1,0 +1,18 @@
+package io.ikws4.weiju.api.openai;
+
+
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Observable;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+
+public interface OpenAIServer {
+    @Headers("Content-Type: application/json")
+    @POST("v1/chat/completions")
+    Observable<ChatCompletion> chat(
+        @Header("Authorization") String schemeAndApiKey,
+        List<ChatCompletion.Message> messages
+    );
+}

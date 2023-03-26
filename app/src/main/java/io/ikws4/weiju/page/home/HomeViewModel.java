@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import io.ikws4.weiju.BuildConfig;
 import io.ikws4.weiju.api.API;
-import io.ikws4.weiju.utils.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.page.home.widget.AppListView;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
@@ -34,6 +33,7 @@ import io.ikws4.weiju.util.Logger;
 import io.ikws4.weiju.util.RandomUtil;
 import io.ikws4.weiju.util.Strings;
 import io.ikws4.weiju.util.Template;
+import io.ikws4.weiju.utils.MutableLiveDataExt;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -199,7 +199,7 @@ public class HomeViewModel extends BaseViewModel {
     }
 
     public void updateScript(ScriptListView.ScriptItem item) {
-        mDisposables.add(API.getInstance().getScript(item.id)
+        mDisposables.add(API.GithubAPI.getScript(item.id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe((contentFile) -> {
@@ -212,7 +212,7 @@ public class HomeViewModel extends BaseViewModel {
 
     public void refreshScripts() {
         String pkg = mCurrentSelectedAppPkg.getValue();
-        mDisposables.add(API.getInstance().getScopeConfig()
+        mDisposables.add(API.GithubAPI.getScopeConfig()
             .subscribeOn(Schedulers.io())
             .subscribe(it -> {
                 // Get all avaliable scripts for this pkg
@@ -240,7 +240,7 @@ public class HomeViewModel extends BaseViewModel {
                 List<ScriptListView.ScriptItem> scriptItems = new ArrayList<>();
 
                 mDisposables.add(Observable.fromIterable(avaliableScripts)
-                    .map(name -> API.getInstance().getScript(name))
+                    .map(name -> API.GithubAPI.getScript(name))
                     .observeOn(Schedulers.io())
                     .buffer(5, 5)
                     .subscribe(observables -> {

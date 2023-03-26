@@ -1,4 +1,4 @@
-package io.ikws4.weiju.api;
+package io.ikws4.weiju.api.github;
 
 import android.util.Base64;
 
