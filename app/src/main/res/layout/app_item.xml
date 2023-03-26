@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:gravity="center"
-    android:background="@drawable/selection_background"
     android:orientation="vertical">
 
     <com.google.android.material.imageview.ShapeableImageView

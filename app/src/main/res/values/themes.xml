@@ -20,6 +20,8 @@
         <item name="rippleColor">@color/highlight_low</item>
         <item name="itemRippleColor">@color/highlight_low</item>
         <item name="selectableItemBackgroundBorderless">@drawable/selection_background</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scroll_bar_thumb</item>
+        <item name="android:scrollbarThumbHorizontal">@drawable/scroll_bar_thumb</item>
     </style>
 
     <style name="PreferenceThemeOverlay.WeiJu">
