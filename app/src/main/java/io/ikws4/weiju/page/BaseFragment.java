@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 
 public class BaseFragment extends Fragment implements MenuProvider, IFragment {
+    private Menu mMenu;
 
     public BaseFragment(int contentLayoutId) {
         super(contentLayoutId);
@@ -38,6 +39,7 @@ public class BaseFragment extends Fragment implements MenuProvider, IFragment {
     @CallSuper
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         menu.clear();
+        mMenu = menu;
     }
 
     @Override
@@ -58,5 +60,9 @@ public class BaseFragment extends Fragment implements MenuProvider, IFragment {
     @Override
     public boolean isDisplayHomeAsUp() {
         return true;
+    }
+
+    public Menu getMenu() {
+        return mMenu;
     }
 }

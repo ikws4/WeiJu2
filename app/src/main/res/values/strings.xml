@@ -58,4 +58,6 @@
     <string name="setting_restore_succeed">Restore succeed</string>
     <string name="setting_restore_failed">Restore failed, please check your json data</string>
     <string name="setting_saved_to_clipbard">Saved to clipboard</string>
+    <string name="scroll_to_top">Scroll to Top</string>
+    <string name="scroll_to_bottom">Scroll to Bottom</string>
 </resources>

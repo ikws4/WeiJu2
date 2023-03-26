@@ -29,6 +29,8 @@
         <entry key="app/src/main/res/drawable/ic_github.xml" value="0.1905" />
         <entry key="app/src/main/res/drawable/ic_help.xml" value="0.109" />
         <entry key="app/src/main/res/drawable/ic_info.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_keyboard_arrow_down.xml" value="0.142" />
+        <entry key="app/src/main/res/drawable/ic_keyboard_arrow_up.xml" value="0.142" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_more_vert.xml" value="0.2685" />
         <entry key="app/src/main/res/drawable/ic_package.xml" value="0.1745" />

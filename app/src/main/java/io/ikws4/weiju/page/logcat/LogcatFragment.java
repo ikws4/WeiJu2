@@ -30,6 +30,7 @@ public class LogcatFragment extends BaseFragment {
 
     private LogcatViewModel vm;
     private LogAdapter mAdapter;
+    private RecyclerView mVLog;
 
     public LogcatFragment() {
         super(R.layout.logcat_fragment);
@@ -42,8 +43,8 @@ public class LogcatFragment extends BaseFragment {
         // getSupportActionBar().setTitle(R.string.logcat);
 
         mAdapter = new LogAdapter();
-        RecyclerView vLog = view.findViewById(R.id.v_log);
-        vLog.setAdapter(mAdapter);
+        mVLog = view.findViewById(R.id.v_log);
+        mVLog.setAdapter(mAdapter);
 
         vm = new ViewModelProvider(requireActivity()).get(LogcatViewModel.class);
         vm.getLogs().observe(getViewLifecycleOwner(), log -> {
@@ -54,6 +55,33 @@ public class LogcatFragment extends BaseFragment {
         vRefresher = view.findViewById(R.id.refresher);
         vRefresher.setOnRefreshListener(() -> {
             vm.readLogs();
+        });
+
+        mVLog.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private MenuItem scrollToTop;
+            private MenuItem scrollToBottom;
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                refreshMenuIcon(recyclerView);
+            }
+
+            private void refreshMenuIcon(@NonNull RecyclerView recyclerView) {
+                final int offset = recyclerView.computeVerticalScrollOffset();
+                final int range = recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent();
+
+                if (scrollToTop == null) {
+                    if (getMenu() == null) return;
+                    scrollToTop = getMenu().findItem(R.id.scroll_to_top);
+                    scrollToBottom = getMenu().findItem(R.id.scroll_to_bottom);
+                    return;
+                }
+
+                var onlyShowScrollToTop = 2 * offset >= range;
+                scrollToTop.setVisible(onlyShowScrollToTop);
+                scrollToBottom.setVisible(!onlyShowScrollToTop);
+            }
         });
 
         // auto-refresh when open logcat
@@ -72,11 +100,37 @@ public class LogcatFragment extends BaseFragment {
         int id = menuItem.getItemId();
 
         if (id == R.id.clear) {
-            vRefresher.setRefreshing(true);
-            vm.clearLogs();
+            clearLog();
+        } else if (id == R.id.scroll_to_top) {
+            scrollToTop();
+        } else if (id == R.id.scroll_to_bottom) {
+            scrollToBottom();
         }
 
         return true;
+    }
+
+    private void scrollToBottom() {
+        var last = mVLog.getAdapter().getItemCount() - 1;
+        scrollToPosition(last);
+    }
+
+    private void scrollToTop() {
+        scrollToPosition(0);
+    }
+
+    private void clearLog() {
+        vRefresher.setRefreshing(true);
+        vm.clearLogs();
+    }
+
+    private void scrollToPosition(int pos) {
+        final int range = mVLog.computeVerticalScrollRange() - mVLog.computeVerticalScrollExtent();
+        if (range < 5 * getView().getHeight()) {
+            mVLog.smoothScrollToPosition(pos);
+        } else {
+            mVLog.scrollToPosition(pos);
+        }
     }
 
     @Override

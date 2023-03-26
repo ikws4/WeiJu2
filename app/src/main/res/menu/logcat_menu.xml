@@ -3,8 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/scroll_to_top"
+        android:icon="@drawable/ic_keyboard_arrow_up"
+        android:title="@string/scroll_to_top"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/scroll_to_bottom"
+        android:icon="@drawable/ic_keyboard_arrow_down"
+        android:title="@string/scroll_to_bottom"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/clear"
-        android:title="@string/clear"
         android:icon="@drawable/ic_clear_all"
+        android:title="@string/clear"
         app:showAsAction="always" />
 </menu>

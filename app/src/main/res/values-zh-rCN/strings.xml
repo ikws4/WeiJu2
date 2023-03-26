@@ -60,4 +60,6 @@
     <string name="setting_restore_succeed">数据导入成功</string>
     <string name="setting_restore_failed">数据导入失败</string>
     <string name="setting_saved_to_clipbard">已保存到剪切板</string>
+    <string name="scroll_to_top">滚动到顶部</string>
+    <string name="scroll_to_bottom">滚动到底部</string>
 </resources>
