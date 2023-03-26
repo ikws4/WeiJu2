@@ -28,6 +28,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements MenuPro
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        getPreferenceManager().setSharedPreferencesName("preference");
         setPreferencesFromResource(R.xml.settings, rootKey);
     }
 

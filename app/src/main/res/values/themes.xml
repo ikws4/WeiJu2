@@ -25,14 +25,7 @@
     </style>
 
     <style name="PreferenceThemeOverlay.WeiJu">
-        <item name="preferenceStyle">@style/Preference.Material.WeiJu</item>
         <item name="preferenceCategoryStyle">@style/Preference.Category.Material.WeiJu</item>
-    </style>
-
-    <style name="Preference.Material.WeiJu">
-        <item name="allowDividerBelow">false</item>
-        <item name="allowDividerAbove">false</item>
-        <item name="iconSpaceReserved">false</item>
     </style>
 
     <style name="Preference.Category.Material.WeiJu">

@@ -11,19 +11,35 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.reflect.TypeToken;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.ikws4.weiju.R;
+import io.ikws4.weiju.api.API;
+import io.ikws4.weiju.api.openai.ChatResponse;
 import io.ikws4.weiju.editor.Editor;
+import io.ikws4.weiju.events.StartChatEvent;
 import io.ikws4.weiju.page.BaseFragment;
 import io.ikws4.weiju.page.MainViewModel;
 import io.ikws4.weiju.page.editor.view.EditorSymbolBar;
 import io.ikws4.weiju.page.home.HomeViewModel;
 import io.ikws4.weiju.page.home.widget.ScriptListView;
+import io.ikws4.weiju.storage.Preferences;
+import io.ikws4.weiju.util.Logger;
+import io.ikws4.weiju.utils.FileUtility;
+import io.ikws4.weiju.utils.GsonUtility;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class EditorFragment extends BaseFragment {
     private Editor vEditor;
@@ -31,6 +47,7 @@ public class EditorFragment extends BaseFragment {
     private MainViewModel mainVM;
     private ScriptListView.ScriptItem mItem;
     private CompositeDisposable mCompositeDisposable;
+    private List<ChatResponse.Message> mChatMessages;
 
     public EditorFragment() {
         super(R.layout.editor_fragment);
@@ -41,6 +58,8 @@ public class EditorFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         vm = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         mCompositeDisposable = new CompositeDisposable();
+        mChatMessages = new ArrayList<>();
+        setupRoleForChatGPT();
 
         mItem = requireArguments().getParcelable("item");
         // getSupportActionBar().setSubtitle(mItem.id);
@@ -70,6 +89,15 @@ public class EditorFragment extends BaseFragment {
         }
     }
 
+    class Response {
+        public List<ChatResponse.Message> messages;
+    }
+
+    private void setupRoleForChatGPT() {
+        var json = FileUtility.readAssetFile(getContext(), "chatgpt_as_weiju2_script_assistant.txt");
+        mChatMessages.addAll(GsonUtility.fromJson(json, TypeToken.get(Response.class)).messages);
+    }
+
     @Override
     public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         super.onCreateMenu(menu, menuInflater);
@@ -91,6 +119,7 @@ public class EditorFragment extends BaseFragment {
         }
         return true;
     }
+
 
     @Override
     public void onDestroy() {
@@ -150,5 +179,46 @@ public class EditorFragment extends BaseFragment {
     @Override
     public boolean isDisplayHomeAsUp() {
         return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStartChatEvent(StartChatEvent event) {
+        var cursor = vEditor.getCursor();
+        Toast.makeText(getContext(), "Receiving...", Toast.LENGTH_SHORT).show();
+        if (cursor.isSelected()) {
+            var content = vEditor.getText().substring(cursor.getLeft(), cursor.getRight());
+            mChatMessages.add(new ChatResponse.Message("user", content));
+
+            mCompositeDisposable.add(API.OpenAIApi.chat(
+                    Preferences.getInstance(getContext()).get(Preferences.OPENAI_API_KEY, ""),
+                    Preferences.getInstance(getContext()).get(Preferences.OPENAI_CHAT_MODEL, ""),
+                    mChatMessages
+                ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    response -> {
+                        var delta = response.choices.get(0).delta;
+                        if (delta.content == null) return;
+                        vEditor.insertText(delta.content, delta.content.length());
+                    },
+                    err -> {
+                        Logger.e(err);
+                        Toast.makeText(getContext(), err.getMessage(), Toast.LENGTH_LONG).show();
+                    }));
+        } else {
+            Toast.makeText(getContext(), "Please select the area you want to ask for", Toast.LENGTH_SHORT).show();
+        }
     }
 }

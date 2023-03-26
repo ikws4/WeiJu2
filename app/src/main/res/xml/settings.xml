@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/general">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/general">
         <Preference
             android:key="@string/backup"
             android:summary="@string/setting_backup_summary"
-            android:title="@string/backup" />
+            android:title="@string/backup"
+            app:iconSpaceReserved="false" />
+
         <Preference
             android:key="@string/restore"
             android:summary="@string/setting_restore_summary"
-            android:title="@string/restore" />
+            android:title="@string/restore"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="AI">
+        <EditTextPreference
+            android:key="openai_api_key"
+            android:defaultValue=""
+            android:summary="%s"
+            app:useSimpleSummaryProvider="true"
+            android:title="OpenAI API Key"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:key="openai_chat_model"
+            android:title="Model"
+            android:entryValues="@array/openai_chat_model_values"
+            android:entries="@array/openai_chat_model_entries"
+            android:defaultValue="gpt-3.5-turbo"
+            android:summary="%s"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/other">
         <Preference
             android:key="@string/about"
-            android:title="@string/about" />
+            android:title="@string/about"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 </PreferenceScreen>

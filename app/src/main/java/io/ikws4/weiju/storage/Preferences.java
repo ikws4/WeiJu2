@@ -17,7 +17,8 @@ public class Preferences {
   public static final String LOGCAT_TIME = "logcat_time";
   public static final String PACKAGE_LIST_SUFFIX = "_package_list";
   public static final String AUTHOR = "author";
-  public static final String OPENAI_KEY = "openai_key";
+  public static final String OPENAI_API_KEY = "openai_api_key";
+  public static final String OPENAI_CHAT_MODEL = "openai_chat_model";
 
   private Preferences(Context context) {
     storage = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);
