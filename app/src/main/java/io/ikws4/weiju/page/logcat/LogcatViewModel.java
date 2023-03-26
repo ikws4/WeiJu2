@@ -2,10 +2,6 @@ package io.ikws4.weiju.page.logcat;
 
 import android.app.Application;
 import android.os.SystemClock;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -13,53 +9,44 @@ import androidx.lifecycle.LiveData;
 import com.topjohnwu.superuser.Shell;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-import io.ikws4.weiju.R;
-import io.ikws4.weiju.utils.MutableLiveDataExt;
 import io.ikws4.weiju.page.BaseViewModel;
 import io.ikws4.weiju.storage.Preferences;
+import io.ikws4.weiju.utils.MutableLiveDataExt;
 import io.ikws4.weiju.xposed.Console;
 
 public class LogcatViewModel extends BaseViewModel {
-    private final MutableLiveDataExt<CharSequence> mLogs;
+    private final MutableLiveDataExt<List<LogItem>> mLogs;
+    private Executor mExecutor;
 
     public LogcatViewModel(@NonNull Application application) {
         super(application);
-        mLogs = new MutableLiveDataExt<>("");
+        mLogs = new MutableLiveDataExt<>();
+        mExecutor = Executors.newSingleThreadExecutor();
     }
 
-    public LiveData<CharSequence> getLogs() {
+    public LiveData<List<LogItem>> getLogs() {
         return mLogs;
     }
 
     public void readLogs() {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
         String time = mPreferences.get(Preferences.LOGCAT_TIME, getRebootTime());
-        Shell.cmd("logcat -d -v tag -b main " + Console.TAG + ":D *:S -t '" + time + "'").submit(it -> {
-            int errorColor = getApplication().getColor(R.color.rose);
-            int debugColor = getApplication().getColor(R.color.foam);
-            int textColor = getApplication().getColor(R.color.base);
+        List<LogItem> logItems = new ArrayList<>();
+        Shell.cmd("logcat -d -v tag -b main " + Console.TAG + ":D *:S -t '" + time + "'").submit(Executors.newSingleThreadExecutor(), it -> {
             for (String line : it.getOut()) {
-                var logline = LogLine.from(line);
-                if (logline == null) continue;
-
-                int startIndex = builder.length();
-
-                builder.append(" ")
-                    .append(logline.level)
-                    .append(" ")
-                    .append(logline.msg)
-                    .append('\n');
-
-                int color = logline.level.equals("D") ? debugColor : errorColor;
-
-                builder.setSpan(new BackgroundColorSpan(color), startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                builder.setSpan(new ForegroundColorSpan(textColor), startIndex, startIndex + 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                builder.setSpan(new ForegroundColorSpan(color), startIndex + 3, startIndex + 3 + logline.msg.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                var logitem = LogItem.from(line);
+                if (logitem != null) {
+                    logItems.add(logitem);
+                }
             }
-            mLogs.setValue(builder);
+            mLogs.postValue(logItems);
         });
     }
 
@@ -86,22 +73,35 @@ public class LogcatViewModel extends BaseViewModel {
     //     Shell.cmd("logcat ")
     // }
 
-    static class LogLine {
+    public static class LogItem {
         public final String level;
         public final String msg;
 
-        private LogLine(String level, String msg) {
+        private LogItem(String level, String msg) {
             this.level = level;
             this.msg = msg;
         }
 
-        public static LogLine from(String raw) {
+        public static LogItem from(String raw) {
             int startIndex = raw.indexOf(':');
             if (startIndex == -1) return null;
 
             String level = String.valueOf(raw.charAt(0));
             String msg = raw.substring(startIndex + 1).replaceAll("\t", "    ");
-            return new LogLine(level, msg);
+            return new LogItem(level, msg);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            LogItem item = (LogItem) o;
+            return Objects.equals(level, item.level) && Objects.equals(msg, item.msg);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(level, msg);
         }
     }
 }

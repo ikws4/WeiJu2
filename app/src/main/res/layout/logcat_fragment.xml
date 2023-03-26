@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <io.ikws4.weiju.widget.Refresher xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refresher"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/base"
         android:fillViewport="true">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/v_log"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/base"
-            android:fillViewport="true">
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-
-            <TextView
-                android:id="@+id/tv_log"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/jetbrains_mono_regular" />
-
-        </HorizontalScrollView>
-
-    </ScrollView>
+    </HorizontalScrollView>
 
 </io.ikws4.weiju.widget.Refresher>
 
