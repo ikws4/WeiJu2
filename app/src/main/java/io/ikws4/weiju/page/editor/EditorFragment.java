@@ -73,6 +73,7 @@ public class EditorFragment extends BaseFragment {
             vSymbolBar.setVisibility(View.GONE);
         }
         vSymbolBar.attach(vEditor);
+        configEditor();
 
         // Auto Save
         mainVM = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
@@ -87,6 +88,11 @@ public class EditorFragment extends BaseFragment {
                         .subscribe(mainVM::hideProgressBar));
                 }));
         }
+    }
+
+    private void configEditor() {
+        var prefs = Preferences.getInstance(getContext());
+        vEditor.setWordwrap(prefs.get(Preferences.EDITOR_WORD_WRAP, false));
     }
 
     class Response {

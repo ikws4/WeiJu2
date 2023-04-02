@@ -19,6 +19,7 @@ public class Preferences {
   public static final String AUTHOR = "author";
   public static final String OPENAI_API_KEY = "openai_api_key";
   public static final String OPENAI_CHAT_MODEL = "openai_chat_model";
+  public static final String EDITOR_WORD_WRAP = "editor_word_wrap";
 
   private Preferences(Context context) {
     storage = context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE);

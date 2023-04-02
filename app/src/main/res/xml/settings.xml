@@ -15,22 +15,30 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="Editor">
+        <SwitchPreference
+            android:key="editor_word_wrap"
+            android:summary="Set whether text in editor should be wrapped to fit its size"
+            android:title="Wrap"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="AI">
         <EditTextPreference
-            android:key="openai_api_key"
             android:defaultValue=""
+            android:key="openai_api_key"
             android:summary="%s"
-            app:useSimpleSummaryProvider="true"
             android:title="OpenAI API Key"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false"
+            app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            android:key="openai_chat_model"
-            android:title="Model"
-            android:entryValues="@array/openai_chat_model_values"
-            android:entries="@array/openai_chat_model_entries"
             android:defaultValue="gpt-3.5-turbo"
+            android:entries="@array/openai_chat_model_entries"
+            android:entryValues="@array/openai_chat_model_values"
+            android:key="openai_chat_model"
             android:summary="%s"
+            android:title="Model"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
