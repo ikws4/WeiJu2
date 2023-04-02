@@ -39,8 +39,6 @@ public class LogcatFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // getSupportActionBar().setTitle(R.string.logcat);
 
         mAdapter = new LogAdapter();
         mVLog = view.findViewById(R.id.v_log);
@@ -112,7 +110,7 @@ public class LogcatFragment extends BaseFragment {
 
     private void scrollToBottom() {
         var last = mVLog.getAdapter().getItemCount() - 1;
-        scrollToPosition(last);
+        if (last >= 0) scrollToPosition(last);
     }
 
     private void scrollToTop() {
