@@ -4,18 +4,21 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import org.eclipse.tm4e.core.registry.IThemeSource;
@@ -27,6 +30,7 @@ import java.util.Map;
 
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.EventReceiver;
+import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
@@ -41,7 +45,6 @@ import io.github.rosemoe.sora.widget.component.DefaultCompletionLayout;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.EditorCompletionAdapter;
 import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
-import io.github.rosemoe.sora.widget.component.Magnifier;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.ikws4.weiju.util.UnitConverter;
 
@@ -80,7 +83,7 @@ public class Editor extends CodeEditor {
         getProps().indicatorWaveAmplitude = 2f;
         getProps().indicatorWaveLength = 8f;
 
-        getComponent(Magnifier.class).setEnabled(false);
+        // var magnifier = getComponent(Magnifier.class);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
         replaceComponent(EditorTextActionWindow.class, new EditorActionWindow(this));
 
@@ -105,6 +108,24 @@ public class Editor extends CodeEditor {
                                 break;
                             }
                         }
+                    }
+                }
+            }
+        });
+
+        subscribeEvent(SelectionChangeEvent.class, new EventReceiver<SelectionChangeEvent>() {
+            private Vibrator mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+            private int lineCount = 0;
+
+            @Override
+            public void onReceive(@NonNull SelectionChangeEvent event, @NonNull Unsubscribe unsubscribe) {
+                if (event.isSelected() && event.getCause() == SelectionChangeEvent.CAUSE_SELECTION_HANDLE) {
+                    var lines = event.getRight().line - event.getLeft().line;
+                    if (lineCount != lines) {
+                        if (mVibrator != null) {
+                            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                        }
+                        lineCount = lines;
                     }
                 }
             }
