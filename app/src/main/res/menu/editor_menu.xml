@@ -5,7 +5,20 @@
     <item
         android:id="@+id/help"
         android:icon="@drawable/ic_help"
+        android:visible="false"
         android:title="@string/help"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/undo"
+        android:icon="@drawable/ic_undo"
+        android:title="Undo"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/redo"
+        android:icon="@drawable/ic_redo"
+        android:title="Redo"
         app:showAsAction="always" />
 
     <item

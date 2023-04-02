@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +19,6 @@ import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.editor.Editor;
-import io.ikws4.weiju.events.StartChatEvent;
 
 public class EditorSymbolBar extends RecyclerView {
     private Callbacks mCallbacks = new EmptyCallbask();
@@ -46,28 +43,24 @@ public class EditorSymbolBar extends RecyclerView {
         registerCallbacks(new EditorSymbolBar.Callbacks() {
             @Override
             public void onClickSymbol(String s) {
-                if (s.equals("AI")) {
-                    EventBus.getDefault().post(new StartChatEvent());
-                } else {
-                    SymbolPairMatch pariMathces = editor.getEditorLanguage().getSymbolPairs();
-                    List<SymbolPairMatch.SymbolPair> pairs = pariMathces.matchBestPairList(s.charAt(0));
+                SymbolPairMatch pariMathces = editor.getEditorLanguage().getSymbolPairs();
+                List<SymbolPairMatch.SymbolPair> pairs = pariMathces.matchBestPairList(s.charAt(0));
 
-                    if (pairs.isEmpty()) {
-                        editor.commitText(s);
+                if (pairs.isEmpty()) {
+                    editor.commitText(s);
+                } else {
+                    SymbolPairMatch.SymbolPair pair = pairs.get(0);
+                    Content content = editor.getText();
+                    Cursor cursor = editor.getCursor();
+                    char afterChar = content.charAt(cursor.getRight());
+                    if (afterChar == s.charAt(0)) {
+                        editor.moveSelectionRight();
                     } else {
-                        SymbolPairMatch.SymbolPair pair = pairs.get(0);
-                        Content content = editor.getText();
-                        Cursor cursor = editor.getCursor();
-                        char afterChar = content.charAt(cursor.getRight());
-                        if (afterChar == s.charAt(0)) {
-                            editor.moveSelectionRight();
+                        if (pair != null) {
+                            editor.commitText(pair.open + pair.close);
+                            editor.moveSelectionLeft();
                         } else {
-                            if (pair != null) {
-                                editor.commitText(pair.open + pair.close);
-                                editor.moveSelectionLeft();
-                            } else {
-                                editor.commitText(s);
-                            }
+                            editor.commitText(s);
                         }
                     }
                 }

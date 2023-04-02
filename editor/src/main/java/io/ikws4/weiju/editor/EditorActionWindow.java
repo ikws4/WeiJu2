@@ -2,9 +2,12 @@ package io.ikws4.weiju.editor;
 
 import android.graphics.drawable.GradientDrawable;
 import android.view.HapticFeedbackConstants;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 
 import io.github.rosemoe.sora.event.EventReceiver;
@@ -14,7 +17,9 @@ import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
 
-class EditorActionWindow extends EditorTextActionWindow {
+public class EditorActionWindow extends EditorTextActionWindow {
+    private LinearLayout mButtonParent;
+    private ImageButton mDefaultButton;
 
     public EditorActionWindow(@NonNull CodeEditor editor) {
         super(editor);
@@ -34,6 +39,8 @@ class EditorActionWindow extends EditorTextActionWindow {
         cut.getDrawable().setTint(RosepineColorScheme.TEXT);
         copy.getDrawable().setTint(RosepineColorScheme.TEXT);
         paste.getDrawable().setTint(RosepineColorScheme.TEXT);
+        mButtonParent = (LinearLayout) selectAll.getParent();
+        mDefaultButton = selectAll;
 
         editor.subscribeEvent(LongPressEvent.class, new EventReceiver<LongPressEvent>() {
             @Override
@@ -47,5 +54,18 @@ class EditorActionWindow extends EditorTextActionWindow {
                 }
             }
         });
+    }
+
+    public void addButton(@DrawableRes int icon, View.OnClickListener callback) {
+        var button = new ImageButton(mButtonParent.getContext());
+        button.setImageDrawable(button.getContext().getDrawable(icon));
+        button.getDrawable().setTint(RosepineColorScheme.TEXT);
+        button.setLayoutParams(mDefaultButton.getLayoutParams());
+        button.setBackground(mDefaultButton.getBackground());
+        button.setOnClickListener(v -> {
+            callback.onClick(v);
+            dismiss();
+        });
+        mButtonParent.addView(button);
     }
 }

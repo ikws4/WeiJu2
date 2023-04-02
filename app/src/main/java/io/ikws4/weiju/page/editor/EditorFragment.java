@@ -93,6 +93,10 @@ public class EditorFragment extends BaseFragment {
     private void configEditor() {
         var prefs = Preferences.getInstance(getContext());
         vEditor.setWordwrap(prefs.get(Preferences.EDITOR_WORD_WRAP, false));
+
+        vEditor.getEditorActionWindow().addButton(R.drawable.ic_auto_awesome, (v) -> {
+            EventBus.getDefault().post(new StartChatEvent());
+        });
     }
 
     class Response {
@@ -120,6 +124,10 @@ public class EditorFragment extends BaseFragment {
             if (trySave(true)) {
                 requireActivity().onBackPressed();
             }
+        } else if (id == R.id.undo) {
+            vEditor.undo();
+        } else if (id == R.id.redo) {
+            vEditor.redo();
         } else {
             return false;
         }

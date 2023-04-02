@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_add_circle.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.1875" />
+        <entry key="app/src/main/res/drawable/ic_auto_awesome.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/ic_bug_report.xml" value="0.1905" />
         <entry key="app/src/main/res/drawable/ic_clear_all.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.259" />
@@ -34,9 +35,11 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_more_vert.xml" value="0.2685" />
         <entry key="app/src/main/res/drawable/ic_package.xml" value="0.1745" />
+        <entry key="app/src/main/res/drawable/ic_redo.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/ic_run.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_terminal.xml" value="0.194" />
+        <entry key="app/src/main/res/drawable/ic_undo.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/popup_menu_background.xml" value="0.208" />
         <entry key="app/src/main/res/drawable/script_drag_target_foreground.xml" value="0.133" />
         <entry key="app/src/main/res/drawable/script_drag_target_foreground_outlined.xml" value="0.1" />

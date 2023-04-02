@@ -49,6 +49,7 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.ikws4.weiju.util.UnitConverter;
 
 public class Editor extends CodeEditor {
+    private final EditorActionWindow mEditorActionWindow;
     private boolean mEditable = true;
 
     public Editor(Context context, AttributeSet attrs) {
@@ -85,7 +86,7 @@ public class Editor extends CodeEditor {
 
         // var magnifier = getComponent(Magnifier.class);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
-        replaceComponent(EditorTextActionWindow.class, new EditorActionWindow(this));
+        replaceComponent(EditorTextActionWindow.class, mEditorActionWindow = new EditorActionWindow(this));
 
         setLanguageAndTheme();
 
@@ -133,6 +134,10 @@ public class Editor extends CodeEditor {
 
         setAutoCompletionItemAdapter(new ComopletionAdapter(this));
         setCompletionWndPositionMode(CodeEditor.WINDOW_POS_MODE_FOLLOW_CURSOR_ALWAYS);
+    }
+
+    public EditorActionWindow getEditorActionWindow() {
+        return mEditorActionWindow;
     }
 
     public static void initialize(Context context) {
