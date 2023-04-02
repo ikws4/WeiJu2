@@ -1,6 +1,7 @@
 package io.ikws4.weiju.page.editor;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -221,8 +222,26 @@ public class EditorFragment extends BaseFragment {
         var cursor = vEditor.getCursor();
         // Toast.makeText(getContext(), "Receiving...", Toast.LENGTH_SHORT).show();
 
+        String content = "";
         if (cursor.isSelected()) {
-            var content = vEditor.getText().substring(cursor.getLeft(), cursor.getRight());
+            content = vEditor.getText().substring(cursor.getLeft(), cursor.getRight());
+        } else if (cursor.getLeftLine() > 0) {
+            var startLine = cursor.getLeftLine() - 1;
+            var text = vEditor.getText();
+            while (startLine >= 0 && text.getLineString(startLine).isEmpty()) {
+                startLine--;
+            }
+            while (startLine >= 0 && text.getLineString(startLine).startsWith("--")) {
+                startLine--;
+            }
+            content = vEditor.getText().substring(
+                cursor.getIndexer().getCharIndex(startLine + 1, 0),
+                cursor.right().index
+            );
+        }
+        content = content.trim();
+
+        if (!content.isEmpty()) {
             mChatMessages.add(new ChatResponse.Message("user", content));
 
             mCursorStart = cursor.right();
@@ -241,7 +260,10 @@ public class EditorFragment extends BaseFragment {
                                 vEditor.getText().insert(mCursorStart.line, mCursorStart.column, "\n");
                             }
 
-                            vEditor.setSelection(mCursorStart.line + 1, 0);
+                            if (!vEditor.getText().getLineString(mCursorStart.line).isEmpty()) {
+                                mCursorStart.line += 1;
+                            }
+                            vEditor.setSelection(mCursorStart.line, 0);
                             vEditor.setEnabled(false);
 
                             getMenu().findItem(R.id.close).setVisible(false);
@@ -267,7 +289,7 @@ public class EditorFragment extends BaseFragment {
     private void resetChat() {
         var cursor = vEditor.getCursor();
         vEditor.setEnabled(true);
-        vEditor.setSelectionRegion(mCursorStart.line + 1, 0, cursor.getRightLine(), cursor.getRightColumn());
+        vEditor.setSelectionRegion(mCursorStart.line, 0, cursor.getRightLine(), cursor.getRightColumn());
         mChatMessages.remove(mChatMessages.size() - 1);
         getMainActivity().hideProgressBar();
 
