@@ -60,9 +60,7 @@ public class EditorSymbolBar extends RecyclerView {
                             var selected = cursor.isSelected();
                             var left = cursor.left();
                             var selectedText = editor.getText().substring(cursor.getLeft(), cursor.getRight());
-                            editor.commitText(pair.open);
-                            editor.commitText(selectedText);
-                            editor.commitText(pair.close);
+                            editor.commitText(pair.open + selectedText + pair.close);
                             editor.setSelected(false);
                             var right = cursor.right();
                             if (selected) editor.setSelectionRegion(left.line, left.column, right.line, right.column);

@@ -1,7 +1,6 @@
 package io.ikws4.weiju.editor;
 
 import android.graphics.drawable.GradientDrawable;
-import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import io.github.rosemoe.sora.event.EventReceiver;
 import io.github.rosemoe.sora.event.LongPressEvent;
+import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
@@ -49,11 +49,20 @@ public class EditorActionWindow extends EditorTextActionWindow {
                     long res = editor.getPointPositionOnScreen(event.getX(), event.getY());
                     int line = IntPair.getFirst(res);
                     int column = IntPair.getSecond(res);
-                    editor.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    // editor.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     editor.selectWord(line, column);
                 }
             }
         });
+    }
+
+    @Override
+    public void onReceive(@NonNull SelectionChangeEvent event, @NonNull Unsubscribe unsubscribe) {
+        if (event.getCause() == SelectionChangeEvent.CAUSE_UNKNOWN && event.getLeft().index == event.getRight().index) {
+            return;
+        }
+
+        super.onReceive(event, unsubscribe);
     }
 
     public void addButton(@DrawableRes int icon, View.OnClickListener callback) {

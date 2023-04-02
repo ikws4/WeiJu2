@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Vibrator;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -30,6 +30,7 @@ import java.util.Map;
 
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.EventReceiver;
+import io.github.rosemoe.sora.event.LongPressEvent;
 import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
@@ -38,7 +39,12 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
+import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.text.ContentLine;
+import io.github.rosemoe.sora.text.ICUUtils;
+import io.github.rosemoe.sora.text.TextRange;
+import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.github.rosemoe.sora.widget.component.DefaultCompletionLayout;
@@ -83,6 +89,7 @@ public class Editor extends CodeEditor {
         getProps().boldMatchingDelimiters = false;
         getProps().indicatorWaveAmplitude = 2f;
         getProps().indicatorWaveLength = 8f;
+        getProps().useICULibToSelectWords = true;
 
         // var magnifier = getComponent(Magnifier.class);
         replaceComponent(EditorAutoCompletion.class, new AutoCompletion(this));
@@ -115,20 +122,24 @@ public class Editor extends CodeEditor {
         });
 
         subscribeEvent(SelectionChangeEvent.class, new EventReceiver<SelectionChangeEvent>() {
-            private Vibrator mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
-            private int lineCount = 0;
-
             @Override
             public void onReceive(@NonNull SelectionChangeEvent event, @NonNull Unsubscribe unsubscribe) {
                 if (event.isSelected() && event.getCause() == SelectionChangeEvent.CAUSE_SELECTION_HANDLE) {
-                    var lines = event.getRight().line - event.getLeft().line;
-                    if (lineCount != lines) {
-                        if (mVibrator != null) {
-                            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                        }
-                        lineCount = lines;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                        performHapticFeedback(HapticFeedbackConstants.TEXT_HANDLE_MOVE);
+                    } else {
+                        performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
                     }
                 }
+            }
+        });
+
+        setSelectionHandleStyle(new EditorHandelStyleSideDrop(getContext()));
+
+        subscribeEvent(LongPressEvent.class, new EventReceiver<LongPressEvent>() {
+            @Override
+            public void onReceive(@NonNull LongPressEvent event, @NonNull Unsubscribe unsubscribe) {
+                showSoftInput();
             }
         });
 
@@ -303,6 +314,89 @@ public class Editor extends CodeEditor {
 
             return view;
         }
+    }
+
+    @Override
+    public TextRange getWordRange(int line, int column, boolean useIcu) {
+        // Find word edges
+        var text = getText();
+        ContentLine lineObj = text.getLine(line);
+        var edges = ICUUtils.getWordEdges(lineObj, column, useIcu);
+        int startOffset = IntPair.getFirst(edges);
+        int endOffset = IntPair.getSecond(edges);
+        if (startOffset == endOffset) {
+            getEventHandler().notifyLater();
+            postDelayed(mEditorActionWindow::displayWindow, 60);
+        }
+        return new TextRange(
+            new CharPosition(line, startOffset, startOffset),
+            new CharPosition(line, endOffset, endOffset)
+        );
+    }
+
+    // TODO: impl expand seelction later
+    public void expandSelection() {
+        if (expandToWord()) return;
+        if (expandToString()) return;
+        if (expandToLine()) return;
+        if (expandToBlock()) return;
+        selectAll();
+    }
+
+    private boolean expandToBlock() {
+        return false;
+    }
+
+    private boolean expandToLine() {
+        var cursor = getCursor();
+        var text = getText();
+        var line = cursor.getLeftLine();
+        ContentLine lineObj = text.getLine(line);
+
+        if (cursor.getLeftColumn() == 0 && cursor.getRightColumn() == lineObj.length()) {
+            return false;
+        }
+
+        setSelectionRegion(new TextRange(
+            new CharPosition(line, 0, 0),
+            new CharPosition(line, lineObj.length(), lineObj.length())
+        ));
+        return true;
+    }
+
+    private boolean expandToString() {
+        // var cursor = getCursor();
+        // var text = getText();
+        // var line = cursor.getLeftLine();
+        // ContentLine lineObj = text.getLine(line);
+        //
+        // var edges = ICUUtils.getWordEdges(lineObj, cursor.getLeftColumn(), getProps().useICULibToSelectWords);
+        return false;
+    }
+
+    private boolean expandToWord() {
+        var cursor = getCursor();
+        var text = getText();
+        var line = cursor.getLeftLine();
+        ContentLine lineObj = text.getLine(line);
+        var edges = ICUUtils.getWordEdges(lineObj, cursor.getLeftColumn(), getProps().useICULibToSelectWords);
+        int startOffset = IntPair.getFirst(edges);
+        int endOffset = IntPair.getSecond(edges);
+        if (startOffset == endOffset) {
+            return false;
+        }
+        if (startOffset == cursor.getLeftColumn() && endOffset == cursor.getRightColumn()) {
+            return false;
+        }
+        setSelectionRegion(new TextRange(
+            new CharPosition(line, startOffset, startOffset),
+            new CharPosition(line, endOffset, endOffset)
+        ));
+        return true;
+    }
+
+    private void setSelectionRegion(TextRange range) {
+        setSelectionRegion(range.getStart().line, range.getStart().column, range.getEnd().line, range.getEnd().column);
     }
 }
 

@@ -42,7 +42,7 @@ class RosepineColorScheme extends TextMateColorScheme {
 
         setColor(SELECTION_INSERT, TEXT);
         setColor(SELECTION_HANDLE, TEXT);
-        setColor(SELECTED_TEXT_BACKGROUND, HIGHLIGHT_LOW);
+        setColor(SELECTED_TEXT_BACKGROUND, HIGHLIGHT_MED);
 
         setColor(LINE_DIVIDER, BASE);
         setColor(LINE_NUMBER_BACKGROUND, BASE);
