@@ -6,12 +6,14 @@ The first scriptable xposed module, provides a new way to change the application
 
 Powered by Lua and made with ♥
 
-
 # Features
 
 - Lua scripting
 - Simple and intuitive hook API
+- AI assistant
 - Share your package with others by publish it at [WeiJu2-Scripts](https://github.com/ikws4/WeiJu2-Scripts)
+
+[![](https://markdown-videos.deta.dev/youtube/FHwR7rCHLkQ)](https://youtu.be/FHwR7rCHLkQ)
 
 # Q&A
 
