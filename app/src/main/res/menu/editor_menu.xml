@@ -22,6 +22,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/stop_chatgpt_streaming"
+        android:icon="@drawable/ic_stop"
+        android:visible="false"
+        android:title="@string/close"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/close"
         android:icon="@drawable/ic_close"
         android:title="@string/close"

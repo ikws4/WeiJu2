@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.github.rosemoe.sora.text.CharPosition;
 import io.ikws4.weiju.R;
 import io.ikws4.weiju.api.API;
 import io.ikws4.weiju.api.openai.ChatResponse;
@@ -39,6 +40,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class EditorFragment extends BaseFragment {
@@ -48,6 +50,8 @@ public class EditorFragment extends BaseFragment {
     private ScriptListView.ScriptItem mItem;
     private CompositeDisposable mCompositeDisposable;
     private List<ChatResponse.Message> mChatMessages;
+    private Disposable mChatDisposable;
+    private CharPosition mCursorStart;
 
     public EditorFragment() {
         super(R.layout.editor_fragment);
@@ -94,7 +98,7 @@ public class EditorFragment extends BaseFragment {
         var prefs = Preferences.getInstance(getContext());
         vEditor.setWordwrap(prefs.get(Preferences.EDITOR_WORD_WRAP, false));
 
-        vEditor.getEditorActionWindow().addButton(R.drawable.ic_auto_awesome, (v) -> {
+        vEditor.getEditorActionWindow().addButton(R.drawable.ic_chatgpt, (v) -> {
             EventBus.getDefault().post(new StartChatEvent());
         });
     }
@@ -128,6 +132,11 @@ public class EditorFragment extends BaseFragment {
             vEditor.undo();
         } else if (id == R.id.redo) {
             vEditor.redo();
+        } else if (id == R.id.stop_chatgpt_streaming) {
+            if (!mChatDisposable.isDisposed()) {
+                mChatDisposable.dispose();
+                resetChat();
+            }
         } else {
             return false;
         }
@@ -210,12 +219,15 @@ public class EditorFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onStartChatEvent(StartChatEvent event) {
         var cursor = vEditor.getCursor();
-        Toast.makeText(getContext(), "Receiving...", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(), "Receiving...", Toast.LENGTH_SHORT).show();
+
         if (cursor.isSelected()) {
             var content = vEditor.getText().substring(cursor.getLeft(), cursor.getRight());
             mChatMessages.add(new ChatResponse.Message("user", content));
 
-            mCompositeDisposable.add(API.OpenAIApi.chat(
+            mCursorStart = cursor.right();
+            getMainActivity().showProgressBar();
+            mCompositeDisposable.add(mChatDisposable = API.OpenAIApi.chat(
                     Preferences.getInstance(getContext()).get(Preferences.OPENAI_API_KEY, ""),
                     Preferences.getInstance(getContext()).get(Preferences.OPENAI_CHAT_MODEL, ""),
                     mChatMessages
@@ -223,6 +235,19 @@ public class EditorFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     response -> {
+                        if (vEditor.isEnabled()) {
+
+                            if (cursor.getRightLine() + 1 >= vEditor.getText().getLineCount()) {
+                                vEditor.getText().insert(mCursorStart.line, mCursorStart.column, "\n");
+                            }
+
+                            vEditor.setSelection(mCursorStart.line + 1, 0);
+                            vEditor.setEnabled(false);
+
+                            getMenu().findItem(R.id.close).setVisible(false);
+                            getMenu().findItem(R.id.stop_chatgpt_streaming).setVisible(true);
+                        }
+
                         var delta = response.choices.get(0).delta;
                         if (delta.content == null) return;
                         vEditor.insertText(delta.content, delta.content.length());
@@ -230,9 +255,23 @@ public class EditorFragment extends BaseFragment {
                     err -> {
                         Logger.e(err);
                         Toast.makeText(getContext(), err.getMessage(), Toast.LENGTH_LONG).show();
+                        resetChat();
+                    }, () -> {
+                        resetChat();
                     }));
         } else {
             Toast.makeText(getContext(), "Please select the area you want to ask for", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void resetChat() {
+        var cursor = vEditor.getCursor();
+        vEditor.setEnabled(true);
+        vEditor.setSelectionRegion(mCursorStart.line + 1, 0, cursor.getRightLine(), cursor.getRightColumn());
+        mChatMessages.remove(mChatMessages.size() - 1);
+        getMainActivity().hideProgressBar();
+
+        getMenu().findItem(R.id.close).setVisible(true);
+        getMenu().findItem(R.id.stop_chatgpt_streaming).setVisible(false);
     }
 }

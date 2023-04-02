@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.ikws4.weiju.util.Logger;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -45,9 +44,8 @@ public class OpenAIApi {
         return body.flatMap((response) -> Observable.create(emitter -> {
             var souce = response.source();
             try {
-                while (!souce.exhausted()) {
+                while (souce.isOpen() && !emitter.isDisposed() && !souce.exhausted()) {
                     var data = souce.readUtf8Line();
-                    Logger.d(data);
                     if (data.isEmpty()) {
                         continue;
                     }
@@ -59,7 +57,7 @@ public class OpenAIApi {
                     emitter.onNext(mGson.fromJson(data, TypeToken.get(ChatResponse.class)));
                 }
             } catch (Exception e) {
-                emitter.onError(e);
+                if (!emitter.isDisposed()) emitter.onError(e);
             }
         }));
     }

@@ -45,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
+    public void showProgressBar() {
+        vm.showProgressBar();
+    }
+
+    public void hideProgressBar() {
+        vm.hideProgressBar();
+    }
+
     private void setupProgressBar() {
         LinearProgressIndicator vProgressBar = findViewById(R.id.progress_bar);
         vm.getProgressBarStatus().observe(this, visible -> {

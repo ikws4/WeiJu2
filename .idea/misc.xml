@@ -21,8 +21,9 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_add_circle.xml" value="0.154" />
         <entry key="app/src/main/res/drawable/ic_arrow_back.xml" value="0.1875" />
-        <entry key="app/src/main/res/drawable/ic_auto_awesome.xml" value="0.15" />
+        <entry key="app/src/main/res/drawable/ic_auto_awesome.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_bug_report.xml" value="0.1905" />
+        <entry key="app/src/main/res/drawable/ic_chatgpt.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/ic_clear_all.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.259" />
         <entry key="app/src/main/res/drawable/ic_fullscreen.xml" value="0.2895" />
@@ -38,6 +39,7 @@
         <entry key="app/src/main/res/drawable/ic_redo.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/ic_run.xml" value="0.2895" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_stop.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/ic_terminal.xml" value="0.194" />
         <entry key="app/src/main/res/drawable/ic_undo.xml" value="0.15" />
         <entry key="app/src/main/res/drawable/popup_menu_background.xml" value="0.208" />
