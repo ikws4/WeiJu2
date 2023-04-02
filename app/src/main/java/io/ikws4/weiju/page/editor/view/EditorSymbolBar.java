@@ -53,12 +53,20 @@ public class EditorSymbolBar extends RecyclerView {
                     Content content = editor.getText();
                     Cursor cursor = editor.getCursor();
                     char afterChar = content.charAt(cursor.getRight());
-                    if (afterChar == s.charAt(0)) {
+                    if (!cursor.isSelected() && afterChar == s.charAt(0)) {
                         editor.moveSelectionRight();
                     } else {
                         if (pair != null) {
-                            editor.commitText(pair.open + pair.close);
-                            editor.moveSelectionLeft();
+                            var selected = cursor.isSelected();
+                            var left = cursor.left();
+                            var selectedText = editor.getText().substring(cursor.getLeft(), cursor.getRight());
+                            editor.commitText(pair.open);
+                            editor.commitText(selectedText);
+                            editor.commitText(pair.close);
+                            editor.setSelected(false);
+                            var right = cursor.right();
+                            if (selected) editor.setSelectionRegion(left.line, left.column, right.line, right.column);
+                            else editor.setSelection(left.line, left.column + 1);
                         } else {
                             editor.commitText(s);
                         }
