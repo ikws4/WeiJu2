@@ -44,20 +44,20 @@
     <string name="migratetool_please_activate_weiju2">MigrateTool: Favor ativar o WeiJu2 no xposed/lsposed primeiro</string>
     <string name="migratetool_migrate_success">MigrateTool: Migrado com sucesso da versão antiga do WeiJu</string>
 
-    <string name="home_status_can_not_force_stop">Auto force-stop failed: need root permission</string>
-    <string name="home_status_can_not_restart">Restart failed: need root permission</string>
+    <string name="home_status_can_not_force_stop">Falha ao forçar parada automaticamente: necessário permissão do root</string>
+    <string name="home_status_can_not_restart">Falha ao reiniciar: necessário permissão do root</string>
 
-    <string name="settings">Settings</string>
+    <string name="setting">Definições</string>
     <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-    <string name="general">General</string>
-    <string name="setting_backup_summary">Export your settings and scripts to the clipboard in JSON format</string>
-    <string name="setting_restore_summary">Import your settings and scripts from the clipboard</string>
-    <string name="other">Other</string>
+    <string name="restore">Restaurar</string>
+    <string name="general">Geral</string>
+    <string name="setting_backup_summary">Exportar suas definições e scripts para a área de transferência no formato JSON</string>
+    <string name="setting_restore_summary">Importar suas definições e scripts da área de transferência</string>
+    <string name="other">Outro</string>
 
-    <string name="setting_restore_succeed">Restore succeed</string>
-    <string name="setting_restore_failed">Restore failed, please check your json data</string>
-    <string name="setting_saved_to_clipbard">Saved to clipboard</string>
-    <string name="scroll_to_top">Scroll to Top</string>
-    <string name="scroll_to_bottom">Scroll to Bottom</string>
+    <string name="setting_restore_succeed">Restauração concluída</string>
+    <string name="setting_restore_failed">Falha na restauração, por favor confira o conteúdo json</string>
+    <string name="setting_saved_to_clipbard">Salvo na área de transferência</string>
+    <string name="scroll_to_top">Rolar para o topo</string>
+    <string name="scroll_to_bottom">Rolar para baixo</string>
 </resources>
