@@ -47,7 +47,7 @@
     <string name="home_status_can_not_force_stop">Falha ao forçar parada automaticamente: necessário permissão do root</string>
     <string name="home_status_can_not_restart">Falha ao reiniciar: necessário permissão do root</string>
 
-    <string name="setting">Definições</string>
+    <string name="settings">Definições</string>
     <string name="backup">Backup</string>
     <string name="restore">Restaurar</string>
     <string name="general">Geral</string>
